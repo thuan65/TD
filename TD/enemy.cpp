@@ -15,6 +15,10 @@ enemy::enemy() {
 	_start = _end = _curr = { 0, 0, 0 };
 	_speed = 3;
 
+	// hello 
+
+	// xin chào mọi người, mình là enemy
+
 		//Hướng		dd[i]	dc[i]	Di chuyển
 		//Lên		 -1		  0		Giảm hàng
 		//Trái		  0		 -1		Giảm cột
