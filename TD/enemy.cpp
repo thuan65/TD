@@ -5,7 +5,7 @@ enemy::enemy() {
 	for (int i = 0; i < point::MAP_SIZE * point::MAP_SIZE; i++) {
 		_p[i] = { 0,0,0 };//Initialize cho cái đường đi
 	}
-
+// hello
 	//
 	dd[0] = -1; dd[1] = 0; dd[2] = 1; dd[3] = 0;
 
