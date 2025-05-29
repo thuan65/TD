@@ -80,3 +80,16 @@ void enemy::findPath(point a[][point::MAP_SIZE], point s, point e) {
 	e = point::fromRowColtoXY(e);
 	calcPath(ta, point::MAP_SIZE, s, e);
 }
+
+
+/*void enemy::findPath(point a[][point::MAP_SIZE], point s, point e) {
+	int ta[point::MAP_SIZE][point::MAP_SIZE]; //Bang chứa cái thuộc tính của thứ nằm trên map
+
+	for (int i = 0; i < point::MAP_SIZE; i++) {
+		for (int j = 0; j < point::MAP_SIZE; j++) {
+			ta[i][j] = a[i][j].getC();
+		}
+	}
+	s = point::fromXYtoRowCol(s);
+	e = point::fromRowColtoXY(e);
+	calcPath(ta, point::MAP_SIZE, s, e);*/
