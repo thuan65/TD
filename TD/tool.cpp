@@ -19,8 +19,10 @@ void tool::GotoXY(int x, int y) {
 //Draw character or array of character ('K', 'o', 'T') 
 //Vẽ đường đi cho 1 một đối tượng
 void tool::Draw(char* str, int i, point p[], point& _p) {
+
 	// p[] contain the thuoc tinh tai vi tri ve
 	mtx.lock(); //đảm bảo chỉ 1 luồng vẽ tại 1 thời điểm
+	
 	_p = p[i]; //Lưu lại vị trí hiện tại vào biến _p(ví dụ : enemy đang ở đây)
 	tool::GotoXY(_p.getX(), _p.getY()); //Move the cursor cái con trỏ của console chứ không phải trỏ chuột
 	cout << str; //In chuỗi ký tự ra màn hình tại vị trí đã di chuyển

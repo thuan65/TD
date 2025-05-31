@@ -4,8 +4,8 @@
 class bullet
 {
 	//_n là độ dài đường đi (số phần tử trong mảng _p)
-	int _n, _speed;
-	point _p[point::MAP_SIZE * point::MAP_SIZE];
+	int _n, _speed; //_n is the number of point for the bullet (số lượng phần tử cho bản đồ mà viên đạn đi)
+	point _p[point::MAP_SIZE * point::MAP_SIZE];//Bản đồ mà viên đạn đi
 
 	point _m[point::MAP_SIZE][point::MAP_SIZE]; //bản đồ mà viên đạn đang sử dụng trong trục x,y
 	point curr; //vị trí hiện tại của viên đạn
@@ -15,6 +15,8 @@ public:
 	void UpdateMap(int, int, point);
 
 	point getCurr() { return curr; }
+
+	//Bản đồ viên đạn đi
 	point* getP() { return _p; }
 	int getSpeed() { return _speed; }
 	int getN() { return _n; }

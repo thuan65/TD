@@ -1,7 +1,7 @@
 ﻿#include "bullet.h"
 
 bullet::bullet() {
-	_n = 0;
+	_n = 0; 
 	_speed = 4;
 	curr = { 0, 0,0 };
 	for (int i = 0; i < point::MAP_SIZE * point::MAP_SIZE; i++) {

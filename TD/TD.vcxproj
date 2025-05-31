@@ -125,15 +125,21 @@
   <ItemGroup>
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="enemy.cpp" />
+    <ClCompile Include="game.cpp" />
+    <ClCompile Include="map.cpp" />
     <ClCompile Include="point.cpp" />
     <ClCompile Include="TD.cpp" />
     <ClCompile Include="tool.cpp" />
+    <ClCompile Include="tower.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bullet.h" />
     <ClInclude Include="enemy.h" />
+    <ClInclude Include="game.h" />
+    <ClInclude Include="map.h" />
     <ClInclude Include="point.h" />
     <ClInclude Include="tool.h" />
+    <ClInclude Include="tower.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
