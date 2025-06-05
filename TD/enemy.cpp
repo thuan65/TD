@@ -36,7 +36,7 @@ void enemy::calcPath(int a[][point::MAP_SIZE], int sizeOfTheMap, point s, point 
 			for (int i = 0; i < point::MAP_SIZE; i++) {
 				for (int j = 0; j < point::MAP_SIZE; j++) {
 					if (a[i][j] == k) {
-						_p[k - 1] = point::fromRowColtoXY({ i,j, 0 });
+						_p[k - 1] = { i,j, 0 };
 						goto Nhan;
 					}
 				}

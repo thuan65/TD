@@ -1,4 +1,5 @@
 ﻿#include "game.h"
+#include "SFML\Graphics.hpp"
 #include <thread>
 
 void ThreadFunc2(game&);
@@ -6,19 +7,34 @@ void ThreadFunc1(game&);
 
 int main() {
 
-	cin.get();
-	tool::ShowConsoleCursor(false);
-	game cg;
-	cg.startGame();
 
-	thread t1(ThreadFunc2, std::ref(cg));
-	thread t2(ThreadFunc1, std::ref(cg));
-	t1.join();
-	t2.join();
 
-	tool::GotoXY(0, 20);
+
 	return 0;
 }
+
+
+//cin.get();
+//tool::ShowConsoleCursor(false);
+//game cg;
+///*cg.startGame();*/
+//
+//enemy& EnemyS = cg.getMap().getEnemy();
+//point* p = EnemyS.getP();
+//
+//
+//for (int i = 0; i < 25; i++) {
+//	cout << p[i].getX() << " " << p[i].getY() << endl;
+//}
+
+//thread t1(ThreadFunc2, std::ref(cg));
+//thread t2(ThreadFunc1, std::ref(cg));
+//t1.join();
+//t2.join();
+
+//tool::GotoXY(0, 20);
+
+
 
 void ThreadFunc2(game& cg) {//Xử lý viên đạn
 	int i = 0;
