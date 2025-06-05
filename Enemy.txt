@@ -1,0 +1,231 @@
+#include <SFML/Graphics.hpp>
+#include <vector>
+#include "game.h"
+#include <thread>
+
+float TITLESIZE = 32;
+
+using namespace std;
+
+//void ThreadFunc2(game&);
+//void ThreadFunc1(game&);
+
+sf::Vector2f toSFMLPosition(int row, int col)
+{
+	return sf::Vector2f(col * 32, row * 32);
+}
+
+
+
+int main() {
+
+
+	game cg;
+	enemy& Son = cg.getMap().getEnemy();
+	vector<sf::Vector2f> _p =  Son.getP();
+
+	//std::vector<sf::Vector2f> path;
+
+	//for (int i = 0; i < 100; i++) {
+	//	cout << _p[i].getX() << " " << _p[i].getY() << endl;
+	//}
+
+	//point a[100] = { {0,10,0}, {1,10,1} ,  {2,10,2} , {3,10,3}
+	//, {3,9,3},{3,8,3},{3,7,3},{3,6,3},{3,5,3},{3,4,3},
+	//{4,4,3},{5,4,3},{6,4,3},{7,4,3},{8,4,3},{9,4,3}
+	//, { 9,5,3 }, { 9,6,3 },{ 9,7,3 },{ 9,8,3 },{ 9,9,3 },{ 9,10,3 }, { 9,11,3 },{ 9,12,3 },
+	//{ 10,12,3 },{ 11,12,3 },{ 12,12,3 },{ 13,12,3 },{ 14,12,3 },{ 15,12,3 },
+	//{ 15,11,3 },{ 15,10,3 },{ 15,9,3 },{ 15,8,3 },
+	//	{ 16,8,3 },{ 17,8,3 },{ 18,8,3 },{ 19,8,3 },{ 20,8,3 },{ 21,8, 3 },{ 22,8,3 },{ 23,8,3 },{ 24, 8,3 },{ 25,8,3 }
+
+
+	//};
+
+
+
+	//for (int i = 0; i < 44; i++) {
+	//	path.emplace_back(toSFMLPosition(a[i].getY() , a[i].getX()));
+	//}
+
+	//for (int i = 0; i < 44; i++) {
+	//	cout << path[i].x << " " << path[i].y << endl;
+	//}
+
+
+	float totalTime = 0.f;
+
+
+	sf::Clock clock;  // đặt ngoài vòng lặp
+
+	int currentTarget = 1; // điểm đích tiếp theo
+	float speed = 100.f;   // pixels per second
+
+	sf::Vector2f velocity(0.f, 0.f);
+
+	sf::Texture p;
+
+	if (!p.loadFromFile("Texture/cir.png")) {
+		return -1;
+	}
+
+
+	sf::Texture mapTexture;
+	if (!mapTexture.loadFromFile("Texture/map1.png")) {
+		return -1;
+	}
+	sf::Sprite enemySprite(p);
+	enemySprite.setScale({ 0.1, 0.1 });
+	enemySprite.setPosition({ _p[0].x, _p[0].y });
+
+	sf::Sprite mapSprite(mapTexture);
+
+
+	sf::RenderWindow window(sf::VideoMode({ 800, 600 }), "GAME");
+	sf::Vector2u textureSize = mapTexture.getSize();
+	sf::Vector2u windowSize = window.getSize();
+
+	float scaleX = (float)windowSize.x / textureSize.x;
+	float scaleY = (float)windowSize.y / textureSize.y;
+	mapSprite.setScale({ scaleX, scaleY });
+
+	//for (int i = 0; i < _p.size(); i++) {
+	//	cout << _p[i].x << " " << _p[i].y << endl;
+	//}
+
+	while (window.isOpen())
+	{
+		sf::Time dt = clock.restart();
+		float delta = dt.asSeconds();
+
+
+		while (const std::optional event = window.pollEvent()) {
+
+			if (event->is<sf::Event::Closed>()) {
+				window.close();
+			}
+		}
+
+
+		/* Di chuyển enemy về phía điểm hiện tại*/
+		if (currentTarget < _p.size())
+		{
+			sf::Vector2f currentPos = enemySprite.getPosition();
+		sf::Vector2f targetPos = _p[currentTarget];
+		
+			sf::Vector2f direction = targetPos - currentPos;
+			float distance = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+		
+			if (distance > 1.f)
+			{
+				direction /= distance; // chuẩn hóa vector
+				enemySprite.move(direction * speed * delta);
+			}
+		else
+		{
+				enemySprite.setPosition(targetPos); // đến nơi
+				currentTarget++;
+			}
+		}
+
+	// Vẽ
+		window.clear();
+		window.draw(mapSprite);
+		window.draw(enemySprite);
+		window.display();
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+//int main() {
+//
+//	cin.get();
+//	tool::ShowConsoleCursor(false);
+//	game cg;
+//	cg.startGame();
+//
+//	thread t1(ThreadFunc2, std::ref(cg));
+//	thread t2(ThreadFunc1, std::ref(cg));
+//	t1.join();
+//	t2.join();
+//
+//	tool::GotoXY(0, 20);
+//	return 0;
+//}
+
+//void ThreadFunc2(game& cg) {//Xử lý viên đạn
+//	int i = 0;
+//	enemy& e = cg.getMap().getEnemy(); //Lấy con enemy ra
+//	point _ENEMY;
+//	bullet& b = cg.getMap().getTower().getBullet(); //Lấy cái viên đạn ra
+//
+//	int _SPEED = b.getSpeed(), _NBULLET = b.getN();
+//	point* _BULLET1_P = b.getP();
+//	point _BULLET1 = b.getCurr();
+//
+//	while (!cg.getIsExist1()) {
+//		tool::Draw((char*)"o", i, _BULLET1_P, _BULLET1);
+//		b.setCurr(_BULLET1);
+//		_ENEMY = e.getCurr();
+//
+//		if (_BULLET1.getX() == _ENEMY.getX() && _BULLET1.getY() == _ENEMY.getY()) {
+//			tool::Draw((char*)" ", i, _BULLET1_P, _BULLET1);
+//			cg.setIsExist1(true);
+//			break;
+//		}
+//		else i++;
+//		Sleep(1000 / _SPEED);
+//		tool::Draw((char*)" ", i - 1, _BULLET1_P, _BULLET1);
+//		if (i == _NBULLET)i = 0;
+//
+//	}
+//	cg.setIsExist2(true);
+//}
+
+//void ThreadFunc1(game& cg) {//Xử lý enemy
+//	int i = 0;
+//	enemy& e = cg.getMap().getEnemy();
+//	point _ENEMY = e.getCurr(), _END = e.getEnd(); int SPEED = e.getSpeed();
+//
+//	point* _p = e.getP(); //Lấy cái map đi của con enemy
+//	bullet& b = cg.getMap().getTower().getBullet(); // Lấy viên đạn
+//	point _BULLET1;
+//
+//	while (!cg.getIsExist1()) {
+//		tool::Draw((char*)"K", i, _p, _ENEMY);
+//		e.setCurr(_ENEMY);
+//		_BULLET1 = b.getCurr();
+//
+//		if (_ENEMY.getX() == _END.getX() && _ENEMY.getY() == _END.getY()) {
+//			break;
+//		}
+//		else if (_ENEMY.getX() == _BULLET1.getX() && _ENEMY.getY() == _BULLET1.getY()) {
+//			tool::Draw((char*)" ", i, _p, _ENEMY);
+//			break;
+//		}
+//		else i++;
+//		Sleep(1000 / SPEED);
+//		tool::Draw((char*)" ", i - 1, _p, _ENEMY);
+//	}
+//	cg.setIsExist1(true);
+//}
