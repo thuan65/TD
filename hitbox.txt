@@ -1,0 +1,106 @@
+// ThuNghiem.cpp : This file contains the 'main' function. Program execution begins and ends there.
+//
+
+#include <iostream>
+#include "SFML\Graphics.hpp"
+#include "SFML/Window/Mouse.hpp"
+#include <random>
+
+float length(const sf::Vector2f rVector) {
+	return float(sqrt(rVector.x * rVector.x + rVector.y * rVector.y));
+}
+
+sf::Vector2f Normalize(const sf::Vector2f rVector) {
+	float length = sqrt(rVector.x * rVector.x + rVector.y * rVector.y);
+	return sf::Vector2f(rVector.x / length, rVector.y / length);
+}
+
+int main()
+{
+	sf::RenderWindow window(sf::VideoMode({ 800,600 }), "SFML");
+	
+	sf::Texture PlayerTexture;
+	if (!PlayerTexture.loadFromFile("Pic\\2 Objects\\9 Bush\\1.png")) {
+		return -1;
+	}
+
+	sf::Sprite Player(PlayerTexture);
+	sf::Sprite thing(PlayerTexture);
+
+	sf::Texture EnemyTexture;
+	if (!EnemyTexture.loadFromFile("Pic\\2 Objects\\8 Camp\\1.png")) {
+		return -1;
+	}
+
+	sf::Sprite Enem(EnemyTexture);
+
+	Player.setOrigin({13,13});
+
+	thing.setOrigin({ 13,13 });
+	Enem.setPosition({ 400, 300 });
+
+	sf::Clock clock;
+
+	sf::Vector2f vRequestedPlayerMovement({ 0.0f, 0.0f });
+
+	while (window.isOpen()) {
+		sf::Vector2i mo = sf::Mouse::getPosition(window);
+	
+	
+
+		while (const std::optional event = window.pollEvent()) {
+			if (event->is<sf::Event::Closed>())
+				window.close();
+		}
+	
+		sf::Time timef = clock.restart();
+
+		
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::W)) {
+
+			vRequestedPlayerMovement += sf::Vector2f{ 0.0f, -0.1f };
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::S)) {
+			vRequestedPlayerMovement += sf::Vector2f{ 0.0f, 0.1f };
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::A)) {
+			vRequestedPlayerMovement += sf::Vector2f{ -0.1f, 0.0f };
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::D)) {
+			vRequestedPlayerMovement += sf::Vector2f{ 0.1f, 0.0f };
+		}
+		Player.move(vRequestedPlayerMovement * timef.asSeconds());
+
+
+	
+		sf::Vector2f fromPlayertoThing = (sf::Vector2f)mo - vRequestedPlayerMovement;
+		
+		sf::Vector2f AlreadyNormalized = Normalize(fromPlayertoThing);
+
+		sf::Vector2f AxeToEnemy = Enem.getPosition() - thing.getPosition();
+
+		sf::Vector2f EnemyToPlayer = Player.getPosition() - Enem.getPosition();
+		sf::Vector2f NormalizedEnemyToPlayer = Normalize(EnemyToPlayer);
+		Enem.move(NormalizedEnemyToPlayer * timef.asSeconds());
+
+
+		thing.setPosition(Player.getPosition() + AlreadyNormalized * 13.0f);
+		float lengthFromEnemytoAxe = length(AxeToEnemy);
+
+		if (lengthFromEnemytoAxe < 32.0f) {
+			sf::Vector2i vNewPostion = { std::rand() % 800, std::rand() % 600 };
+			Enem.setPosition((sf::Vector2f)vNewPostion);
+		}
+
+		window.clear();
+		window.draw(Enem);
+		window.draw(Player);
+		window.draw(thing);
+		window.display();
+
+	}
+
+
+
+}
