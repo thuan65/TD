@@ -26,6 +26,7 @@ bool map::ReadFile(std::string fileName) {
 	int row, col;
 	fin >> row >> col;
 
+	_m.resize(row, std::vector<point>(col));
 	for (int i = 0; i < row; ++i) {
 		for (int j = 0; j < col; ++j) {
 			int c;

@@ -14,7 +14,7 @@ public:
 	point() { x = y = c = 0; }
 	point(int tx, int ty, int tc) { x = tx, y = ty, c = tc; }
 	int getX() { return x; }
-	int getY() { return y; }
+	int getY()  { return y; }
 	int getC() { return c; }
 	void setC(int tc) { c = tc; }
 	static point fromXYtoRowCol(point v);

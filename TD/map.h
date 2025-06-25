@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include "SFML\Graphics.hpp"
+#include <vector>
 #include "tool.h"
 #include "enemy.h"
 #include "tower.h"
@@ -14,7 +15,7 @@ class map {
 private:
 
 	//Matrix map
-	point _m[point::TileSize][point::TileSize];
+	std::vector<std::vector<point>> _m;
 
 
 	//////////////////Texture///////////////////////////////////
@@ -41,6 +42,10 @@ public:
 	void drawMap(sf::RenderWindow& window);
 
 	void setTotalFrame(int rFrameNum) { totalFrame = rFrameNum; }
+	vector<vector<point>> getMap(){
+		return _m;
+	}
+
 
 
 };

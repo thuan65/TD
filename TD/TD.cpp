@@ -1,5 +1,6 @@
 ﻿#include "game.h"
 #include "SFML\Graphics.hpp"
+#include "PathFinder.h"
 #include <thread>
 #include <iostream>
 
@@ -15,21 +16,42 @@ float Vector_Length(sf::Vector2f rVector) {
 int main() {
 
 	map cmap;
+	vector<vector<point>> _m = cmap.getMap();
+	
+	point s = { 1,0,0 }, e = { 8 , 15 ,0 };
+
+	PathFinder::setStart(s);
+	PathFinder::setEnd(e);
+	PathFinder::setCurr({0,0,0});
+
+	PathFinder::findPath(_m, s,e);
+	
+	vector<sf::Vector2f> _path = PathFinder::getPath();
+
+	//for (int i = 0; i < _path.size(); i++) {
+	//	cout << _path[i].x << " " << _path[i].y << std::endl;
+	//}
+
+	enemy enemy1(_path);
+
 
 	sf::RenderWindow window(sf::VideoMode({ 540, 360 }), "GAME");
 	sf::Clock clock;
 
+
+
 	while (window.isOpen()) {
-		sf::Time time = clock.getElapsedTime();
-
-
-
+		sf::Time time = clock.restart();
 		float Second = time.asSeconds();
 
+		enemy1.Update(Second);
 		cmap.Update(Second);
+
+		
 
 		window.clear();
 		cmap.drawMap(window);
+		enemy1.draw(window);
 		window.display();
 
 	}

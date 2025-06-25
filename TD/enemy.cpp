@@ -2,79 +2,82 @@
 
 //Default constructer
 enemy::enemy() {
-	//for (int i = 0; i < point::MAP_SIZE * point::MAP_SIZE; i++) {
-	//	_p[i] = { 0,0,0 };//Initialize cho cái đường đi
-	//}
+	setTotalFrame(3);//3 frame for now
+	LoadTexture();
+	sprite.emplace_back(textures[0]);
+	sprite[0].setScale({ 0.08, 0.08 });
+	sprite[0].setOrigin({ 16, 16 });
 
-	dd[0] = -1; dd[1] = 0; dd[2] = 1; dd[3] = 0;
-
-	dc[0] = 0; dc[1] = -1; dc[2] = 0; dc[3] = 1;
-
-	_start = _end = _curr = { 0, 0, 0 };
 	_speed = 3;
-
-		//Hướng		dd[i]	dc[i]	Di chuyển
-		//Lên		 -1		  0		Giảm hàng
-		//Trái		  0		 -1		Giảm cột
-		//Xuống	      1		  0		Tăng hàng
-		//Phải		  0		  1		Tăng cột
 }
 
 enemy::enemy(const vector<sf::Vector2f>& _rpath)
 {
 	_path = _rpath;
+	setTotalFrame(3);//3 frame for now
+	LoadTexture();
+	sprite.emplace_back(textures[0]);
+	sprite[0].setPosition(_path[currentWayPoint]);
+	//sprite[0].setOrigin({ 16, 16 });
+	
 }
 
-enemy::enemy(point tstart, point tend, point tcurr) : enemy() {
-	_start = tstart;
-	_end = tend;
-	_curr = tcurr;
+//enemy::enemy(point tstart, point tend, point tcurr) : enemy() {
+//	_start = tstart;
+//	_end = tend;
+//	_curr = tcurr;
+//}
+
+void enemy::LoadTexture() {
+	textures.resize(totalFrame);
+	textures[0].loadFromFile("Pic\\3enemy\\MageSleame\\Mage Sleame1.png");
+	textures[1].loadFromFile("Pic\\3enemy\\MageSleame\\Mage Sleame2.png");
+	textures[2].loadFromFile("Pic\\3enemy\\MageSleame\\Mage Sleame3.png");
 }
 
-
-void enemy::calcPath(int a[][point::MAP_SIZE], int sizeOfTheMap, point s, point e, int step) {
-	a[s.getX()][s.getY()] = step;
-
-	//B2: check thuat toan DFS hoan thanh? (if yes) luu _path cho enemy
-	if (s.getX() == e.getX() && s.getY() == e.getY()) {
-		int k = 1;
-		while (k <= step) {
-			for (int i = 0; i < point::MAP_SIZE; i++) {
-				for (int j = 0; j < point::MAP_SIZE; j++) {
-					if (a[i][j] == k) {
-						_path.emplace_back(sf::Vector2f{ (float)j, (float)i }); //(X,Y) 
-						goto Nhan;
-					}
-				}
-
-			}
-		Nhan: k++;
-		}
-		return;
-	}
-
-	//B1:
-	for (int i = 0; i < 4; i++) {
-		int dmoi = dd[i] + s.getX(), cmoi = dc[i] + s.getY();
-		if (dmoi >= 0 && dmoi < sizeOfTheMap && cmoi >= 0 && cmoi < sizeOfTheMap && a[dmoi][cmoi] == 0) {//Do để kiếm đường
-			calcPath(a, sizeOfTheMap, { dmoi, cmoi, 0 }, e, step + 1);
-		}
-	}
-	a[s.getX()][s.getY()] = 0;
+void enemy::Update(float deltaTime)
+{
+	move(deltaTime);
+	animate(deltaTime);
 }
 
-//B1: tạo ra được một cái bảng đường đi (DFS)
-//B2: sau khi chắc được đường đi của đối tượng thì bắt đầu chuyển qua _p cho cái đường đi của đối tượng enemy này
+void enemy::draw(sf::RenderWindow& window)
+{
+	window.draw(sprite[0]);
+}
 
-void enemy::findPath(point a[][point::MAP_SIZE], point s, point e) {
-	int ta[point::MAP_SIZE][point::MAP_SIZE]; //Bang chứa cái thuộc tính của thứ nằm trên map
+void enemy::move(float deltaTime)
+{
+	//sf::Vector2f s = sprite[0].getPosition();
+	//std::cout << s.x << " " << s.y << "\n";
+	//std::cin.get();
 
-	for (int i = 0; i < point::MAP_SIZE; i++) {
-		for (int j = 0; j < point::MAP_SIZE; j++) {
-			ta[i][j] = a[i][j].getC();
-		}
+	if (currentWayPoint >= _path.size()) return;
+
+	sf::Vector2f currentPosition = sprite[0].getPosition();
+	sf::Vector2f TargetPosition = _path[currentWayPoint]; //The next point it need to go to
+
+	sf::Vector2f direction = TargetPosition - currentPosition;
+
+	float distance = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+
+	if (distance > 1.0f) {
+		direction /= distance;
+		sprite[0].move(direction * speed * deltaTime);
 	}
-	s = point::fromXYtoRowCol(s);
-	e = point::fromXYtoRowCol(e);
-	calcPath(ta, point::MAP_SIZE, s, e);
+	else {
+		sprite[0].setPosition(TargetPosition);
+		currentWayPoint++;
+	}
+}
+
+void enemy::animate(float deltaTime)
+{
+	timeSinceLastFrame += deltaTime;
+	if (timeSinceLastFrame >= frameTime) {
+		currentFrame = (currentFrame + 1) % totalFrame;
+		
+		sprite[0].setTexture(textures[currentFrame]);
+		timeSinceLastFrame = 0.0F;
+	}
 }

@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "point.h"
-#include "SFML\Graphics.hpp"
 #include <vector>
+#include "SFML\Graphics.hpp"
 
 class PathFinder {
 	PathFinder() {};
@@ -25,10 +25,10 @@ public:
 		_curr = tcurr;
 	}
 
-	static void findPath(point[][point::MAP_SIZE], point, point);
+	static void findPath(std::vector<std::vector<point>>, point, point);
 	static const std::vector<sf::Vector2f>& getPath() { return _path; }
 private:
-	static void calcPath(int[][point::MAP_SIZE], int, point, point, int = 1);
+	static void calcPath(std::vector<std::vector<int>>, int, point, point, int = 1);
 
 };
 
