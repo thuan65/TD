@@ -6,6 +6,6 @@ game::game(){
 
 void game::startGame() {
 	system("cls");
-	_map.drawMap();
+
 }
 

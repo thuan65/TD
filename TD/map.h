@@ -1,26 +1,47 @@
 ﻿#pragma once
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include "SFML\Graphics.hpp"
 #include "tool.h"
 #include "enemy.h"
 #include "tower.h"
 
-class map{
+class map {
 
 private:
-	enemy _e;
-	tower _tw;
 
 	//Matrix map
-	point _m[point::MAP_SIZE][point::MAP_SIZE];
+	point _m[point::TileSize][point::TileSize];
+
+
+	//////////////////Texture///////////////////////////////////
+	int totalFrame = 0;
+	float frameTime = 0.3F; // 1frame/2 second
+	float timeSinceLastFrame = 0.0F;
+	int currentFrame = 0;
+
+	std::vector<sf::Texture> mapTexture;
+	std::vector<sf::Sprite> mapSprite;
+
+	void LoadTexture();
+	void animate(float);
+	///////////////////////////////////////////////////////////
 
 public:
 	map();
 	// -1 là tường, 0 là trống, 1 là tower
-	void resetMapData();
+	//void resetMapData();
 	void makeMapData();
-	void drawMap();
+	bool ReadFile(std::string fileName);
 
-	enemy& getEnemy() { return _e; }
-	tower& getTower() { return _tw; }
+	void Update(float);
+	void drawMap(sf::RenderWindow& window);
+
+	void setTotalFrame(int rFrameNum) { totalFrame = rFrameNum; }
+
 
 };
 

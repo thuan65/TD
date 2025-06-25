@@ -2,9 +2,9 @@
 
 //Default constructer
 enemy::enemy() {
-	for (int i = 0; i < point::MAP_SIZE * point::MAP_SIZE; i++) {
-		_p[i] = { 0,0,0 };//Initialize cho cái đường đi
-	}
+	//for (int i = 0; i < point::MAP_SIZE * point::MAP_SIZE; i++) {
+	//	_p[i] = { 0,0,0 };//Initialize cho cái đường đi
+	//}
 
 	dd[0] = -1; dd[1] = 0; dd[2] = 1; dd[3] = 0;
 
@@ -20,27 +20,33 @@ enemy::enemy() {
 		//Phải		  0		  1		Tăng cột
 }
 
+enemy::enemy(const vector<sf::Vector2f>& _rpath)
+{
+	_path = _rpath;
+}
+
 enemy::enemy(point tstart, point tend, point tcurr) : enemy() {
 	_start = tstart;
 	_end = tend;
 	_curr = tcurr;
 }
 
+
 void enemy::calcPath(int a[][point::MAP_SIZE], int sizeOfTheMap, point s, point e, int step) {
 	a[s.getX()][s.getY()] = step;
 
-	//B2:
+	//B2: check thuat toan DFS hoan thanh? (if yes) luu _path cho enemy
 	if (s.getX() == e.getX() && s.getY() == e.getY()) {
 		int k = 1;
 		while (k <= step) {
 			for (int i = 0; i < point::MAP_SIZE; i++) {
 				for (int j = 0; j < point::MAP_SIZE; j++) {
 					if (a[i][j] == k) {
-						_p[k - 1] = { i,j, 0 };
+						_path.emplace_back(sf::Vector2f{ (float)j, (float)i }); //(X,Y) 
 						goto Nhan;
 					}
 				}
-			
+
 			}
 		Nhan: k++;
 		}
@@ -48,13 +54,13 @@ void enemy::calcPath(int a[][point::MAP_SIZE], int sizeOfTheMap, point s, point 
 	}
 
 	//B1:
-		for (int i = 0; i < 4; i++) {
-			int dmoi = dd[i] + s.getX(), cmoi = dc[i] + s.getY();
-			if (dmoi >= 0 && dmoi < sizeOfTheMap && cmoi >= 0 && cmoi < sizeOfTheMap && a[dmoi][cmoi] == 0) {//Do để kiếm đường
-				calcPath(a, sizeOfTheMap, { dmoi, cmoi, 0 }, e, step + 1);
-			}
+	for (int i = 0; i < 4; i++) {
+		int dmoi = dd[i] + s.getX(), cmoi = dc[i] + s.getY();
+		if (dmoi >= 0 && dmoi < sizeOfTheMap && cmoi >= 0 && cmoi < sizeOfTheMap && a[dmoi][cmoi] == 0) {//Do để kiếm đường
+			calcPath(a, sizeOfTheMap, { dmoi, cmoi, 0 }, e, step + 1);
 		}
-		a[s.getX()][s.getY()] = 0;
+	}
+	a[s.getX()][s.getY()] = 0;
 }
 
 //B1: tạo ra được một cái bảng đường đi (DFS)

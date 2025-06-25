@@ -5,6 +5,8 @@ public:
 	const static int LEFT = 3;
 	const static int TOP = 1;
 
+	const static int TileSize = 32;
+
 private:
 	int x, y, c;
 

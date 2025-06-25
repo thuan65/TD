@@ -135,6 +135,7 @@
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="map.cpp" />
+    <ClCompile Include="PathFinder.cpp" />
     <ClCompile Include="point.cpp" />
     <ClCompile Include="TD.cpp" />
     <ClCompile Include="tool.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="enemy.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="map.h" />
+    <ClInclude Include="PathFinder.h" />
     <ClInclude Include="point.h" />
     <ClInclude Include="tool.h" />
     <ClInclude Include="tower.h" />
