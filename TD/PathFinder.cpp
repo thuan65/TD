@@ -1,7 +1,5 @@
 ﻿#include "PathFinder.h"
 
-#include <iostream>
-
 //Hướng		dd[i]	dc[i]	Di chuyển
 //Lên		 -1		  0		Giảm hàng
 //Trái		  0		 -1		Giảm cột
@@ -18,7 +16,7 @@ std::vector<sf::Vector2f> PathFinder::_path;
 int PathFinder::dd[4] = { -1, 0, 1, 0 };
 int PathFinder::dc[4] = { 0, -1, 0, 1 };
 
-void PathFinder::findPath(std::vector<std::vector<point>> a, point s, point e) {
+void PathFinder::findPath(std::vector<std::vector<point>> a) {
 	_path.clear();
 
 	//Bang chứa cái thuộc tính của thứ nằm trên map
@@ -31,9 +29,9 @@ void PathFinder::findPath(std::vector<std::vector<point>> a, point s, point e) {
 			ta[i][j] = a[i][j].getC();
 		}
 	}
-
-	//s = point::fromXYtoRowCol(s);
-	//e = point::fromXYtoRowCol(e);
+	point s, e;
+	s = _start;
+	e = _end;
 
 	calcPath(ta, point::MAP_SIZE, s, e);
 }

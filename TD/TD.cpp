@@ -1,5 +1,6 @@
 ﻿#include "game.h"
-#include "SFML\Graphics.hpp"
+#include <SFML/Graphics.hpp>
+#include "Resource_Management.h"
 #include "PathFinder.h"
 #include <thread>
 #include <iostream>
@@ -22,17 +23,13 @@ int main() {
 
 	PathFinder::setStart(s);
 	PathFinder::setEnd(e);
-	PathFinder::setCurr({0,0,0});
+	PathFinder::setCurr({0,0,0});//change this later
 
-	PathFinder::findPath(_m, s,e);
+	PathFinder::findPath(_m);//put this in some other map
 	
 	vector<sf::Vector2f> _path = PathFinder::getPath();
 
-	//for (int i = 0; i < _path.size(); i++) {
-	//	cout << _path[i].x << " " << _path[i].y << std::endl;
-	//}
-
-	enemy enemy1(_path);
+	enemy enemy1(Resource_Management::getTexture("Mage_Sleame"), _path);
 
 
 	sf::RenderWindow window(sf::VideoMode({ 540, 360 }), "GAME");

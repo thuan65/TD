@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "point.h"
-#include "SFML\Graphics.hpp"
+#include <SFML/Graphics.hpp>
 #include <vector>
 #include <iostream>
 
@@ -9,37 +9,33 @@ using namespace std;
 class enemy
 {
 private:
+
+	std::vector<sf::Texture> textures;
+	sf::Sprite Enemysprite;
+
+
 	//Atribute of enemy
 	int _speed;
 	//int _health;
 
-	/*point _start, _end, _curr;*/
-	std::vector<sf::Sprite> sprite;
-
 	//Mảng đường đi của con enemy đã tính trước
 	vector<sf::Vector2f> _path;
 
-	//Animation
-	std::vector<sf::Texture> textures;
+	////////////Animation_helper//////////
 	int currentWayPoint = 0;
-
 	int currentFrame = 0;
 	float speed = 50.0F;
 	float frameTime = 0.5F;
 	float timeSinceLastFrame = 0.0F;
 	int totalFrame = 4;
 
+	/*point _start, _end, _curr;*/// Delete later
 
-	int dd[4], dc[4];
 public:
-	enemy();
-	enemy(const vector<sf::Vector2f>& _rpath);
-	//enemy(point tstart, point tend, point tcurr);
+	//enemy();
+	enemy(const std::vector<sf::Texture>& ,const vector<sf::Vector2f>& _rpath);
 	
 	vector<sf::Vector2f> getP() { return _path; }
-	//point getStart() { return _start; }
-	//point getEnd() { return _end; }
-	//point getCurr() { return _curr; }
 	int getSpeed() { return _speed; }
 	
 	void setSeed(int tspeed) {
