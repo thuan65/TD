@@ -4,29 +4,29 @@ bullet::bullet() {
 	_n = 0; 
 	_speed = 4;
 	curr = { 0, 0,0 };
-	for (int i = 0; i < point::MAP_SIZE * point::MAP_SIZE; i++) {
+	for (int i = 0; i < point::Map_Game_SIZE * point::Map_Game_SIZE; i++) {
 		_p[i] = { 0,0,0, };
 	}
 
-	for(int i = 0; i < point::MAP_SIZE; i++) {
-		for (int j = 0; j < point::MAP_SIZE; j++) {
+	for(int i = 0; i < point::Map_Game_SIZE; i++) {
+		for (int j = 0; j < point::Map_Game_SIZE; j++) {
 			_m[i][j] = { 0,0,0 };
 		}
 	}
 }
 
-void bullet::UpdateMap(int i, int j, point v) {
+void bullet::UpdateMap_Game(int i, int j, point v) {
 	// we have some if() here
 	_m[i][j] = v;
 }
 
 //Lấy cái vị trí tiếp theo mà viên đạn bay
 int bullet::queryCFromRowCol(int row, int col) {
-	if (row < 0 || row >= point::MAP_SIZE || col < 0 || col >= point::MAP_SIZE) return -2;
+	if (row < 0 || row >= point::Map_Game_SIZE || col < 0 || col >= point::Map_Game_SIZE) return -2;
 	//Nếu không hợp lệ thì trả về -2
 
-	for (int i = 0; i < point::MAP_SIZE; i++) {
-		for (int j = 0; j < point::MAP_SIZE; j++) {
+	for (int i = 0; i < point::Map_Game_SIZE; i++) {
+		for (int j = 0; j < point::Map_Game_SIZE; j++) {
 			point tmp = point::fromXYtoRowCol(_m[i][j]);
 			if (tmp.getX() == row && tmp.getY() == col) {
 				return _m[i][j].getC();
@@ -46,7 +46,7 @@ int bullet::calcPathBullet(point tower) {
 			i += 2;
 		}
 		else break;
-	} while (i < point::MAP_SIZE);
+	} while (i < point::Map_Game_SIZE);
 	_n = i;
 	for (i = 1; i < _n; i +=2) {
 		_p[i] = { _p[i - 1].getX() + 2, _p[i - 1].getY() - 1, 0 };

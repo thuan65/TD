@@ -1,4 +1,5 @@
 ﻿#include "game.h"
+#include "WaveManager.h"
 #include <SFML/Graphics.hpp>
 #include "Resource_Management.h"
 #include "PathFinder.h"
@@ -16,39 +17,57 @@ float Vector_Length(sf::Vector2f rVector) {
 
 int main() {
 
-	map cmap;
-	vector<vector<point>> _m = cmap.getMap();
+	mapTowerDefense_Game cMap_Game(Resource_Management::getTexture("Map_Game1"));
+	vector<vector<point>> _Map_GameLogic = cMap_Game.getMap_Game();
 	
 	point s = { 1,0,0 }, e = { 8 , 15 ,0 };
-
-	PathFinder::setStart(s);
-	PathFinder::setEnd(e);
-	PathFinder::setCurr({0,0,0});//change this later
-
-	PathFinder::findPath(_m);//put this in some other map
+	PathFinder::setStart(s); PathFinder::setEnd(e);
+	PathFinder::findPath(_Map_GameLogic);//put this in some other Map_Game
 	
 	vector<sf::Vector2f> _path = PathFinder::getPath();
-
-	enemy enemy1(Resource_Management::getTexture("Mage_Sleame"), _path);
-
+	enemy enemy1(Resource_Management::getTexture("Knight_Sleame"), _path);
+	mapTowerDefense_Game tower1(Resource_Management::getTexture("Tower1"));
 
 	sf::RenderWindow window(sf::VideoMode({ 540, 360 }), "GAME");
 	sf::Clock clock;
 
-
+	WaveManager wave1;
 
 	while (window.isOpen()) {
+
+		if (const std::optional event = window.pollEvent()) {
+			if (event->is<sf::Event::Closed>()) {
+				window.close();
+			}
+		}
+
 		sf::Time time = clock.restart();
 		float Second = time.asSeconds();
 
-		enemy1.Update(Second);
-		cmap.Update(Second);
+		//if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+		//	sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
+		//	sf::Vector2f ReadlCord = window.Map_GamePixelToCoords(pixelPos);
 
-		
+		//	int row = ReadlCord.y / point::TileSize;
+		//	int col = ReadlCord.x / point::TileSize;
+		//	if (row >= 0 && row < _Map_GameLogic.size() && col >= 0 && col < _Map_GameLogic[0].size()) {
+		//		//std::cout << "Row: " << row << " " << "Col: " << col << "\n";
+		//		if (_Map_GameLogic[row][col].getC() == -2) {
+		//			tower1.setLocation({ col,row,0 });
+	
+		//		}
+		//	}
+
+		//}
+
+	
+		cMap_Game.Update(Second);
 
 		window.clear();
-		cmap.drawMap(window);
-		enemy1.draw(window);
+		cMap_Game.draw(window);
+		tower1.draw(window);
+		wave1.update(Second, window);
+
 		window.display();
 
 	}
@@ -62,7 +81,7 @@ int main() {
 //game cg;
 ///*cg.startGame();*/
 //
-//enemy& EnemyS = cg.getMap().getEnemy();
+//enemy& EnemyS = cg.getMap_Game().getEnemy();
 //point* p = EnemyS.getP();
 //
 //
@@ -81,9 +100,9 @@ int main() {
 
 //void ThreadFunc2(game& cg) {//Xử lý viên đạn
 //	int i = 0;
-//	enemy& e = cg.getMap().getEnemy(); //Lấy con enemy ra
+//	enemy& e = cg.getMap_Game().getEnemy(); //Lấy con enemy ra
 //	point _ENEMY;
-//	bullet& b = cg.getMap().getTower().getBullet(); //Lấy cái viên đạn ra
+//	bullet& b = cg.getMap_Game().getTower().getBullet(); //Lấy cái viên đạn ra
 //
 //	int _SPEED = b.getSpeed(), _NBULLET = b.getN();
 //	point* _BULLET1_P = b.getP();
@@ -110,11 +129,11 @@ int main() {
 
 //void ThreadFunc1(game& cg) {//Xử lý enemy
 //	int i = 0;
-//	enemy& e = cg.getMap().getEnemy();
+//	enemy& e = cg.getMap_Game().getEnemy();
 //	point _ENEMY = e.getCurr(), _END = e.getEnd(); int SPEED = e.getSpeed();
 //
-//	point* _p = e.getP(); //Lấy cái map đi của con enemy
-//	bullet& b = cg.getMap().getTower().getBullet(); // Lấy viên đạn
+//	point* _p = e.getP(); //Lấy cái Map_Game đi của con enemy
+//	bullet& b = cg.getMap_Game().getTower().getBullet(); // Lấy viên đạn
 //	point _BULLET1;
 //
 //	while (!cg.getIsExist1()) {

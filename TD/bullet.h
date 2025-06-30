@@ -5,14 +5,14 @@ class bullet
 {
 	//_n là độ dài đường đi (số phần tử trong mảng _p)
 	int _n, _speed; //_n is the number of point for the bullet (số lượng phần tử cho bản đồ mà viên đạn đi)
-	point _p[point::MAP_SIZE * point::MAP_SIZE];//Bản đồ mà viên đạn đi
+	point _p[point::Map_Game_SIZE * point::Map_Game_SIZE];//Bản đồ mà viên đạn đi
 
-	point _m[point::MAP_SIZE][point::MAP_SIZE]; //bản đồ mà viên đạn đang sử dụng trong trục x,y
+	point _m[point::Map_Game_SIZE][point::Map_Game_SIZE]; //bản đồ mà viên đạn đang sử dụng trong trục x,y
 	point curr; //vị trí hiện tại của viên đạn
 
 public:
 	bullet();
-	void UpdateMap(int, int, point);
+	void UpdateMap_Game(int, int, point);
 
 	point getCurr() { return curr; }
 
@@ -22,7 +22,7 @@ public:
 	int getN() { return _n; }
 
 	void setCurr(point tcurr) {
-		//if sẽ có một if để check điều kiện của viên đạn (bay ra khỏi map...)
+		//if sẽ có một if để check điều kiện của viên đạn (bay ra khỏi Map_Game...)
 		curr = tcurr;
 	}
 	

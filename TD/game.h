@@ -1,9 +1,9 @@
 #pragma once
-#include "map.h"
+#include "mapTowerDefense_Game.h"
 
 class game {
 private:
-	map _map;
+	//Map_Game _Map_Game;
 	bool _ISEXIT1, _ISEXIT2;
 
 public:
@@ -13,7 +13,7 @@ public:
 
 	void setIsExist1(bool b) { _ISEXIT1 = b; }
 	void setIsExist2(bool b) { _ISEXIT2 = b; }
-	map& getMap() { return _map; }
+	/*Map_Game& getMap_Game() { return _Map_Game; }*/
 	void startGame();
 };
 

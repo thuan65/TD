@@ -1,4 +1,5 @@
 ﻿#include "PathFinder.h"
+#include <iostream>
 
 //Hướng		dd[i]	dc[i]	Di chuyển
 //Lên		 -1		  0		Giảm hàng
@@ -19,7 +20,7 @@ int PathFinder::dc[4] = { 0, -1, 0, 1 };
 void PathFinder::findPath(std::vector<std::vector<point>> a) {
 	_path.clear();
 
-	//Bang chứa cái thuộc tính của thứ nằm trên map
+	//Bang chứa cái thuộc tính của thứ nằm trên Map_Game
 	std::vector<std::vector<int>> ta;
 
 	ta.resize(a.size(), std::vector<int>(a[0].size()));
@@ -33,13 +34,13 @@ void PathFinder::findPath(std::vector<std::vector<point>> a) {
 	s = _start;
 	e = _end;
 
-	calcPath(ta, point::MAP_SIZE, s, e);
+	calcPath(ta, point::Map_Game_SIZE, s, e);
 }
 
 //B1: tạo ra được một cái bảng đường đi (DFS)
 //B2: sau khi chắc được đường đi của đối tượng thì bắt đầu chuyển qua _p cho cái đường đi của đối tượng enemy này
 
-void PathFinder::calcPath(std::vector<std::vector<int>> a, int sizeOfTheMap, point s, point e, int step) {
+void PathFinder::calcPath(std::vector<std::vector<int>> a, int sizeOfTheMap_Game, point s, point e, int step) {
 	a[s.getX()][s.getY()] = step;
 
 	//B2: check thuat toan DFS hoan thanh? (if yes) luu _path cho enemy
@@ -65,7 +66,7 @@ void PathFinder::calcPath(std::vector<std::vector<int>> a, int sizeOfTheMap, poi
 	for (int i = 0; i < 4; i++) {
 		int dmoi = dd[i] + s.getX(), cmoi = dc[i] + s.getY();
 		if (dmoi >= 0 && dmoi < a.size() && cmoi >= 0 && cmoi < a[0].size() && a[dmoi][cmoi] == 0) {//Do để kiếm đường
-			calcPath(a, sizeOfTheMap, { dmoi, cmoi, 0 }, e, step + 1);
+			calcPath(a, sizeOfTheMap_Game, { dmoi, cmoi, 0 }, e, step + 1);
 		}
 	}
 	a[s.getX()][s.getY()] = 0;

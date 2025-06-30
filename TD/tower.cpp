@@ -1,9 +1,19 @@
 ﻿#include "tower.h"
+tower::tower(const std::vector<sf::Texture>& rtowerTexture, int row, int col)
+	: towerTexture(rtowerTexture), towerSprite(towerTexture[0]), _location(row,col,0)
 
-void tower::setMapForBullet(point a[][point::MAP_SIZE]) {//Update map dữa trên cái map mình tạo ra
-	for (int i = 0; i < point::MAP_SIZE; i++) {
-		for (int j = 0; j < point::MAP_SIZE; j++) {
-			_b.UpdateMap(i, j, a[i][j]);//Cập nhật đường đi cho viên đạn
+{
+}
+
+void tower::draw(sf::RenderWindow& window)
+{
+	window.draw(towerSprite);
+}
+
+void tower::setMap_GameForBullet(point a[][point::Map_Game_SIZE]) {//Update mapTowerDefense_Game dữa trên cái mapTowerDefense_Game mình tạo ra
+	for (int i = 0; i < point::Map_Game_SIZE; i++) {
+		for (int j = 0; j < point::Map_Game_SIZE; j++) {
+			_b.UpdateMap_Game(i, j, a[i][j]);//Cập nhật đường đi cho viên đạn
 		}
 	}
 }

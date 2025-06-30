@@ -4,23 +4,20 @@
 //{
 //}
 
-enemy::enemy(const std::vector<sf::Texture>& rTextures, const vector<sf::Vector2f>& _rpath)
-	: textures(rTextures), Enemysprite(textures[0]), speed(30)//for now speed is 3
+enemy::enemy(const std::vector<sf::Texture>& rTextures, const vector<sf::Vector2f>& _rpath, float rspeed)
+	: textures(rTextures), Enemysprite(textures[0]), _speed(rspeed)
 {
 	totalFrame = rTextures.size();
 	_path = _rpath;
 	Enemysprite.setPosition(_path[currentWayPoint]);
-	//Enemysprite[0].setOrigin({ 16, 16 });
+	//Enemysprite.setOrigin({ 16, 16 });
 }
 
-void enemy::LoadTexture() {
-
-}
-
-void enemy::Update(float deltaTime)
+void enemy::Update(float deltaTime, sf::RenderWindow& window)
 {
 	move(deltaTime);
 	animate(deltaTime);
+	draw(window);
 }
 
 void enemy::draw(sf::RenderWindow& window)
@@ -30,8 +27,9 @@ void enemy::draw(sf::RenderWindow& window)
 
 void enemy::move(float deltaTime)
 {
-	//sf::Vector2f s = sprite[0].getPosition();
-	//std::cout << s.x << " " << s.y << "\n";
+	//This is for debug
+	sf::Vector2f s = Enemysprite.getPosition();
+	std::cout << s.x << " " << s.y << "\n";
 	//std::cin.get();
 
 	if (currentWayPoint >= _path.size()) return;
@@ -45,7 +43,7 @@ void enemy::move(float deltaTime)
 
 	if (distance > 1.0f) {
 		direction /= distance;
-		Enemysprite.move(direction * speed * deltaTime);
+		Enemysprite.move(direction * _speed * deltaTime);
 	}
 	else {
 		Enemysprite.setPosition(TargetPosition);
@@ -55,11 +53,11 @@ void enemy::move(float deltaTime)
 
 void enemy::animate(float deltaTime)
 {
-	timeSinceLastFrame += deltaTime;
-	if (timeSinceLastFrame >= frameTime) {
-		currentFrame = (currentFrame + 1) % totalFrame;
+	timeSinceLastFrame += deltaTime; //Thoi gian giua cac Frame
+	if (timeSinceLastFrame >= frameTime) { //Neu du thoi gian chuyen frame
+		currentFrame = (currentFrame + 1) % totalFrame; 
 		
-		Enemysprite.setTexture(textures[currentFrame]);
+		Enemysprite.setTexture(textures[currentFrame]);//Dat frame ke tiep
 		timeSinceLastFrame = 0.0F;
 	}
 }
