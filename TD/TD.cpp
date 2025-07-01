@@ -45,7 +45,7 @@ int main() {
 		sf::Time time = clock.restart();
 		float Second = time.asSeconds();
 
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {//check if left mouse button click 
 			wave1.startNewWave();
 		}
 
