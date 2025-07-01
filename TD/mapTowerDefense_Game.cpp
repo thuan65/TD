@@ -57,7 +57,7 @@ void mapTowerDefense_Game::animate(float deltaTime)
 }
 
 void mapTowerDefense_Game::draw(sf::RenderWindow& window) {
-	Map_GameSprite.setTexture(Map_GameTexture[currentFrame]);//set cho khung hinh dau tien
+	Map_GameSprite.setTexture(Map_GameTexture[currentFrame]);//set khung hinh
 	window.draw(Map_GameSprite);
 }
 

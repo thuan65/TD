@@ -32,6 +32,7 @@ int main() {
 	sf::Clock clock;
 
 	WaveManager wave1;
+	wave1.startNewWave();
 
 	while (window.isOpen()) {
 
@@ -44,30 +45,18 @@ int main() {
 		sf::Time time = clock.restart();
 		float Second = time.asSeconds();
 
-		//if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
-		//	sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
-		//	sf::Vector2f ReadlCord = window.Map_GamePixelToCoords(pixelPos);
-
-		//	int row = ReadlCord.y / point::TileSize;
-		//	int col = ReadlCord.x / point::TileSize;
-		//	if (row >= 0 && row < _Map_GameLogic.size() && col >= 0 && col < _Map_GameLogic[0].size()) {
-		//		//std::cout << "Row: " << row << " " << "Col: " << col << "\n";
-		//		if (_Map_GameLogic[row][col].getC() == -2) {
-		//			tower1.setLocation({ col,row,0 });
-	
-		//		}
-		//	}
-
-		//}
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+			wave1.startNewWave();
+		}
 
 	
 		cMap_Game.Update(Second);
+		wave1.update(Second);
 
 		window.clear();
 		cMap_Game.draw(window);
 		tower1.draw(window);
-		wave1.update(Second, window);
-
+		wave1.draw(window);
 		window.display();
 
 	}
@@ -75,6 +64,20 @@ int main() {
 	return 0;
 }
 
+//////////////////////This is how we deal with mouse//////////////////
+//if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+	//	sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
+	//	sf::Vector2f ReadlCord = window.Map_GamePixelToCoords(pixelPos);
+	//	int row = ReadlCord.y / point::TileSize;
+	//	int col = ReadlCord.x / point::TileSize;
+	//	if (row >= 0 && row < _Map_GameLogic.size() && col >= 0 && col < _Map_GameLogic[0].size()) {
+	//		//std::cout << "Row: " << row << " " << "Col: " << col << "\n";
+	//		if (_Map_GameLogic[row][col].getC() == -2) {
+	//			tower1.setLocation({ col,row,0 });
+	//		}
+	//	}
+	//}
+//////////////////////This is how we deal with mouse//////////////////
 
 //cin.get();
 //tool::ShowConsoleCursor(false);

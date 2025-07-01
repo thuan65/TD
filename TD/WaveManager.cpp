@@ -1,31 +1,31 @@
 #include "WaveManager.h"
 
 WaveManager::WaveManager() 
-	: timeSinceLastWave(0)
+	: wave_number(1) //Start from wave 1
 {
-	loadWaveFromFile();
 }
 
 void WaveManager::startNewWave()
 {
+	if (!WaveEnded()) return; //if wave not end yet
+	enemySpawnIndex = 0;
+	timeSinceLastWave = 0;
+	loadWaveFromFile(wave_number);
+	wave_number++;
 }
 
-bool WaveManager::IsAllEnemySpawned() const {
-	if (enemySpawnIndex < EnemyInfoForWave.size()) return false;
-	return true;
-}
-
-void WaveManager::loadWaveFromFile()
+void WaveManager::loadWaveFromFile(int rwave_number)
 {
-	ifstream fin("Data\\1wave\\map1\\wave1.txt");
+
+	ifstream fin("Data\\1wave\\map1\\wave" + to_string(rwave_number) + ".txt");
 
 	if (fin.fail()) {//use catch throw here
 		cout << "ERROR Reading WaveSpawn File";
 		return;
 	}
-
+	
 	std::string line;
-
+	EnemyInfoForWave.clear();
 	while (getline(fin, line)) {
 		if (line[0] == '#') continue;
 		stringstream ss(line);
@@ -47,16 +47,36 @@ void WaveManager::spawnEnemy(const EnemyInfo& info) {
 	activeEnemy.push_back(e);
 }
 
-void WaveManager::update(float deltaTime, sf::RenderWindow& window) {
+bool WaveManager::AllEnemySpawned() const {
+	if (enemySpawnIndex < EnemyInfoForWave.size()) return false;
+	return true;
+}
+
+bool WaveManager::WaveEnded()
+{
+	return activeEnemy.empty() && enemySpawnIndex >= EnemyInfoForWave.size();
+}
+
+void WaveManager::update(float deltaTime) {
 	timeSinceLastWave += deltaTime;
 	
-	if (enemySpawnIndex < EnemyInfoForWave.size() && EnemyInfoForWave[enemySpawnIndex].spawnTime <= timeSinceLastWave) {
+	if (!AllEnemySpawned() && EnemyInfoForWave[enemySpawnIndex].spawnTime <= timeSinceLastWave) {
 		spawnEnemy(EnemyInfoForWave[enemySpawnIndex]);
 		enemySpawnIndex++;
 	}
 
 	for (int i = 0; i < activeEnemy.size(); i++) {
-		activeEnemy[i]->Update(deltaTime, window);
-	}
+		activeEnemy[i]->Update(deltaTime);
 
+		if (activeEnemy[i]->reachedEnd()) {
+			delete activeEnemy[i];
+			activeEnemy.erase(activeEnemy.begin() + i);
+		}
+	}
+}
+
+void WaveManager::draw(sf::RenderWindow& window) {
+	for (int i = 0; i < activeEnemy.size(); i++) {
+		activeEnemy[i]->draw(window);
+	}
 }

@@ -1,5 +1,5 @@
 #pragma once
-#include <iostream>
+#include <iostream> // this is for debbug
 #include <vector>
 #include <string>
 #include <fstream>
@@ -21,18 +21,21 @@ private:
 
 	std::vector <EnemyInfo> EnemyInfoForWave;
 	std::vector<enemy*> activeEnemy;
-	int enemySpawnIndex = 0;
+	int wave_number; 
+	int enemySpawnIndex;
 	float timeSinceLastWave;
 
 public:
 	WaveManager();
 
 	void startNewWave();
-	bool IsAllEnemySpawned() const;
-	void loadWaveFromFile();
+	bool AllEnemySpawned() const;
+	void loadWaveFromFile(int rwave_number);
 	void spawnEnemy(const EnemyInfo& info);
-	void update(float deltaTime, sf::RenderWindow& window); //Update in wave (spawn enemy and update enemy)
+	void update(float deltaTime); //Update in wave (spawn enemy and update enemy)
+	void draw(sf::RenderWindow& window);
 
+	bool WaveEnded();
 
 
 };

@@ -36,7 +36,7 @@ public:
 	int getSpeed() { return _speed; }
 	
 	void setSeed(int tspeed) {
-		if (tspeed > 0) _speed = tspeed; // Có thể cập nhật điều của tốc độ enemy sau
+		if (tspeed > 0) _speed = tspeed;
 	}
 	void setTotalFrame(int rTotalFrame) { 
 		totalFrame = rTotalFrame;
@@ -48,9 +48,11 @@ public:
 
 public:
 
-	void Update(float, sf::RenderWindow& window);
+	void Update(float);
 	void draw(sf::RenderWindow& window);
 //////////////////////For_Animation///////////////////
+
+	bool reachedEnd(); //Enemy reached ended ?
 };
 
 

@@ -13,16 +13,21 @@ enemy::enemy(const std::vector<sf::Texture>& rTextures, const vector<sf::Vector2
 	//Enemysprite.setOrigin({ 16, 16 });
 }
 
-void enemy::Update(float deltaTime, sf::RenderWindow& window)
+void enemy::Update(float deltaTime)
 {
 	move(deltaTime);
 	animate(deltaTime);
-	draw(window);
 }
 
 void enemy::draw(sf::RenderWindow& window)
 {
 	window.draw(Enemysprite);
+}
+
+bool enemy::reachedEnd()
+{
+	if (Enemysprite.getPosition() == _path.back()) return true;
+	return false;
 }
 
 void enemy::move(float deltaTime)
