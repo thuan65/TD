@@ -27,6 +27,7 @@ private:
 
 public:
 	WaveManager();
+	~WaveManager();
 
 	void startNewWave();
 	bool AllEnemySpawned() const;

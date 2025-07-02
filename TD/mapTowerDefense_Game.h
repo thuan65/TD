@@ -39,7 +39,7 @@ public:
 	void draw(sf::RenderWindow& window);
 
 	void setTotalFrame(int rFrameNum) { totalFrame = rFrameNum; }
-	vector<vector<point>> getMap_Game(){
+	vector<vector<point>>& getMap_Game() {
 		return _m;
 	}
 };

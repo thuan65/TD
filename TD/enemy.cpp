@@ -9,7 +9,7 @@ enemy::enemy(const std::vector<sf::Texture>& rTextures, const vector<sf::Vector2
 {
 	totalFrame = rTextures.size();
 	_path = _rpath;
-	Enemysprite.setPosition(_path[currentWayPoint]);
+	Enemysprite.setPosition(_path[currentWayPoint] - sf::Vector2f{32.0 , 0.0});
 	//Enemysprite.setOrigin({ 16, 16 });
 }
 

@@ -5,6 +5,14 @@ WaveManager::WaveManager()
 {
 }
 
+WaveManager::~WaveManager() {
+	for (int i = 0; i < activeEnemy.size(); ++i) {
+		delete activeEnemy[i];
+		activeEnemy[i] = nullptr;
+	}
+	activeEnemy.clear();
+}
+
 void WaveManager::startNewWave()
 {
 	if (!WaveEnded()) return; //if wave not end yet

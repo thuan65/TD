@@ -141,6 +141,7 @@
     <ClCompile Include="TD.cpp" />
     <ClCompile Include="tool.cpp" />
     <ClCompile Include="tower.cpp" />
+    <ClCompile Include="TowerManager.cpp" />
     <ClCompile Include="WaveManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -153,6 +154,7 @@
     <ClInclude Include="Resource_Management.h" />
     <ClInclude Include="tool.h" />
     <ClInclude Include="tower.h" />
+    <ClInclude Include="TowerManager.h" />
     <ClInclude Include="WaveManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

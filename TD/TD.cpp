@@ -1,6 +1,8 @@
 ﻿#include "game.h"
 #include "WaveManager.h"
-#include <SFML/Graphics.hpp>
+#include "TowerManager.h"
+#include "SFML/Graphics.hpp"
+#include "SFML/Window.hpp"
 #include "Resource_Management.h"
 #include "PathFinder.h"
 #include <thread>
@@ -17,49 +19,8 @@ float Vector_Length(sf::Vector2f rVector) {
 
 int main() {
 
-	mapTowerDefense_Game cMap_Game(Resource_Management::getTexture("Map_Game1"));
-	vector<vector<point>> _Map_GameLogic = cMap_Game.getMap_Game();
-	
-	point s = { 1,0,0 }, e = { 8 , 15 ,0 };
-	PathFinder::setStart(s); PathFinder::setEnd(e);
-	PathFinder::findPath(_Map_GameLogic);//put this in some other Map_Game
-	
-	vector<sf::Vector2f> _path = PathFinder::getPath();
-	enemy enemy1(Resource_Management::getTexture("Knight_Sleame"), _path);
-	mapTowerDefense_Game tower1(Resource_Management::getTexture("Tower1"));
-
-	sf::RenderWindow window(sf::VideoMode({ 540, 360 }), "GAME");
-	sf::Clock clock;
-
-	WaveManager wave1;
-	wave1.startNewWave();
-
-	while (window.isOpen()) {
-
-		if (const std::optional event = window.pollEvent()) {
-			if (event->is<sf::Event::Closed>()) {
-				window.close();
-			}
-		}
-
-		sf::Time time = clock.restart();
-		float Second = time.asSeconds();
-
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {//check if left mouse button click 
-			wave1.startNewWave();
-		}
-
-	
-		cMap_Game.Update(Second);
-		wave1.update(Second);
-
-		window.clear();
-		cMap_Game.draw(window);
-		tower1.draw(window);
-		wave1.draw(window);
-		window.display();
-
-	}
+	game cg;
+	cg.Run();
 
 	return 0;
 }
@@ -70,6 +31,7 @@ int main() {
 	//	sf::Vector2f ReadlCord = window.Map_GamePixelToCoords(pixelPos);
 	//	int row = ReadlCord.y / point::TileSize;
 	//	int col = ReadlCord.x / point::TileSize;
+	// if (
 	//	if (row >= 0 && row < _Map_GameLogic.size() && col >= 0 && col < _Map_GameLogic[0].size()) {
 	//		//std::cout << "Row: " << row << " " << "Col: " << col << "\n";
 	//		if (_Map_GameLogic[row][col].getC() == -2) {
