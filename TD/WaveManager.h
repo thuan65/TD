@@ -24,20 +24,21 @@ private:
 	int wave_number; 
 	int enemySpawnIndex;
 	float timeSinceLastWave;
+	std::vector<enemy*> _enemyToRemove;
 
 public:
 	WaveManager();
 	~WaveManager();
 
+	std::vector<enemy*>& getActiveEnemy() { return activeEnemy; }
 	void startNewWave();
 	bool AllEnemySpawned() const;
 	void loadWaveFromFile(int rwave_number);
 	void spawnEnemy(const EnemyInfo& info);
 	void update(float deltaTime); //Update in wave (spawn enemy and update enemy)
+	void processRemovals();
 	void draw(sf::RenderWindow& window);
 
 	bool WaveEnded();
-
-
 };
 

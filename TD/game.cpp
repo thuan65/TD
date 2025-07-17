@@ -12,7 +12,7 @@
 //}
 
 game::game()
-	:window(sf::VideoMode({ 540, 360 }), "GAME"), gameMap(Resource_Management::getTexture("Map_Game1"))
+	:window(sf::VideoMode({ 540, 360 }), "GAME"), gameMap(Resource_Management::getTexture("Map_Game1")), towerControl(&bulletManager)
 {
 	vector<vector<point>> _Map_GameLogic = gameMap.getMap_Game(); //Put all of this in mapTowerDefense_Game
 	point s = { 1,0,0 }, e = { 8 , 15 ,0 };//All of this
@@ -28,11 +28,11 @@ game::~game()
 void game::Run() {
 	////////////////////////All of this will be put in mapTowerDefense_Game to deal with this
 	vector<vector<point>> _Map_GameLogic = gameMap.getMap_Game();
-	WaveManager wave1;
-	TowerManager towerControl;
+
+
 	////////////////////////
 	
-	wave1.startNewWave();
+	waveControl.startNewWave();
 	sf::Clock clock;//Đồng hồ để đếm thời gian (dùng để nhận biết giữa các frame)
 	while (window.isOpen()) {
 
@@ -46,7 +46,7 @@ void game::Run() {
 		float deltaTime = time.asSeconds();
 
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {//check if left mouse button click 
-			wave1.startNewWave();//Click chuột trái khi wave hết để sang wave kế
+			waveControl.startNewWave();//Click chuột trái khi wave hết để sang wave kế
 
 			sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
 			sf::Vector2f ReadlCord = window.mapPixelToCoords(pixelPos);
@@ -64,12 +64,15 @@ void game::Run() {
 		}
 
 		gameMap.Update(deltaTime);
-		wave1.update(deltaTime);
+		towerControl.update(deltaTime, waveControl.getActiveEnemy());
+		bulletManager.update(deltaTime);
+		waveControl.update(deltaTime);
 
 		window.clear();
 		gameMap.draw(window);
 		towerControl.draw(window);
-		wave1.draw(window);
+		bulletManager.draw(window);
+		waveControl.draw(window);
 		window.display();
 
 	}

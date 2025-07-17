@@ -1,8 +1,45 @@
 ﻿#include "tower.h"
-tower::tower(const std::vector<sf::Texture>& rtowerTexture, int row, int col)
-	: towerTexture(rtowerTexture), towerSprite(towerTexture[0])
+#include "BulletManager.h"
+
+tower::tower(const std::vector<sf::Texture>& rtowerTexture, int row, int col, float rRange, float rFireRate)
+	: towerTexture(rtowerTexture), towerSprite(towerTexture[0]), range(rRange), FireRate (rFireRate), towerReloading(FireRate), row(row), col(col)
 {
 	towerSprite.setPosition(sf::Vector2f(col * point::TileSize, row * point::TileSize));
+}
+
+void tower::update(const float& deltaTime, std::vector<enemy*>& enemies, BulletManager* bulletManager) {
+
+	towerReloading -= deltaTime;
+
+	enemy* target = findTheNearestEnemyInRange(enemies);
+
+	if (target && towerReloading <= 0.0000001f) {
+		bulletManager->spawBullet(this, target);
+	
+		towerReloading += FireRate;
+
+	}
+}
+
+enemy* tower::findTheNearestEnemyInRange(std::vector<enemy*>& enemies) {
+	if (enemies.empty()) return nullptr;
+	enemy* Target = nullptr;
+
+	float minDistance = 999999;
+	sf::Vector2f towerPosition = this->getPosition();
+
+	for (int i = 0; i < enemies.size(); ++i) {
+		float distance = MathHelpers::Distance(towerPosition, enemies[i]->getPosition());
+
+		if (distance < range) {
+
+			if (distance < minDistance) {
+				minDistance = distance;
+				Target = enemies[i];
+			}
+		}
+	}
+	return Target;
 }
 
 void tower::draw(sf::RenderWindow& window)

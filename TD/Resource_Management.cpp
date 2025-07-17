@@ -10,6 +10,8 @@ std::vector<sf::Texture> Resource_Management::Sleame;
 
 std::vector<sf::Texture> Resource_Management::Tower1;
 
+std::vector<sf::Texture> Resource_Management::bullet1;
+
 void Resource_Management::loadTexture()
 {
 	Mage_Sleame.resize(3);
@@ -62,6 +64,9 @@ void Resource_Management::loadTexture()
 		Tower1[i] = std::move(tower1Texture);
 	}
 
+	bullet1.resize(1);
+	bullet1[0].loadFromFile("Data\\5bullet\\normal.png");
+
 }
 
 //Mage_Sleame, Knight_Sleame, Sleame, Map_Game1
@@ -89,6 +94,10 @@ std::vector<sf::Texture>& Resource_Management::getTexture(const std::string& Tex
 
 	else if (Texture_Name == "Tower1") {
 		return Tower1;
+	}
+
+	else if (Texture_Name == "bullet") {
+		return bullet1;
 	}
 
 	throw "Hinh nhu nhap sai ten";

@@ -5,8 +5,6 @@
 #include <string>
 #include <vector>
 #include "SFML\Graphics.hpp"
-#include <vector>
-#include "tool.h"
 #include "enemy.h"
 #include "tower.h"
 

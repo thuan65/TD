@@ -2,6 +2,7 @@
 #include "mapTowerDefense_Game.h"
 
 #include "WaveManager.h"
+#include "BulletManager.h"
 #include "TowerManager.h"
 #include "SFML/Graphics.hpp"
 #include "SFML/Window.hpp"
@@ -15,7 +16,9 @@ class game {
 private:
 	sf::RenderWindow window;
 	mapTowerDefense_Game gameMap;
-
+	BulletManager bulletManager;
+	WaveManager waveControl;
+	TowerManager towerControl;
 
 public:
 	game();

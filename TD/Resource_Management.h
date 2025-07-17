@@ -20,6 +20,10 @@ private:
 	////////////Tower_Texture/////////////////
 	static std::vector<sf::Texture> Tower1;
 
+
+	////////////Bullet_Texture/////////////////
+	static std::vector<sf::Texture> bullet1;
+
 public:
 	//load Texture
 	static void loadTexture();

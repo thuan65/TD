@@ -1,16 +1,51 @@
 ﻿#include "enemy.h"
 
-//enemy::enemy() 
-//{
-//}
-
-enemy::enemy(const std::vector<sf::Texture>& rTextures, const vector<sf::Vector2f>& _rpath, float rspeed)
-	: textures(rTextures), Enemysprite(textures[0]), _speed(rspeed)
+enemy::enemy(const std::vector<sf::Texture>& rTextures, const vector<sf::Vector2f>& _rpath, int rHealth, float rspeed)
+	: textures(rTextures), Enemysprite(textures[0]), _speed(rspeed), _health(rHealth)
 {
 	totalFrame = rTextures.size();
 	_path = _rpath;
 	Enemysprite.setPosition(_path[currentWayPoint] - sf::Vector2f{32.0 , 0.0});
 	//Enemysprite.setOrigin({ 16, 16 });
+}
+
+sf::Vector2f enemy::getPositionAfter(float time) {
+
+	sf::Vector2f currentPosition = getPosition();
+	int index = currentWayPoint;
+
+	while (time > 0.0f && index + 1 < _path.size()) {
+		sf::Vector2f nextPosition = _path[index + 1];//The next place that the enemy have to stay on
+		sf::Vector2f deltaVector = nextPosition - currentPosition; //Vector huong tu diem A - B
+		float distance = std::sqrt(deltaVector.x * deltaVector.x + deltaVector.y * deltaVector.y); //Cong thuc do dai vector la sqrt(a*a + b*b), to avoid sqrt Binh Phuong len
+
+		if (distance == 0.0f) {
+			++index;
+			continue;
+		}
+
+		float timeToNextPosition = distance / _speed;
+
+		if (time >= timeToNextPosition) {
+			time -= timeToNextPosition;
+			index++;
+			currentPosition = nextPosition;
+		}
+		else {
+			float ratio = time / timeToNextPosition;
+			return currentPosition + deltaVector * ratio;
+		}
+	}
+	return currentPosition;
+}
+
+void enemy::damageTake(int rdamage) {
+	_health -= rdamage;
+}
+
+bool enemy::isEnemyAlive() {
+	if (_health <= 0) return false;
+	return true;
 }
 
 void enemy::Update(float deltaTime)
@@ -33,8 +68,8 @@ bool enemy::reachedEnd()
 void enemy::move(float deltaTime)
 {
 	//This is for debug
-	sf::Vector2f s = Enemysprite.getPosition();
-	std::cout << s.x << " " << s.y << "\n";
+	//sf::Vector2f s = Enemysprite.getPosition();
+	//std::cout << s.x << " " << s.y << "\n";
 	//std::cin.get();
 
 	if (currentWayPoint >= _path.size()) return;

@@ -1,57 +1,47 @@
-﻿//#include "bullet.h"
-//
-//bullet::bullet() {
-//	_n = 0; 
-//	_speed = 4;
-//	curr = { 0, 0,0 };
-//	for (int i = 0; i < point::Map_Game_SIZE * point::Map_Game_SIZE; i++) {
-//		_p[i] = { 0,0,0, };
-//	}
-//
-//	for(int i = 0; i < point::Map_Game_SIZE; i++) {
-//		for (int j = 0; j < point::Map_Game_SIZE; j++) {
-//			_m[i][j] = { 0,0,0 };
-//		}
-//	}
-//}
-//
-//void bullet::UpdateMap_Game(int i, int j, point v) {
-//	// we have some if() here
-//	_m[i][j] = v;
-//}
-//
-////Lấy cái vị trí tiếp theo mà viên đạn bay
-//int bullet::queryCFromRowCol(int row, int col) {
-//	if (row < 0 || row >= point::Map_Game_SIZE || col < 0 || col >= point::Map_Game_SIZE) return -2;
-//	//Nếu không hợp lệ thì trả về -2
-//
-//	for (int i = 0; i < point::Map_Game_SIZE; i++) {
-//		for (int j = 0; j < point::Map_Game_SIZE; j++) {
-//			point tmp = point::fromXYtoRowCol(_m[i][j]);
-//			if (tmp.getX() == row && tmp.getY() == col) {
-//				return _m[i][j].getC();
-//			}
-//		}
-//	}
-//}
-//
-//int bullet::calcPathBullet(point tower) {
-//	point tmp = point::fromXYtoRowCol(tower);
-//	int row = tmp.getX(), col = tmp.getY(), i = 0;
-//
-//	do {
-//		col++; row--;
-//		if (queryCFromRowCol(row, col) == 0) {//Kiểm tra đường đi có đi được không (0 là trống)
-//			_p[i] = point::fromRowColtoXY({ row, col, 0 });
-//			i += 2;
-//		}
-//		else break;
-//	} while (i < point::Map_Game_SIZE);
-//	_n = i;
-//	for (i = 1; i < _n; i +=2) {
-//		_p[i] = { _p[i - 1].getX() + 2, _p[i - 1].getY() - 1, 0 };
-//	}
-//
-//	curr = { _p[0].getX(), _p[0].getY(), _p[0].getC() };
-//	return _n;
-//}
+﻿#include "bullet.h"
+#include "tower.h"
+#include "enemy.h"
+
+bullet::bullet(const std::vector<sf::Texture>& bulletTexure, int rSpeed, int rdamage)
+	: bulletSprite(bulletTexure[0]), _speed(rSpeed), damage(rdamage)
+{
+	bulletSprite.setScale(sf::Vector2f(0.01, 0.01));
+}
+
+void bullet::Initialize(tower* theTower, enemy* theTarget) {
+	if (theTower) {//if the tower is still exist
+		target = theTarget;
+		sf::Vector2f targetPosition = theTarget->getPosition();
+		sf::Vector2f towerPostion = theTower->getPosition();
+
+		
+
+		sf::Vector2f deltaVectorFromTowerToTarget = targetPosition - towerPostion;
+	
+		//float distance = std::sqrt(deltaVectorFromTowerToTarget.x * deltaVectorFromTowerToTarget.x + deltaVectorFromTowerToTarget.y * deltaVectorFromTowerToTarget.y);
+		//This may have better efficiency
+		float distance = deltaVectorFromTowerToTarget.x > deltaVectorFromTowerToTarget.y ? deltaVectorFromTowerToTarget.x : deltaVectorFromTowerToTarget.y; // Max(x,y)
+		float Second = distance / _speed;
+
+		targetPosition = theTarget->getPositionAfter(Second);
+
+		bulletDirection = targetPosition - towerPostion;
+		distance = abs(abs(bulletDirection.x) > abs(bulletDirection.y) ? bulletDirection.x : bulletDirection.y);//Tim max giua x va y
+		Second = distance / _speed;
+		timeBeforeCollide = Second;//Pre - calc time before collide
+		bulletDirection /= Second;//Tinh van toc co huong cho tung frame di chuyen
+		bulletSprite.setPosition(towerPostion);
+	}
+}
+
+void bullet::Update(float deltaTime) {
+	sf::Vector2f bulletPosition = bulletSprite.getPosition();
+	bulletPosition += bulletDirection * deltaTime;
+	timeBeforeCollide -= deltaTime;
+	bulletSprite.setPosition(bulletPosition);
+}
+
+void bullet::draw(sf::RenderWindow& window) {
+	window.draw(bulletSprite);
+}
+

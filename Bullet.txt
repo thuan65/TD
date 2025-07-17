@@ -1,0 +1,24 @@
+Thêm trong tower.h
+- Một hàm Update, kiểm tra để bắn enemy.
+- Hàm Tìm enemy trong range
+
+
+tạo một class bullet
+- Chứa thuộc tính (speed, dame,
+- Với các vẽ Update và vẽ
+Contructor, Initialize nó
+(viên đạn sẽ được tính toán trước vị trí mà nó cần bay tới)
+
+
+tạo một class bullet manager
+- Hàm Spawn viên đạn
+- Hàm Update cho tất cả viên đạn
+- Hàm Logic dành cho việc destroy bullet
+Contructor
+~Destructor 
+bulletManager chỉ việc quản lý update viên đạn
+//Spaw enemy hay enemy vô tầm bắn sẽ nằm ở tower
+hàm update viên đạn sẽ có việc quét, nếu collide enemy, delete viên đạn (giống cách delete enemy) đây là cách tạm thời
+
+https://drive.google.com/drive/folders/1_QtO0gqIte0bPCUoPTDf9T5C7-mvFnk6?usp=sharing
+

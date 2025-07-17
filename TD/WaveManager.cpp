@@ -46,12 +46,11 @@ void WaveManager::loadWaveFromFile(int rwave_number)
 
 		EnemyInfoForWave.emplace_back(info);
 	}
-
 		fin.close();
 }
 
 void WaveManager::spawnEnemy(const EnemyInfo& info) {
-	enemy* e = new enemy(Resource_Management::getTexture(info.enemy_type), PathFinder::getPath(), info.speed);
+	enemy* e = new enemy(Resource_Management::getTexture(info.enemy_type), PathFinder::getPath(), info.speed, info.health);
 	activeEnemy.push_back(e);
 }
 
@@ -73,12 +72,41 @@ void WaveManager::update(float deltaTime) {
 		enemySpawnIndex++;
 	}
 
-	for (int i = 0; i < activeEnemy.size(); i++) {
+	if (activeEnemy.empty()) return; //If there is no enemy active now return
+
+	for (int i = activeEnemy.size() - 1; i >= 0; --i) {
 		activeEnemy[i]->Update(deltaTime);
+		//std::cout << i << " ";
+
+		if (!activeEnemy[i]->isEnemyAlive()) {//Enemy is unalive
+			_enemyToRemove.push_back(activeEnemy[i]);
+		}
 
 		if (activeEnemy[i]->reachedEnd()) {
-			delete activeEnemy[i];
-			activeEnemy.erase(activeEnemy.begin() + i);
+			_enemyToRemove.push_back(activeEnemy[i]);
+		}
+	}
+	processRemovals();
+}
+
+void WaveManager::processRemovals() {
+	if (!_enemyToRemove.empty()) {
+		while (!_enemyToRemove.empty()) {
+			enemy* target = _enemyToRemove.back();
+			int tmp = -1;
+
+			for (int i = 0; i < activeEnemy.size(); ++i) {
+				if (target == activeEnemy[i]) {
+					tmp = i;
+					break;
+				}
+			}
+
+			if (tmp == -1) continue;
+
+			delete activeEnemy[tmp];
+			activeEnemy.erase(activeEnemy.begin() + tmp);
+			_enemyToRemove.pop_back();
 		}
 	}
 }
@@ -88,3 +116,5 @@ void WaveManager::draw(sf::RenderWindow& window) {
 		activeEnemy[i]->draw(window);
 	}
 }
+
+
