@@ -1,4 +1,5 @@
 #include "Resource_Management.h"
+#include <iostream>
 
 std::vector<sf::Texture> Resource_Management::Map_Game1;
 //std::vector<sf::Texture> Resource_Management::Map_Game2;
@@ -10,73 +11,47 @@ std::vector<sf::Texture> Resource_Management::Sleame;
 
 std::vector<sf::Texture> Resource_Management::Tower1;
 
+
 std::vector<sf::Texture> Resource_Management::bullet1;
+
+
+std::vector<sf::Texture> Resource_Management::loadFrame(const std::string& filePath, int count) {
+	std::vector<sf::Texture> textures;
+
+	textures.reserve(count);
+	for (int i = 0; i < count; ++i) {
+		sf::Texture texture;
+		if (texture.loadFromFile(filePath + std::to_string(i + 1) + ".png") == false) {
+			throw std::invalid_argument("Erorr loading Enemy frame!");
+
+		}
+		textures.push_back(std::move(texture));
+	}
+
+	return textures;
+}
 
 void Resource_Management::loadTexture()
 {
-	Mage_Sleame.resize(3);
-	for (int i = 0; i < 3; ++i) {
-		sf::Texture mageSleameTexture;
-		if (mageSleameTexture.loadFromFile("Data\\3enemy\\MageSleame\\Mage Sleame" + std::to_string(i + 1) + ".png") == false) {
-			throw std::invalid_argument("Erorr loading Enemy frame!");
 
-		}
-		Mage_Sleame[i] = std::move(mageSleameTexture);
-	}
+	Mage_Sleame = loadFrame("Data\\3enemy\\MageSleame\\Mage Sleame", 3);//RVO or Move semantics
 
-	Knight_Sleame.resize(3);
-	for (int i = 0; i < 3; ++i) {
-		sf::Texture knight_SleameTexture;
-		if (knight_SleameTexture.loadFromFile("Data\\3enemy\\MageSleame\\Mage Sleame" + std::to_string(i + 1) + ".png") == false) {
-			throw std::invalid_argument("Erorr loading Enemy frame!");
+	Knight_Sleame = loadFrame("Data\\3enemy\\KnightSleame\\KnightSleame", 3);
 
-		}
-		Knight_Sleame[i] = std::move(knight_SleameTexture);
-	}
+	Sleame = loadFrame("Data\\3enemy\\Sleame\\Sleame", 3);
 
-	Sleame.resize(3);
-	for (int i = 0; i < 3; ++i) {
-		sf::Texture sleameTexture;
-		if (sleameTexture.loadFromFile("Data\\3enemy\\MageSleame\\Mage Sleame" + std::to_string(i + 1) + ".png") == false) {
-			throw std::invalid_argument("Erorr loading Enemy frame!");
+	Map_Game1 = loadFrame("Data\\4map\\Texture\\map1\\map1_Frame", 2);
 
-		}
-		Sleame[i] = std::move(sleameTexture);
-	}
+	Tower1 = loadFrame("Data\\2tower\\Tower\\DarkTower\\DarkTowerFrame", 2);
 
-	Map_Game1.resize(2);
-	for (int i = 0; i < 2; ++i) {
-		sf::Texture tmpMap_GameTexture;
-		if (tmpMap_GameTexture.loadFromFile("Data\\4map\\Texture\\map1\\map1_Frame" + std::to_string(i) + ".png") == false) {
-			throw std::invalid_argument("Erorr loading Map_Game frame!");
-		
-		}
-		Map_Game1[i] = std::move(tmpMap_GameTexture);
-	}
-
-	Tower1.resize(1);
-	for (int i = 0; i < 1; ++i) {
-		sf::Texture tower1Texture;
-		if (tower1Texture.loadFromFile("Data\\2tower\\tempTowerObject.png") == false) {
-			throw std::invalid_argument("Erorr loading Map_Game frame!");
-
-		}
-		Tower1[i] = std::move(tower1Texture);
-	}
 
 	bullet1.resize(1);
-	bullet1[0].loadFromFile("Data\\5bullet\\normal.png");
+	bullet1[0].loadFromFile("Data\\5bullet\\test.png");
 
 }
 
 //Mage_Sleame, Knight_Sleame, Sleame, Map_Game1
 std::vector<sf::Texture>& Resource_Management::getTexture(const std::string& Texture_Name) {
-	static bool IsLoaded = false;//Not thread safe, will find a way to fix it later
-
-	if (!IsLoaded) {
-		loadTexture();
-		IsLoaded = true;
-	}
 
 	if (Texture_Name == "Mage_Sleame") {
 		return Mage_Sleame;
@@ -87,15 +62,12 @@ std::vector<sf::Texture>& Resource_Management::getTexture(const std::string& Tex
 	else if (Texture_Name == "Sleame") {
 		return Sleame;
 	}
-
 	else if (Texture_Name == "Map_Game1") {
 		return Map_Game1;
 	}
-
 	else if (Texture_Name == "Tower1") {
 		return Tower1;
 	}
-
 	else if (Texture_Name == "bullet") {
 		return bullet1;
 	}
