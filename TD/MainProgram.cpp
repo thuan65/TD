@@ -18,7 +18,7 @@ float Vector_Length(sf::Vector2f rVector) {
 
 
 int main() {
-
+	Resource_Management::getInstance();//Load Texture
 	game cg;
 	cg.Run();
 
