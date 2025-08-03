@@ -19,7 +19,7 @@ public:
 
 	void update(float deltaTime, std::vector<enemy*>& enemies);//Kiem soat viec dan ban
 	bool towerTowerExisted(int row, int col);
-	void buildTower(int row, int col);//Sau này tham số sẽ là id (loại tháp) của tháp muốn build
+	void buildTower(int row, int col, const std::string& towerType);
 	void sellTower();
 	void upgrateTower();
 

@@ -1,8 +1,10 @@
-#include "TowerManager.h"
+﻿#include "TowerManager.h"
 
 TowerManager::TowerManager(BulletManager* rbulletManager)
 	: bulletManager(rbulletManager)
 {}
+
+
 
 TowerManager::~TowerManager() {
 	for (int i = 0; i < towers.size(); ++i) {
@@ -12,9 +14,11 @@ TowerManager::~TowerManager() {
 	towers.clear();
 }
 
+
+
 void TowerManager::update(float deltaTime, std::vector<enemy*>& enemies) {
 	for (int i = 0; i < towers.size(); ++i) {
-		towers[i]->update(deltaTime, enemies, bulletManager);
+		towers[i]->update(deltaTime, enemies, bulletManager);	
 	}
 }
 
@@ -30,12 +34,11 @@ bool TowerManager::towerTowerExisted(int row, int col) {
 	return false;
 }
 
-void TowerManager::buildTower(int row, int col) {
+void TowerManager::buildTower(int row, int col, const std::string& towerType) {
 	if (towerTowerExisted(row, col)) return;
-	tower* buildNewTower = new tower(Resource_Management::getTexture("Sleame"), row, col);
+	tower* buildNewTower = new tower(Resource_Management::getTexture(towerType), row, col);
 	towers.emplace_back(buildNewTower);
 }
-
 void TowerManager::sellTower() {
 
 }

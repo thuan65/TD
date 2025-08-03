@@ -1,4 +1,5 @@
-#include "WaveManager.h"
+﻿#include "WaveManager.h"
+#include "enemy.h"
 
 WaveManager::WaveManager() 
 	: wave_number(1) //Start from wave 1
@@ -20,6 +21,11 @@ void WaveManager::startNewWave()
 	timeSinceLastWave = 0;
 	loadWaveFromFile(wave_number);
 	wave_number++;
+	if (wave_number + 1 > EnemyInfo::TOTAL_WAVES) { // Fixed TOTAL_WAVES reference
+		// Nếu muốn, bạn có thể xóa dòng này đi để nó không báo lỗi nữa
+		// cout << "All waves completed!" << endl;
+		return;
+	}
 }
 
 void WaveManager::loadWaveFromFile(int rwave_number)
@@ -50,7 +56,7 @@ void WaveManager::loadWaveFromFile(int rwave_number)
 }
 
 void WaveManager::spawnEnemy(const EnemyInfo& info) {
-	enemy* e = new enemy(Resource_Management::getTexture(info.enemy_type), PathFinder::getPath(), info.speed, info.health);
+	enemy* e = new enemy(Resource_Management::getTexture(info.enemy_type), PathFinder::getPath(), info.health, info.speed);
 	activeEnemy.push_back(e);
 }
 
@@ -66,47 +72,55 @@ bool WaveManager::WaveEnded()
 
 void WaveManager::update(float deltaTime) {
 	timeSinceLastWave += deltaTime;
-	
-	if (!AllEnemySpawned() && EnemyInfoForWave[enemySpawnIndex].spawnTime <= timeSinceLastWave) {
+
+	if (!AllEnemySpawned() && enemySpawnIndex < EnemyInfoForWave.size() && EnemyInfoForWave[enemySpawnIndex].spawnTime <= timeSinceLastWave) {
 		spawnEnemy(EnemyInfoForWave[enemySpawnIndex]);
 		enemySpawnIndex++;
 	}
 
-	if (activeEnemy.empty()) return; //If there is no enemy active now return
+	if (activeEnemy.empty()) return;
 
 	for (int i = activeEnemy.size() - 1; i >= 0; --i) {
 		activeEnemy[i]->Update(deltaTime);
-		//std::cout << i << " ";
 
-		if (!activeEnemy[i]->isEnemyAlive()) {//Enemy is unalive
-			_enemyToRemove.push_back(activeEnemy[i]);
-		}
-
-		if (activeEnemy[i]->reachedEnd()) {
+		if (!activeEnemy[i]->isEnemyAlive() || activeEnemy[i]->reachedEnd()) {
 			_enemyToRemove.push_back(activeEnemy[i]);
 		}
 	}
-	processRemovals();
+	
 }
 
-void WaveManager::processRemovals() {
-	if (!_enemyToRemove.empty()) {
-		while (!_enemyToRemove.empty()) {
-			enemy* target = _enemyToRemove.back();
-			int tmp = -1;
+void WaveManager::processRemovals(int* enemiesReachedEnd, int* moneyFromKills) {
+	// Reset các biến đếm
+	if (enemiesReachedEnd) *enemiesReachedEnd = 0;
+	if (moneyFromKills) *moneyFromKills = 0;
 
-			for (int i = 0; i < activeEnemy.size(); ++i) {
-				if (target == activeEnemy[i]) {
-					tmp = i;
-					break;
+	if (!_enemyToRemove.empty()) {
+		auto it = _enemyToRemove.begin();
+		while (it != _enemyToRemove.end()) {
+			enemy* toRemove = *it;
+
+			// Tìm và xóa khỏi activeEnemy
+			for (auto activeIt = activeEnemy.begin(); activeIt != activeEnemy.end(); ) {
+				if (*activeIt == toRemove) {
+					// Kiểm tra lý do bị xóa
+					if (toRemove->reachedEnd() && enemiesReachedEnd) {
+						(*enemiesReachedEnd)++;
+					}
+					if (!toRemove->isEnemyAlive() && moneyFromKills) {
+						// (*moneyFromKills) += toRemove->getBounty(); // Cần thêm hàm getBounty() cho enemy
+					}
+
+					delete* activeIt;
+					activeIt = activeEnemy.erase(activeIt); // Xóa và lấy iterator tiếp theo
+					goto next_removal; // Nhảy đến lần lặp tiếp theo của vòng lặp ngoài
+				}
+				else {
+					++activeIt;
 				}
 			}
-
-			if (tmp == -1) continue;
-
-			delete activeEnemy[tmp];
-			activeEnemy.erase(activeEnemy.begin() + tmp);
-			_enemyToRemove.pop_back();
+		next_removal:
+			it = _enemyToRemove.erase(it);
 		}
 	}
 }
@@ -116,5 +130,3 @@ void WaveManager::draw(sf::RenderWindow& window) {
 		activeEnemy[i]->draw(window);
 	}
 }
-
-

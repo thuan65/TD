@@ -1,14 +1,27 @@
 ﻿#include "enemy.h"
 
-enemy::enemy(const std::vector<sf::Texture>& rTextures, const vector<sf::Vector2f>& _rpath, int rHealth, float rspeed)
-	: textures(rTextures), Enemysprite(textures[0]), _speed(rspeed), _health(rHealth)
+enemy::enemy(const std::vector<sf::Texture>& rTextures, const vector<sf::Vector2f>& _rpath, int rMaxHealth, float rspeed) // thêm max_Health
+	: textures(rTextures),
+	Enemysprite(textures[0]),
+	_speed(rspeed),
+	maxHealth(rMaxHealth), // Khởi tạo máu tối đa
+	_health(rMaxHealth)    // Máu hiện tại bắt đầu bằng máu tối đa
 {
 	totalFrame = rTextures.size();
 	_path = _rpath;
-	Enemysprite.setPosition(_path[currentWayPoint] - sf::Vector2f{32.0 , 0.0});
-	//Enemysprite.setOrigin({ 16, 16 });
-}
+	if (!_path.empty()) {
+		Enemysprite.setPosition(_path[0] - sf::Vector2f{ 32.0, 0.0 });
+	}
 
+	// --- KHỞI TẠO THANH MÁU ---
+	// Thanh nền (màu đỏ)
+	healthBarBackground.setSize(sf::Vector2f(32.f, 5.f)); // Chiều dài 32, cao 5
+	healthBarBackground.setFillColor(sf::Color::Red);
+
+	// Thanh máu hiện tại (màu xanh)
+	healthBarForeground.setSize(sf::Vector2f(32.f, 5.f));
+	healthBarForeground.setFillColor(sf::Color::Green);
+}
 sf::Vector2f enemy::getPositionAfter(float time) {
 
 	sf::Vector2f currentPosition = getPosition();
@@ -41,6 +54,13 @@ sf::Vector2f enemy::getPositionAfter(float time) {
 
 void enemy::damageTake(int rdamage) {
 	_health -= rdamage;
+	if (_health < 0) {
+		_health = 0;
+	}
+
+	// CẬP NHẬT CHIỀU DÀI THANH MÁU KHI NHẬN SÁT THƯƠNG
+	float healthPercent = static_cast<float>(_health) / maxHealth;
+	healthBarForeground.setSize(sf::Vector2f(32.f * healthPercent, 5.f));
 }
 
 bool enemy::isEnemyAlive() {
@@ -52,11 +72,23 @@ void enemy::Update(float deltaTime)
 {
 	move(deltaTime);
 	animate(deltaTime);
+
+	// CẬP NHẬT VỊ TRÍ THANH MÁU THEO VỊ TRÍ CỦA ENEMY
+	// Đặt thanh máu ngay phía trên sprite của enemy
+	sf::Vector2f enemyPos = Enemysprite.getPosition();
+		
+    // Update the code to use sf::Vector2f for setPosition to fix the error
+    healthBarBackground.setPosition(sf::Vector2f(enemyPos.x, enemyPos.y - 10.f)); // -10.f để nó ở trên đầu
+    healthBarForeground.setPosition(sf::Vector2f(enemyPos.x, enemyPos.y - 10.f));
 }
 
 void enemy::draw(sf::RenderWindow& window)
 {
 	window.draw(Enemysprite);
+
+	// VẼ CẢ THANH MÁU
+	window.draw(healthBarBackground);
+	window.draw(healthBarForeground);
 }
 
 bool enemy::reachedEnd()

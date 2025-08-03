@@ -15,6 +15,9 @@ private:
 	//Atribute of enemy
 	float _speed;
 	int _health;
+	int maxHealth; // Lưu lượng máu tối đa(dùng để tính % máu còn lại)
+	sf::RectangleShape healthBarBackground; // Thanh nền màu đỏ
+	sf::RectangleShape healthBarForeground; // Thanh máu xanh lá
 
 	//Mảng đường đi của con enemy đã tính trước
 	vector<sf::Vector2f> _path;
@@ -28,7 +31,8 @@ private:
 
 
 public:
-	enemy(const std::vector<sf::Texture>& ,const vector<sf::Vector2f>& _rpath, int rHealth,float rspeed = 50.0F);
+	enemy(const std::vector<sf::Texture>&, const vector<sf::Vector2f>& _rpath, int rMaxHealth, float rspeed = 50.0F); // Thêm maxHealth
+   
 	
 	vector<sf::Vector2f> getP() { return _path; }
 	int getSpeed() { return _speed; }

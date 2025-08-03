@@ -2,7 +2,7 @@
 #include "BulletManager.h"
 
 tower::tower(const std::vector<sf::Texture>& rtowerTexture, int row, int col, float rRange, float rFireRate)
-	: towerTexture(rtowerTexture), towerSprite(towerTexture[0]), range(rRange), FireRate (rFireRate), towerReloading(FireRate), row(row), col(col)
+	: towerTexture(rtowerTexture), towerSprite(towerTexture[0]), range(rRange), FireRate(rFireRate), towerReloading(FireRate), row(row), col(col)
 {
 	towerSprite.setPosition(sf::Vector2f(col * point::TileSize, row * point::TileSize));
 }
@@ -13,10 +13,10 @@ void tower::update(const float& deltaTime, std::vector<enemy*>& enemies, BulletM
 
 	enemy* target = findTheNearestEnemyInRange(enemies);
 
-	if (target && towerReloading <= 0.0000001f) {
+	if (target && towerReloading <= 0.00f) {
 		bulletManager->spawBullet(this, target);
-	
-		towerReloading += FireRate;
+
+		towerReloading = FireRate;
 
 	}
 }

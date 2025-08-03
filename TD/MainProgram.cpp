@@ -17,14 +17,36 @@ float Vector_Length(sf::Vector2f rVector) {
 
 
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+int main()
+{
+    try {
+        // BƯỚC 1: Tải tất cả tài nguyên TRƯỚC KHI làm bất cứ điều gì khác
+        Resource_Management::init();
+
+        // BƯỚC 2: Tạo đối tượng game (bây giờ nó có thể gọi getTexture một cách an toàn)
+        game myGame;
+=======
+=======
+>>>>>>> dee9fe8d4c05a8b1d6faece8c4a30abc9df92a24
 int main() {
 	Resource_Management::getInstance();//Load Texture
 	game cg;
 	cg.Run();
+>>>>>>> dee9fe8d4c05a8b1d6faece8c4a30abc9df92a24
 
-	return 0;
+        // BƯỚC 3: Chạy game
+        myGame.Run();
+    }
+    catch (const std::exception& e) {
+        // Bắt lỗi nếu có gì đó sai (ví dụ: không tìm thấy file ảnh)
+        std::cerr << "An unexpected error occurred: " << e.what() << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
 }
-
 //////////////////////This is how we deal with mouse//////////////////
 //if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
 	//	sf::Vector2i pixelPos = sf::Mouse::getPosition(window);

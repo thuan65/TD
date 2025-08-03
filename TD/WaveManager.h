@@ -17,6 +17,7 @@ private:
 		std::string enemy_type;
 		int health;
 		int speed;
+		static const int TOTAL_WAVES = 3; // << TONG WAVE LA 3	
 	};
 
 	std::vector <EnemyInfo> EnemyInfoForWave;
@@ -27,16 +28,17 @@ private:
 	std::vector<enemy*> _enemyToRemove;
 
 public:
+	static const int TOTAL_WAVES = 3; // << THÊM DÒNG NÀY
 	WaveManager();
 	~WaveManager();
-
+		
 	std::vector<enemy*>& getActiveEnemy() { return activeEnemy; }
 	void startNewWave();
 	bool AllEnemySpawned() const;
 	void loadWaveFromFile(int rwave_number);
 	void spawnEnemy(const EnemyInfo& info);
 	void update(float deltaTime); //Update in wave (spawn enemy and update enemy)
-	void processRemovals();
+	void processRemovals(int* enemiesReachedEnd, int* moneyFromKills);
 	void draw(sf::RenderWindow& window);
 
 	bool WaveEnded();

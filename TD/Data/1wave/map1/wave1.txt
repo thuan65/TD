@@ -1,7 +1,9 @@
-# Wave 1 - 5 enemy (For now) 
-#(Format: time_spawn  enemy_type  hp  speed)
-	0.0	Sleame	100	100	
-	1.0	Sleame	100	100	
-	2.0	Mage_Sleame	70	100	
-	3.0	Knight_Sleame	300	100	
-	4.5	Sleame	100	100	
+# Wave 1 - Giới thiệu các loại quái
+# (Format: time_spawn  enemy_type   hp    speed)
+0.0   Sleame         100     50
+1.5   Sleame         100     50
+3.0   Mage_Sleame    200      75
+3.5   Mage_Sleame    200      75
+5.5   Knight_Sleame  400     35
+7.0   Sleame         100     50
+7.5   Sleame         100     50

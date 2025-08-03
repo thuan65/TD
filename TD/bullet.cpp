@@ -5,7 +5,7 @@
 bullet::bullet(const std::vector<sf::Texture>& bulletTexure, int rSpeed, int rdamage)
 	: bulletSprite(bulletTexure[0]), _speed(rSpeed), damage(rdamage)
 {
-	bulletSprite.setScale(sf::Vector2f(0.01, 0.01));
+	bulletSprite.setScale(sf::Vector2f(0.7, 0.7));
 }
 
 void bullet::Initialize(tower* theTower, enemy* theTarget) {

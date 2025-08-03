@@ -1,6 +1,5 @@
-#pragma once
+﻿#pragma once
 #include "mapTowerDefense_Game.h"
-
 #include "WaveManager.h"
 #include "BulletManager.h"
 #include "TowerManager.h"
@@ -8,11 +7,15 @@
 #include "SFML/Window.hpp"
 #include "Resource_Management.h"
 #include "PathFinder.h"
-#include <thread>
 #include <iostream>
+#include <memory>
+
+namespace sf
+{
+    class Sprite;
+}
 
 class game {
-	
 private:
 	sf::RenderWindow window;
 	mapTowerDefense_Game gameMap;
@@ -20,27 +23,47 @@ private:
 	WaveManager waveControl;
 	TowerManager towerControl;
 
+    int lives;
+    int money;
+	int currentWave;
+	bool isGameOver;
+    bool playerWon;
+
+
+    bool isBuildMenuOpen;
+    sf::Vector2i buildMenuTilePosition; // Lưu vị trí (row, col) của ô đang mở menu
+
+    // Các đối tượng đồ họa cho menu
+    // Giả sử menu là một hình chữ nhật đơn giản chứa 2 icon
+    std::unique_ptr<sf::RectangleShape> buildMenuBackground;
+    std::unique_ptr<sf::Sprite> buildMenuTower1Icon;
+    std::unique_ptr<sf::Sprite> buildMenuTower2Icon;
+    std::unique_ptr<sf::Sprite> buildMenuTower3Icon; // << THÊM
+    std::unique_ptr<sf::Sprite> buildMenuTower4Icon; // << THÊM
+
+    std::vector<sf::Sprite> livesSprites;
+    std::vector<sf::Sprite> moneySprites;
+    std::vector<sf::Sprite> waveSprites;
+    std::unique_ptr<sf::Sprite> gameOverSprite; // Ảnh "Game Over"
+    std::unique_ptr<sf::Sprite> victorySprite;  // Ảnh "Victory"
+
+
+
+    // Vùng có thể click của các icon
+    sf::FloatRect tower1IconBounds;
+    sf::FloatRect tower2IconBounds;
+    sf::FloatRect tower3IconBounds; // << THÊM
+    sf::FloatRect tower4IconBounds; // << THÊM
+
+    // Hàm trợ giúp để thiết lập các đối tượng menu
+    void setupBuildMenu();
+    void openBuildMenu(int row, int col);
+    void closeBuildMenu();
+    void updateGUISprites();
+    void drawNumber(int number, float x, float y, std::vector<sf::Sprite>& sprite_vector);
+
 public:
 	game();
 	~game();
-
 	void Run();
-
 };
-
-//class game {
-//private:
-//	Map_Game _Map_Game;
-//	bool _ISEXIT1, _ISEXIT2;
-//
-//public:
-//	game();
-//
-//	bool getIsExist1() { return _ISEXIT1; }
-//	bool getIsExist2() { return _ISEXIT2; }
-//	void setIsExist1(bool b) { _ISEXIT1 = b; }
-//	void setIsExist2(bool b) { _ISEXIT2 = b; }
-//	Map_Game& getMap_Game() { return _Map_Game; }
-//	void startGame();
-//};
-
