@@ -1,14 +1,6 @@
-<<<<<<< HEAD
-﻿#include "Resource_Management.h"
-#include <iostream>
-#include <stdexcept>
-=======
 #include "Resource_Management.h"
 #include <iostream>
-<<<<<<< HEAD
->>>>>>> dee9fe8d4c05a8b1d6faece8c4a30abc9df92a24
-=======
->>>>>>> dee9fe8d4c05a8b1d6faece8c4a30abc9df92a24
+#include <stdexcept>
 
 // --- Định nghĩa các biến static ---
 // Biến cờ
@@ -20,15 +12,7 @@ std::vector<sf::Texture> Resource_Management::Mage_Sleame;
 std::vector<sf::Texture> Resource_Management::Knight_Sleame;
 std::vector<sf::Texture> Resource_Management::Sleame;
 std::vector<sf::Texture> Resource_Management::Tower1;
-<<<<<<< HEAD
 std::vector<sf::Texture> Resource_Management::Tower2;
-=======
-
-
-<<<<<<< HEAD
->>>>>>> dee9fe8d4c05a8b1d6faece8c4a30abc9df92a24
-=======
->>>>>>> dee9fe8d4c05a8b1d6faece8c4a30abc9df92a24
 std::vector<sf::Texture> Resource_Management::bullet1;
 std::vector<sf::Texture> Resource_Management::Tower1_Icon;
 std::vector<sf::Texture> Resource_Management::Tower2_Icon;
@@ -42,12 +26,10 @@ std::vector<sf::Texture> Resource_Management::Victory_Image;
 std::vector<sf::Texture> Resource_Management::GameOver_Image;
 
 
-<<<<<<< HEAD
 // --- Định nghĩa các hàm static ---
 
 // Hàm này sẽ được gọi một lần duy nhất từ game::game()
-void Resource_Management::init()
-{
+void Resource_Management::init() {
     // Nếu đã khởi tạo rồi thì không làm gì cả
     if (m_isInitialized) {
         return;
@@ -95,60 +77,6 @@ void Resource_Management::init()
         Tower4.resize(1);
         if (!Tower4[0].loadFromFile("Data\\2tower\\Tower\\FlameTower\\FlameTowerFrame0.png"))
             throw std::runtime_error("Failed to load Tower4 texture");
-=======
-std::vector<sf::Texture> Resource_Management::loadFrame(const std::string& filePath, int count) {
-	std::vector<sf::Texture> textures;
-
-	textures.reserve(count);
-	for (int i = 0; i < count; ++i) {
-		sf::Texture texture;
-		if (texture.loadFromFile(filePath + std::to_string(i + 1) + ".png") == false) {
-			throw std::invalid_argument("Erorr loading Enemy frame!");
-
-		}
-		textures.push_back(std::move(texture));
-	}
-
-	return textures;
-}
-
-
-std::vector<sf::Texture> Resource_Management::loadFrame(const std::string& filePath, int count) {
-	std::vector<sf::Texture> textures;
-
-	textures.reserve(count);
-	for (int i = 0; i < count; ++i) {
-		sf::Texture texture;
-		if (texture.loadFromFile(filePath + std::to_string(i + 1) + ".png") == false) {
-			throw std::invalid_argument("Erorr loading Enemy frame!");
-
-		}
-		textures.push_back(std::move(texture));
-	}
-
-	return textures;
-}
-
-void Resource_Management::loadTexture()
-{
-
-	Mage_Sleame = loadFrame("Data\\3enemy\\MageSleame\\Mage Sleame", 3);//RVO or Move semantics
-
-	Knight_Sleame = loadFrame("Data\\3enemy\\KnightSleame\\KnightSleame", 3);
-
-	Sleame = loadFrame("Data\\3enemy\\Sleame\\Sleame", 3);
-
-	Map_Game1 = loadFrame("Data\\4map\\Texture\\map1\\map1_Frame", 2);
-
-	Tower1 = loadFrame("Data\\2tower\\Tower\\DarkTower\\DarkTowerFrame", 2);
-
-
-	bullet1.resize(1);
-	bullet1[0].loadFromFile("Data\\5bullet\\test.png");
-<<<<<<< HEAD
->>>>>>> dee9fe8d4c05a8b1d6faece8c4a30abc9df92a24
-=======
->>>>>>> dee9fe8d4c05a8b1d6faece8c4a30abc9df92a24
 
         bullet1.resize(1);
         if (!bullet1[0].loadFromFile("Data\\5bullet\\test.png"))
@@ -204,7 +132,6 @@ void Resource_Management::loadTexture()
     }
 }
 
-<<<<<<< HEAD
 const std::vector<sf::Texture>& Resource_Management::getTexture(const std::string& name) {
     if (!m_isInitialized) {
         // Đây là một chốt an toàn, nhưng tốt nhất là nên gọi init() một cách tường minh
@@ -231,29 +158,3 @@ const std::vector<sf::Texture>& Resource_Management::getTexture(const std::strin
     // Nếu không tìm thấy, ném một ngoại lệ rõ ràng
     throw std::runtime_error("Texture not found: " + name);
 }
-=======
-//Mage_Sleame, Knight_Sleame, Sleame, Map_Game1
-std::vector<sf::Texture>& Resource_Management::getTexture(const std::string& Texture_Name) {
-
-	if (Texture_Name == "Mage_Sleame") {
-		return Mage_Sleame;
-	}
-	else if (Texture_Name == "Knight_Sleame") {
-		return Knight_Sleame;
-	}
-	else if (Texture_Name == "Sleame") {
-		return Sleame;
-	}
-	else if (Texture_Name == "Map_Game1") {
-		return Map_Game1;
-	}
-	else if (Texture_Name == "Tower1") {
-		return Tower1;
-	}
-	else if (Texture_Name == "bullet") {
-		return bullet1;
-	}
-
-	throw "Hinh nhu nhap sai ten";
-}
->>>>>>> dee9fe8d4c05a8b1d6faece8c4a30abc9df92a24
