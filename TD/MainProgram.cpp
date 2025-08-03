@@ -1,4 +1,4 @@
-﻿#include "game.h"
+#include "game.h"
 #include "WaveManager.h"
 #include "TowerManager.h"
 #include "SFML/Graphics.hpp"
