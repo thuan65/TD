@@ -61,6 +61,10 @@ void mapTowerDefense_Game::draw(sf::RenderWindow& window) {
 	window.draw(Map_GameSprite);
 }
 
+void mapTowerDefense_Game::setTexture(const std::vector<sf::Texture>& rMap_GameTexture) {
+	Map_GameTexture = rMap_GameTexture;
+}
+
 //for (int i = 0; i < point::Map_Game_SIZE; i++) {
 //	for (int j = 0; j < point::Map_Game_SIZE; j++) {
 //		tool::GotoXY(_m[i][j].getX(), _m[i][j].getY());//Đưa con trỏ vẻ (cái nhập ký tự) tới vị trí tương ứng

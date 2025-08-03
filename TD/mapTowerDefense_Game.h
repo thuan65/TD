@@ -37,6 +37,7 @@ public:
 	void draw(sf::RenderWindow& window);
 
 	void setTotalFrame(int rFrameNum) { totalFrame = rFrameNum; }
+	void setTexture(const std::vector<sf::Texture>&);
 	vector<vector<point>>& getMap_Game() {
 		return _m;
 	}

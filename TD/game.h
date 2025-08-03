@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "mapTowerDefense_Game.h"
-#include "WaveManager.h"
+#include "WaveManager.h" //For mapSelection
+#include "mapManager.h"
 #include "BulletManager.h"
 #include "TowerManager.h"
 #include "SFML/Graphics.hpp"
@@ -21,6 +22,7 @@ private:
     BulletManager bulletManager;
     WaveManager waveControl;
     TowerManager towerControl;
+    mapManager mapSelection;
 
     int lives;
     int money;

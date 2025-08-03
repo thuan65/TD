@@ -7,10 +7,13 @@
 #include "enemy.h"
 #include "Resource_Management.h"
 #include "PathFinder.h"
+#include <string>
 
 class WaveManager {
 
 private:
+
+	std::string filePath;
 
 	struct EnemyInfo {
 		float spawnTime;
@@ -33,6 +36,7 @@ public:
 	~WaveManager();
 		
 	std::vector<enemy*>& getActiveEnemy() { return activeEnemy; }
+	void setFilePath(const std::string& rfilePath);
 	void startNewWave();
 	bool AllEnemySpawned() const;
 	void loadWaveFromFile(int rwave_number);

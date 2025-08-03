@@ -122,6 +122,9 @@ const std::vector<sf::Texture>& Resource_Management::getTexture(const std::strin
     if (name == "Knight_Sleame") return Knight_Sleame;
     if (name == "Sleame") return Sleame;
     if (name == "Map_Game1") return Map_Game1;
+    if (name == "Map_Game2") return Map_Game2;
+    if (name == "Map_Game3") return Map_Game3;
+    if (name == "Map_Game4") return Map_Game4;
     if (name == "Tower1") return Tower1;
     if (name == "Tower2") return Tower2;
     if (name == "Tower3") return Tower3;

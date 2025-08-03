@@ -2,7 +2,7 @@
 #include "enemy.h"
 
 WaveManager::WaveManager() 
-	: wave_number(1) //Start from wave 1
+	: filePath("No path for wave loading yet"), wave_number(1), enemySpawnIndex(0) //Start from wave 1
 {
 }
 
@@ -14,6 +14,10 @@ WaveManager::~WaveManager() {
 	activeEnemy.clear();
 }
 
+void WaveManager::setFilePath(const std::string& rfilePath) {
+	filePath = rfilePath;
+}
+
 void WaveManager::startNewWave()
 {
 	if (!WaveEnded()) return; //if wave not end yet
@@ -22,20 +26,24 @@ void WaveManager::startNewWave()
 	loadWaveFromFile(wave_number);
 	wave_number++;
 	if (wave_number + 1 > EnemyInfo::TOTAL_WAVES) { // Fixed TOTAL_WAVES reference
-		// Nếu muốn, bạn có thể xóa dòng này đi để nó không báo lỗi nữa
+		// Nếu muốn, xóa dòng này đi để nó không báo lỗi nữa
 		// cout << "All waves completed!" << endl;
 		return;
 	}
 }
 
-void WaveManager::loadWaveFromFile(int rwave_number)
-{
+void WaveManager::loadWaveFromFile(int rwave_number) {
 
-	ifstream fin("Data\\1wave\\map1\\wave" + to_string(rwave_number) + ".txt");
-
-	if (fin.fail()) {//use catch throw here
-		cout << "ERROR Reading WaveSpawn File";
-		return;
+	ifstream fin(filePath + to_string(rwave_number) + ".txt");
+	try {
+		if (fin.fail()) {//use catch throw here
+		throw std::runtime_error("ERROR Reading WaveSpawn File");
+	}
+	}
+	catch (const std::runtime_error& e) {
+		// In lỗi ra console và ném lại để chương trình có thể dừng lại
+		std::cerr << "Resource loading failed: " << e.what() << std::endl;
+		throw;
 	}
 	
 	std::string line;

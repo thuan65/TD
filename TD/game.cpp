@@ -7,6 +7,7 @@ game::game()
     : window(sf::VideoMode({ 540, 360 }), "GAME"),
     gameMap(Resource_Management::getTexture("Map_Game1")),
     towerControl(&bulletManager),
+    mapSelection(&gameMap, &bulletManager, &waveControl, &towerControl),
     isBuildMenuOpen(false),
     // Khởi tạo các biến trạng thái
     lives(5), money(500), currentWave(0),
@@ -129,7 +130,8 @@ void game::drawNumber(int number, float x, float y, std::vector<sf::Sprite>& spr
 void game::Run() {
     vector<vector<point>> _Map_Game_Logic = gameMap.getMap_Game();
     currentWave = 1;
-    waveControl.startNewWave();
+    mapSelection.selectMap(1); // This is for selecting map MOVE THIS TO THE LOOP AFTER
+    //waveControl.startNewWave();
 
     sf::Clock clock;
     while (window.isOpen()) {
@@ -221,6 +223,17 @@ void game::Run() {
         waveControl.draw(window);
         towerControl.draw(window);
         bulletManager.draw(window);
+
+       // for (int i = 0; i < _Map_Game_Logic.size(); ++i) {
+        //    for (int j = 0; j < _Map_Game_Logic[0].size(); ++j) {
+        //        sf::RectangleShape cell(sf::Vector2f(point::TileSize, point::TileSize));
+        //        cell.setPosition(sf::Vector2f(j * point::TileSize, i * point::TileSize));
+        //        cell.setOutlineColor(sf::Color::White);
+        //        cell.setOutlineThickness(1);
+        //        cell.setFillColor(sf::Color::Transparent);
+         //       window.draw(cell);
+         //   }
+        //}
 
         if (isBuildMenuOpen) {
             if (buildMenuBackground) window.draw(*buildMenuBackground);
