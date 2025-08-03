@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #include "Resource_Management.h"
 #include <iostream>
 #include <stdexcept>
@@ -159,6 +158,3 @@ const std::vector<sf::Texture>& Resource_Management::getTexture(const std::strin
     // Nếu không tìm thấy, ném một ngoại lệ rõ ràng
     throw std::runtime_error("Texture not found: " + name);
 }
-=======
-
->>>>>>> e70c06d351099523de1e2b69bba52599da428017
