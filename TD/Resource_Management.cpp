@@ -8,6 +8,9 @@ bool Resource_Management::m_isInitialized = false;
 
 // Các vector texture
 std::vector<sf::Texture> Resource_Management::Map_Game1;
+std::vector<sf::Texture> Resource_Management::Map_Game2;
+std::vector<sf::Texture> Resource_Management::Map_Game3;
+std::vector<sf::Texture> Resource_Management::Map_Game4;
 std::vector<sf::Texture> Resource_Management::Mage_Sleame;
 std::vector<sf::Texture> Resource_Management::Knight_Sleame;
 std::vector<sf::Texture> Resource_Management::Sleame;
@@ -41,10 +44,10 @@ void Resource_Management::init() {
         loadFrame(Sleame, "Data\\3enemy\\Sleame\\Sleame", 3);
 
         ///////////////////////Load Map Texture///////////////////////////////////////
-        loadFrame(Map_Game1, "Data\\4map\\Texture\\map1\\map1_Frame", 2);
-        //loadFrame(Map_Game1, "Data\\4map\\Texture\\map1\\map1_Frame", 2);
-        //loadFrame(Map_Game1, "Data\\4map\\Texture\\map1\\map1_Frame", 2);
-        //loadFrame(Map_Game1, "Data\\4map\\Texture\\map1\\map1_Frame", 2);
+        loadFrame(Map_Game1, "Data\\4map\\Texture\\Map1\\Map1_Frame", 2);
+        loadFrame(Map_Game2, "Data\\4map\\Texture\\Map2\\Map2_Frame", 2);
+        loadFrame(Map_Game3, "Data\\4map\\Texture\\Map3\\Map3_Frame", 2);
+        loadFrame(Map_Game4, "Data\\4map\\Texture\\Map4\\Map4_Frame", 2);
 
         ///////////////////////Load Tower Texture///////////////////////////////////////
         loadFrame(Tower1, "Data\\2tower\\Tower\\DarkTower\\DarkTowerFrame", 2);

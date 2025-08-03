@@ -10,6 +10,9 @@ private:
 
 	// Các biến texture vẫn là static private
 	static std::vector<sf::Texture> Map_Game1;
+	static std::vector<sf::Texture> Map_Game2;
+	static std::vector<sf::Texture> Map_Game3;
+	static std::vector<sf::Texture> Map_Game4;
 	static std::vector<sf::Texture> Mage_Sleame;
 	static std::vector<sf::Texture> Knight_Sleame;
 	static std::vector<sf::Texture> Sleame;

@@ -30,7 +30,7 @@ game::game()
 
     // Tính toán đường đi ban đầu
     vector<vector<point>> _Map_Game_Logic = gameMap.getMap_Game();
-    point s = { 1,0,0 }, e = { 8 , 15 ,0 };
+    point s = { 3,0,0 }, e = { 8 , 15 ,0 };
     PathFinder::setStart(s); PathFinder::setEnd(e);
     PathFinder::findPath(_Map_Game_Logic);
 }

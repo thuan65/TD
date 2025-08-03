@@ -10,7 +10,7 @@ enemy::enemy(const std::vector<sf::Texture>& rTextures, const vector<sf::Vector2
 	totalFrame = rTextures.size();
 	_path = _rpath;
 	if (!_path.empty()) {
-		Enemysprite.setPosition(_path[0] - sf::Vector2f{ 32.0, 0.0 });
+		Enemysprite.setPosition(_path[0] - sf::Vector2f{ 32.0, 0.0 });//Sau sẽ có chỉnh sai số
 	}
 
 	// --- KHỞI TẠO THANH MÁU ---
