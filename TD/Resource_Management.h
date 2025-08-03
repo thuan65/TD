@@ -32,6 +32,7 @@ public:
 	static void init(); // Đổi tên loadTexture thành init cho rõ ràng
 	static const std::vector<sf::Texture>& getTexture(const std::string& name);
 	static std::vector<std::vector<sf::Texture>> Digits;
+	static void loadFrame(std::vector<sf::Texture>& textures, const std::string& filePath, int size);
 
 private:
 	// Biến cờ để đảm bảo chỉ load 1 lần

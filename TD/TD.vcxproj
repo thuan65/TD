@@ -135,6 +135,7 @@
     <ClCompile Include="BulletManager.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="mapManager.cpp" />
     <ClCompile Include="mapTowerDefense_Game.cpp" />
     <ClCompile Include="PathFinder.cpp" />
     <ClCompile Include="point.cpp" />
@@ -149,6 +150,7 @@
     <ClInclude Include="BulletManager.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="mapManager.h" />
     <ClInclude Include="mapTowerDefense_Game.h" />
     <ClInclude Include="MathHelpers.h" />
     <ClInclude Include="PathFinder.h" />

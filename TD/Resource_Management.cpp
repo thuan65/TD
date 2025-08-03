@@ -24,8 +24,6 @@ std::vector<sf::Texture> Resource_Management::Heart_Icon;
 std::vector<std::vector<sf::Texture>> Resource_Management::Digits;
 std::vector<sf::Texture> Resource_Management::Victory_Image;
 std::vector<sf::Texture> Resource_Management::GameOver_Image;
-
-
 // --- Định nghĩa các hàm static ---
 
 // Hàm này sẽ được gọi một lần duy nhất từ game::game()
@@ -36,74 +34,33 @@ void Resource_Management::init() {
     }
 
     try {
-        Mage_Sleame.resize(3);
-        for (int i = 0; i < 3; ++i) {
-            if (!Mage_Sleame[i].loadFromFile("Data\\3enemy\\MageSleame\\Mage Sleame" + std::to_string(i + 1) + ".png"))
-                throw std::runtime_error("Failed to load Mage Sleame texture");
-        }
+        ///////////////////////Load Enemy Texture///////////////////////////////////////
+        loadFrame(Mage_Sleame, "Data\\3enemy\\MageSleame\\Mage Sleame", 3);
+        loadFrame(Knight_Sleame, "Data\\3enemy\\KnightSleame\\KnightSleame", 2);
+        loadFrame(Mage_Sleame, "Data\\3enemy\\MageSleame\\Mage Sleame", 3);
+        loadFrame(Sleame, "Data\\3enemy\\Sleame\\Sleame", 3);
 
-        Knight_Sleame.resize(3);
-        for (int i = 0; i < 3; ++i) {
-            if (!Knight_Sleame[i].loadFromFile("Data\\3enemy\\KnightSleame\\KnightSleame" + std::to_string(i + 1) + ".png"))
-                throw std::runtime_error("Failed to load Knight Sleame texture");
-        }
+        ///////////////////////Load Map Texture///////////////////////////////////////
+        loadFrame(Map_Game1, "Data\\4map\\Texture\\map1\\map1_Frame", 2);
+        //loadFrame(Map_Game1, "Data\\4map\\Texture\\map1\\map1_Frame", 2);
+        //loadFrame(Map_Game1, "Data\\4map\\Texture\\map1\\map1_Frame", 2);
+        //loadFrame(Map_Game1, "Data\\4map\\Texture\\map1\\map1_Frame", 2);
 
-        Sleame.resize(3);
-        for (int i = 0; i < 3; ++i) {
-            if (!Sleame[i].loadFromFile("Data\\3enemy\\Sleame\\Sleame" + std::to_string(i + 1) + ".png"))
-                throw std::runtime_error("Failed to load Sleame texture");
-        }
+        ///////////////////////Load Tower Texture///////////////////////////////////////
+        loadFrame(Tower1, "Data\\2tower\\Tower\\DarkTower\\DarkTowerFrame", 2);
+        loadFrame(Tower2, "Data\\2tower\\Tower\\IceTower\\IceTowerFrame", 2);
+        loadFrame(Tower3, "Data\\2tower\\Tower\\ElectricTower\\ElectricTowerFrame", 2);
+        loadFrame(Tower4, "Data\\2tower\\Tower\\FlameTower\\FlameTowerFrame", 2);
 
-        Map_Game1.resize(2);
-        for (int i = 0; i < 2; ++i) {
-            if (!Map_Game1[i].loadFromFile("Data\\4map\\Texture\\map1\\map1_Frame" + std::to_string(i) + ".png"))
-                throw std::runtime_error("Failed to load map texture");
-        }
-
-        Tower1.resize(1);
-        if (!Tower1[0].loadFromFile("Data\\2tower\\Tower\\DarkTower\\DarkTowerFrame0.png"))
-            throw std::runtime_error("Failed to load Tower1 texture");
-
-        Tower2.resize(1);
-        // !!! THAY ĐỔI ĐƯỜNG DẪN NÀY !!!
-        if (!Tower2[0].loadFromFile("Data\\2tower\\Tower\\IceTower\\IceTowerFrame0.png"))
-            throw std::runtime_error("Failed to load Tower2 texture");
-
-        Tower3.resize(1);
-        if (!Tower3[0].loadFromFile("Data\\2tower\\Tower\\ElectricTower\\ElectricTowerFrame0.png"))
-            throw std::runtime_error("Failed to load Tower3 texture");
-
-
-        Tower4.resize(1);
-        if (!Tower4[0].loadFromFile("Data\\2tower\\Tower\\FlameTower\\FlameTowerFrame0.png"))
-            throw std::runtime_error("Failed to load Tower4 texture");
+        ///////////////////////Load Tower Icon ///////////////////////////////////////
+        loadFrame(Tower1_Icon, "Data\\2tower\\Tower\\DarkTower\\DarkTowerFrame", 2);
+        loadFrame(Tower2_Icon, "Data\\2tower\\Tower\\IceTower\\IceTowerFrame", 2);
+        loadFrame(Tower3_Icon, "Data\\2tower\\Tower\\ElectricTower\\ElectricTowerFrame", 2);
+        loadFrame(Tower4_Icon, "Data\\2tower\\Tower\\FlameTower\\FlameTowerFrame", 2);
 
         bullet1.resize(1);
         if (!bullet1[0].loadFromFile("Data\\5bullet\\test.png"))
             throw std::runtime_error("Failed to load bullet texture");
-
-        Tower1_Icon.resize(1);
-        // !!! THAY ĐỔI ĐƯỜNG DẪN NÀY !!!
-        if (!Tower1_Icon[0].loadFromFile("Data\\2tower\\Tower\\DarkTower\\DarkTowerFrame0.png"))
-            throw std::runtime_error("Failed to load Tower1_Icon");
-
-        Tower2_Icon.resize(1);
-        // !!! THAY ĐỔI ĐƯỜNG DẪN NÀY !!!
-        if (!Tower2_Icon[0].loadFromFile("Data\\2tower\\Tower\\IceTower\\IceTowerFrame0.png"))
-            throw std::runtime_error("Failed to load Tower2_Icon");
-
-
-        Tower3_Icon.resize(1);
-        // !!! THAY ĐỔI ĐƯỜNG DẪN NÀY !!!
-        if (!Tower3_Icon[0].loadFromFile("Data\\2tower\\Tower\\ElectricTower\\ElectricTowerFrame0.png"))
-            throw std::runtime_error("Failed to load Tower3_Icon");
-
-
-
-        Tower4_Icon.resize(1);
-        // !!! THAY ĐỔI ĐƯỜNG DẪN NÀY !!!
-        if (!Tower4_Icon[0].loadFromFile("Data\\2tower\\Tower\\FlameTower\\FlameTowerFrame0.png"))
-            throw std::runtime_error("Failed to load Tower4_Icon");
 
         Heart_Icon.resize(1);
         if (!Heart_Icon[0].loadFromFile("Data/GUI/heart.png"))
@@ -129,6 +86,26 @@ void Resource_Management::init() {
         // In lỗi ra console và ném lại để chương trình có thể dừng lại
         std::cerr << "Resource loading failed: " << e.what() << std::endl;
         throw;
+    }
+}
+
+void Resource_Management::loadFrame(std::vector<sf::Texture>& textures, const std::string& filePath, int size) {
+    textures.reserve(size);
+    std::string baseName;
+    size_t pos = filePath.find_last_of("\\/");
+    if (pos != std::string::npos) {
+        baseName = filePath.substr(pos + 1);
+    }
+    else {
+        baseName = filePath;//TH khong co dau
+    }
+
+    for (int i = 0; i < size; ++i) {
+        sf::Texture texture;
+        if (texture.loadFromFile(filePath + std::to_string(i + 1) + ".png") == false) {
+            throw std::invalid_argument("Erorr loading" + baseName + "frame!");
+        }
+        textures.push_back(texture);
     }
 }
 

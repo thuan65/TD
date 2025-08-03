@@ -10,23 +10,22 @@
 #include <iostream>
 #include <memory>
 
-namespace sf
-{
+namespace sf {
     class Sprite;
 }
 
 class game {
 private:
-	sf::RenderWindow window;
-	mapTowerDefense_Game gameMap;
-	BulletManager bulletManager;
-	WaveManager waveControl;
-	TowerManager towerControl;
+    sf::RenderWindow window;
+    mapTowerDefense_Game gameMap;
+    BulletManager bulletManager;
+    WaveManager waveControl;
+    TowerManager towerControl;
 
     int lives;
     int money;
-	int currentWave;
-	bool isGameOver;
+    int currentWave;
+    bool isGameOver;
     bool playerWon;
 
 
@@ -50,10 +49,10 @@ private:
 
 
     // Vùng có thể click của các icon
-    sf::FloatRect tower1IconBounds;
-    sf::FloatRect tower2IconBounds;
-    sf::FloatRect tower3IconBounds; // << THÊM
-    sf::FloatRect tower4IconBounds; // << THÊM
+    //sf::FloatRect tower1IconBounds;
+    //sf::FloatRect tower2IconBounds;
+    //sf::FloatRect tower3IconBounds; // << THÊM
+    //sf::FloatRect tower4IconBounds; // << THÊM
 
     // Hàm trợ giúp để thiết lập các đối tượng menu
     void setupBuildMenu();
@@ -63,7 +62,7 @@ private:
     void drawNumber(int number, float x, float y, std::vector<sf::Sprite>& sprite_vector);
 
 public:
-	game();
-	~game();
-	void Run();
+    game();
+    ~game();
+    void Run();
 };
