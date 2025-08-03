@@ -27,8 +27,8 @@ public:
 	void update(const float& deltaTime, std::vector<enemy*>& enemies, BulletManager* bulletManager);
 	void draw(sf::RenderWindow& window);
 
-	void setPosition(const point &_rlocation) {
-		towerSprite.setPosition(sf::Vector2f(_rlocation.getX() * point::TileSize, _rlocation.getY() * point::TileSize));
+	void setPosition(const sf::Vector2f &_rlocation) {
+		towerSprite.setPosition(_rlocation);
 	}
 	sf::Vector2f getPosition() {
 		return towerSprite.getPosition();

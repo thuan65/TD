@@ -12,7 +12,7 @@ game::game()
     // Khởi tạo các biến trạng thái
     lives(5), money(500), currentWave(0),
     isGameOver(false), playerWon(false) {
-    window.setFramerateLimit(60);
+    //window.setFramerateLimit(60);
     setupBuildMenu();
     updateGUISprites(); // Gọi để khởi tạo các sprite GUI ban đầu
 
@@ -144,7 +144,7 @@ void game::Run() {
                 if (mouseEvent && mouseEvent->button == sf::Mouse::Button::Left) {
                     sf::Vector2i pixelPos = mouseEvent->position;
                     sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos);
-
+             
                     if (isBuildMenuOpen) {
                         // TÍNH TOÁN BOUNDS NGAY TẠI ĐÂY
                         if (buildMenuTower1Icon->getGlobalBounds().contains(worldPos)) {
@@ -170,9 +170,9 @@ void game::Run() {
                     else {
                         int row = static_cast<int>(worldPos.y / point::TileSize);
                         int col = static_cast<int>(worldPos.x / point::TileSize);
-
+                      
                         if (row >= 0 && row < _Map_Game_Logic.size() && col >= 0 && col < _Map_Game_Logic[0].size()) {
-                            if (_Map_Game_Logic[row][col].getC() == point::Empty_Tile) {
+                            if (towerControl.clickCheck(worldPos)) {
                                 openBuildMenu(row, col);
                             }
                         }

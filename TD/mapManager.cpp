@@ -16,13 +16,13 @@ void mapManager::selectMap(int rmapSelection) {//Add arguement later
 		loadMapConfig("Data\\6mapSelection\\mapconfig1.txt");
 	}
 	if (rmapSelection == 2) {
-
+		loadMapConfig("Data\\6mapSelection\\mapconfig2.txt");
 	}
 	if (rmapSelection == 3) {
-
+		loadMapConfig("Data\\6mapSelection\\mapconfig3.txt");
 	}
 	if (rmapSelection == 4) {
-
+		loadMapConfig("Data\\6mapSelection\\mapconfig4.txt");
 	}
 	//add a exception catch error here
 
@@ -38,12 +38,14 @@ void mapManager::loadMapConfig(std::string filePathMapconfg) {
 		mapcfg.filePathForEnemyWave = line;
 		std::getline(fin, line);
 		mapcfg.mapName = line;
-
+		std::getline(fin, line);
+		mapcfg.filePathForBuildPosition = line;
 
 }
 
 void mapManager::setMap() {
 	waveControl->setFilePath(mapcfg.filePathForEnemyWave);
 	gameMap->setTexture(Resource_Management::getTexture(mapcfg.mapName));
+	towerControl->ReadFile(mapcfg.filePathForBuildPosition);
 }
 

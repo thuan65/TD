@@ -1,2 +1,3 @@
 Data\\1wave\\map1\\wave
 Map_Game1
+Data\\2tower\\BuildPosition\\BuildPositionMap1.txt

@@ -3,3 +3,6 @@ load wave khác trong thư mục khác (đường dẫn)
 load maptexture (đường dẫn)
 load vị trí hợp lệ để đặt tháp (đường dẫn)
 
+Tower vị trí đặt
+BuildZone 
+Rectangle
