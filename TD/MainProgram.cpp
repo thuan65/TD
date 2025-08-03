@@ -1,4 +1,4 @@
-﻿#include "game.h"
+#include "game.h"
 #include "WaveManager.h"
 #include "TowerManager.h"
 #include "SFML/Graphics.hpp"
@@ -12,29 +12,18 @@
 //void ThreadFunc1(game&);
 
 float Vector_Length(sf::Vector2f rVector) {
-	return sqrt(rVector.x * rVector.x + rVector.y * rVector.y);
+    return sqrt(rVector.x * rVector.x + rVector.y * rVector.y);
 }
 
 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-int main()
-{
+int main() {
     try {
         // BƯỚC 1: Tải tất cả tài nguyên TRƯỚC KHI làm bất cứ điều gì khác
         Resource_Management::init();
 
         // BƯỚC 2: Tạo đối tượng game (bây giờ nó có thể gọi getTexture một cách an toàn)
         game myGame;
-=======
-=======
->>>>>>> dee9fe8d4c05a8b1d6faece8c4a30abc9df92a24
-int main() {
-	Resource_Management::getInstance();//Load Texture
-	game cg;
-	cg.Run();
->>>>>>> dee9fe8d4c05a8b1d6faece8c4a30abc9df92a24
 
         // BƯỚC 3: Chạy game
         myGame.Run();
@@ -49,18 +38,18 @@ int main() {
 }
 //////////////////////This is how we deal with mouse//////////////////
 //if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
-	//	sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
-	//	sf::Vector2f ReadlCord = window.Map_GamePixelToCoords(pixelPos);
-	//	int row = ReadlCord.y / point::TileSize;
-	//	int col = ReadlCord.x / point::TileSize;
-	// if (
-	//	if (row >= 0 && row < _Map_GameLogic.size() && col >= 0 && col < _Map_GameLogic[0].size()) {
-	//		//std::cout << "Row: " << row << " " << "Col: " << col << "\n";
-	//		if (_Map_GameLogic[row][col].getC() == -2) {
-	//			tower1.setLocation({ col,row,0 });
-	//		}
-	//	}
-	//}
+    //	sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
+    //	sf::Vector2f ReadlCord = window.Map_GamePixelToCoords(pixelPos);
+    //	int row = ReadlCord.y / point::TileSize;
+    //	int col = ReadlCord.x / point::TileSize;
+    // if (
+    //	if (row >= 0 && row < _Map_GameLogic.size() && col >= 0 && col < _Map_GameLogic[0].size()) {
+    //		//std::cout << "Row: " << row << " " << "Col: " << col << "\n";
+    //		if (_Map_GameLogic[row][col].getC() == -2) {
+    //			tower1.setLocation({ col,row,0 });
+    //		}
+    //	}
+    //}
 //////////////////////This is how we deal with mouse//////////////////
 
 //cin.get();
