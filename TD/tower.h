@@ -11,10 +11,10 @@ class tower {
 	std::vector<sf::Texture> towerTexture;
 	sf::Sprite towerSprite;
 
-	float range;
-	float FireRate;
-	float towerReloading = 0.0f;
-	int row, col;
+	float range;//Phạm vi bắn
+	float FireRate;//Tốc độ bắn
+	float towerReloading = 0.0f;//Thời gian hồi tới lượt bắn kế
+	//int row, col;
 
 	////////////Animation_helper//////////
 	int currentFrame = 0;
@@ -33,14 +33,14 @@ public:
 	void update(const float& deltaTime, std::vector<enemy*>& enemies, BulletManager* bulletManager);
 	void draw(sf::RenderWindow& window);
 
-	void setPosition(const sf::Vector2f &_rlocation) {
+	void setPosition(sf::Vector2f _rlocation) {
 		towerSprite.setPosition(_rlocation);
 	}
 	sf::Vector2f getPosition() {
 		return towerSprite.getPosition();
 	}
-	int getRow() { return row; }
-	int getCol() { return col; }
+	//int getRow() { return row; }
+	//int getCol() { return col; }
 
 	//void setMap_GameForBullet(point[][point::Map_Game_SIZE]);
 	//void calcPathBullet() {

@@ -3,17 +3,22 @@
 #include "enemy.h"
 #include "BulletManager.h"
 #include "Resource_Management.h"
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 #include <fstream>
 #include <vector>
 
 class TowerManager{
 
 private: 
+
+	struct buildZone {
+		sf::FloatRect bounds;
+		bool TowerExist = false;
+	};
 	
 	BulletManager* bulletManager;
 	std::vector<tower*> towers;
-	std::vector<sf::FloatRect> buildZone;
+	std::vector<buildZone> buildZones;
 
 public:
 
@@ -21,10 +26,10 @@ public:
 	~TowerManager();
 
 	void update(float deltaTime, std::vector<enemy*>& enemies);//Kiem soat viec dan ban
-	bool towerTowerExisted(int row, int col);
+	bool towerTowerExisted(sf::Vector2f worldPos);
 	void ReadFile(const std::string& filePath);
 	bool clickCheck(sf::Vector2f);
-	void buildTower(int row, int col, const std::string& towerType);
+	void buildTower(sf::Vector2f worldPos, const std::string& towerType);
 	void sellTower();
 	void upgrateTower();
 

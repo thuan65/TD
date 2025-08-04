@@ -2,9 +2,10 @@
 #include "BulletManager.h"
 
 tower::tower(const std::vector<sf::Texture>& rtowerTexture, int row, int col, float rRange, float rFireRate)
-	: towerTexture(rtowerTexture), towerSprite(towerTexture[0]), range(rRange), FireRate(rFireRate), towerReloading(FireRate), row(row), col(col), totalFrame(towerTexture.size())
+	: towerTexture(rtowerTexture), towerSprite(towerTexture[0]), range(rRange), FireRate(rFireRate), towerReloading(FireRate), totalFrame(towerTexture.size())
 {
-	towerSprite.setPosition(sf::Vector2f(col * point::TileSize, row * point::TileSize));
+	//towerSprite.setPosition(sf::Vector2f(col * point::TileSize, row * point::TileSize));
+	towerSprite.setOrigin(sf::Vector2f{ towerSprite.getLocalBounds().size / 2.f });//Canh giữa cho ảnh tháp
 }
 
 void tower::update(const float& deltaTime, std::vector<enemy*>& enemies, BulletManager* bulletManager) {

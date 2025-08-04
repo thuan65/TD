@@ -147,6 +147,8 @@ void game::Run() {
     sf::Clock clock;
     while (window.isOpen()) {
         if (const auto event = window.pollEvent()) {
+            sf::Vector2i orldPos = sf::Mouse::getPosition(window);
+            //std::cout << "Mouse " << orldPos.x << " " << orldPos.y << "\n";
             if (event->is<sf::Event::Closed>()) {
                 window.close();
             }
@@ -155,13 +157,13 @@ void game::Run() {
                 if (mouseEvent && mouseEvent->button == sf::Mouse::Button::Left) {
                     sf::Vector2i pixelPos = mouseEvent->position;
                     sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos);
-
+                  
                     if (isBuildMenuOpen) {
                         // TÍNH TOÁN BOUNDS NGAY TẠI ĐÂY
                         if (buildMenuTower1Icon->getGlobalBounds().contains(worldPos)) {
                             if (money >= 100) {
                                 money -= 100;
-                                towerControl.buildTower(buildMenuTilePosition.y, buildMenuTilePosition.x, "Tower1");
+                                towerControl.buildTower(worldPos, "Tower1");
                                 updateGUISprites(); // Cập nhật lại hiển thị tiền
                             }
                             closeBuildMenu();
@@ -169,7 +171,7 @@ void game::Run() {
                         else if (buildMenuTower2Icon->getGlobalBounds().contains(worldPos)) {
                             if (money >= 150) {
                                 money -= 150;
-                                towerControl.buildTower(buildMenuTilePosition.y, buildMenuTilePosition.x, "Tower2");
+                                towerControl.buildTower(worldPos, "Tower2");
                                 updateGUISprites(); // Cập nhật lại hiển thị tiền
                             }
 
@@ -178,7 +180,7 @@ void game::Run() {
                         else if (buildMenuTower3Icon->getGlobalBounds().contains(worldPos)) {
                             if (money >= 200) {
                                 money -= 200;
-                                towerControl.buildTower(buildMenuTilePosition.y, buildMenuTilePosition.x, "Tower3");
+                                towerControl.buildTower(worldPos, "Tower3");
                                 updateGUISprites(); // Cập nhật lại hiển thị tiền
                             }
 
@@ -187,7 +189,7 @@ void game::Run() {
                         else if (buildMenuTower4Icon->getGlobalBounds().contains(worldPos)) {
                             if (money >= 250) {
                                 money -= 250;
-                                towerControl.buildTower(buildMenuTilePosition.y, buildMenuTilePosition.x, "Tower4");
+                                towerControl.buildTower(worldPos, "Tower4");
                                 updateGUISprites(); // Cập nhật lại hiển thị tiền
                             }
 
