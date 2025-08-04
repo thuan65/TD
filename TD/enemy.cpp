@@ -1,11 +1,11 @@
 ﻿#include "enemy.h"
 
-enemy::enemy(const std::vector<sf::Texture>& rTextures, const vector<sf::Vector2f>& _rpath, int rMaxHealth, float rspeed) // thêm max_Health
+enemy::enemy(const std::vector<sf::Texture>& rTextures, const vector<sf::Vector2f>& _rpath, int rMaxHealth, float rspeed, int rBounty) // thêm max_Health
 	: textures(rTextures),
 	Enemysprite(textures[0]),
 	_speed(rspeed),
 	maxHealth(rMaxHealth), // Khởi tạo máu tối đa
-	_health(rMaxHealth)    // Máu hiện tại bắt đầu bằng máu tối đa
+	_health(rMaxHealth), bounty(rBounty)    // Máu hiện tại bắt đầu bằng máu tối đa
 {
 	totalFrame = rTextures.size();
 	_path = _rpath;
@@ -68,22 +68,20 @@ bool enemy::isEnemyAlive() {
 	return true;
 }
 
-void enemy::Update(float deltaTime)
-{
+void enemy::Update(float deltaTime) {
 	move(deltaTime);
 	animate(deltaTime);
 
 	// CẬP NHẬT VỊ TRÍ THANH MÁU THEO VỊ TRÍ CỦA ENEMY
 	// Đặt thanh máu ngay phía trên sprite của enemy
 	sf::Vector2f enemyPos = Enemysprite.getPosition();
-		
-    // Update the code to use sf::Vector2f for setPosition to fix the error
-    healthBarBackground.setPosition(sf::Vector2f(enemyPos.x, enemyPos.y - 10.f)); // -10.f để nó ở trên đầu
-    healthBarForeground.setPosition(sf::Vector2f(enemyPos.x, enemyPos.y - 10.f));
+
+	// Update the code to use sf::Vector2f for setPosition to fix the error
+	healthBarBackground.setPosition(sf::Vector2f(enemyPos.x, enemyPos.y - 10.f)); // -10.f để nó ở trên đầu
+	healthBarForeground.setPosition(sf::Vector2f(enemyPos.x, enemyPos.y - 10.f));
 }
 
-void enemy::draw(sf::RenderWindow& window)
-{
+void enemy::draw(sf::RenderWindow& window) {
 	window.draw(Enemysprite);
 
 	// VẼ CẢ THANH MÁU
@@ -91,14 +89,12 @@ void enemy::draw(sf::RenderWindow& window)
 	window.draw(healthBarForeground);
 }
 
-bool enemy::reachedEnd()
-{
+bool enemy::reachedEnd() {
 	if (Enemysprite.getPosition() == _path.back()) return true;
 	return false;
 }
 
-void enemy::move(float deltaTime)
-{
+void enemy::move(float deltaTime) {
 	//This is for debug
 	//sf::Vector2f s = Enemysprite.getPosition();
 	//std::cout << s.x << " " << s.y << "\n";
@@ -123,12 +119,11 @@ void enemy::move(float deltaTime)
 	}
 }
 
-void enemy::animate(float deltaTime)
-{
+void enemy::animate(float deltaTime) {
 	timeSinceLastFrame += deltaTime; //Thoi gian giua cac Frame
 	if (timeSinceLastFrame >= frameTime) { //Neu du thoi gian chuyen frame
-		currentFrame = (currentFrame + 1) % totalFrame; 
-		
+		currentFrame = (currentFrame + 1) % totalFrame;
+
 		Enemysprite.setTexture(textures[currentFrame]);//Dat frame ke tiep
 		timeSinceLastFrame = 0.0F;
 	}

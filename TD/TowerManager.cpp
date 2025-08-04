@@ -69,6 +69,7 @@ void TowerManager::buildTower(int row, int col, const std::string& towerType) {
 	for (int i = 0; i < buildZone.size(); ++i) {
 		if (buildZone[i].contains(sf::Vector2f{ (float)col * point::TileSize, (float)row * point::TileSize })) {
 			buildNewTower->setPosition(buildZone[i].getCenter());
+			std::cout << "Build " << buildZone[i].getCenter().x << " " << buildZone[i].getCenter().y << "\n";
 			break;
 		}
 	}
@@ -89,18 +90,20 @@ void TowerManager::draw(sf::RenderWindow& window) {
 		towers[i]->draw(window);
 	}
 
+	/*for (const auto& zone : buildZone) {
+	sf::RectangleShape shape;
+	shape.setPosition(sf::Vector2f(zone.position));
+	shape.setSize(sf::Vector2f(zone.size));
+	shape.setFillColor(sf::Color::Transparent);
+	shape.setOutlineColor(sf::Color::Green);
+	shape.setOutlineThickness(1.f);
+
+	window.draw(shape);
+	}*/
+
+	/*std::cin.get();*/
 
 
 }
 
-//for (const auto& zone : buildZone) {
-//	sf::RectangleShape shape;
-//	shape.setPosition(sf::Vector2f(zone.position));
-//	shape.setSize(sf::Vector2f(zone.size));
-//	shape.setFillColor(sf::Color::Transparent);
-//	shape.setOutlineColor(sf::Color::Green);
-//	shape.setOutlineThickness(1.f);
-//
-	//	window.draw(shape);
-	//}
 

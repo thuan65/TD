@@ -49,6 +49,16 @@ private:
     std::unique_ptr<sf::Sprite> victorySprite;  // Ảnh "Victory"
 
 
+    bool isBetweenWaves; // Cờ báo hiệu đang trong thời gian nghỉ
+    float timeUntilNextWave; // Thời gian đếm ngược
+
+    // Hằng số thời gian nghỉ giữa các wave
+    const float TIME_BETWEEN_WAVES = 3.0f; // 3 giây    
+
+    // ... các unique_ptr ...
+    std::unique_ptr<sf::Text> victoryText;
+    std::vector<sf::Sprite> nextWaveTimerSprites;
+
 
     // Vùng có thể click của các icon
     //sf::FloatRect tower1IconBounds;

@@ -1,7 +1,7 @@
 ﻿#include "WaveManager.h"
 #include "enemy.h"
 
-WaveManager::WaveManager() 
+WaveManager::WaveManager()
 	: filePath("No path for wave loading yet"), wave_number(1), enemySpawnIndex(0) //Start from wave 1
 {
 }
@@ -18,34 +18,39 @@ void WaveManager::setFilePath(const std::string& rfilePath) {
 	filePath = rfilePath;
 }
 
-void WaveManager::startNewWave()
-{
-	if (!WaveEnded()) return; //if wave not end yet
-	enemySpawnIndex = 0;
-	timeSinceLastWave = 0;
-	loadWaveFromFile(wave_number);
-	wave_number++;
-	if (wave_number + 1 > EnemyInfo::TOTAL_WAVES) { // Fixed TOTAL_WAVES reference
-		// Nếu muốn, xóa dòng này đi để nó không báo lỗi nữa
-		// cout << "All waves completed!" << endl;
+void WaveManager::startNewWave() {
+	// Nếu không phải là wave đầu tiên và wave cũ chưa kết thúc, thì không làm gì cả
+	if (wave_number > 1 && !WaveEnded()) {
 		return;
 	}
+
+	// Nếu đã hoàn thành tất cả các wave, cũng không làm gì cả
+	if (wave_number > TOTAL_WAVES) { // TOTAL_WAVES là hằng số bạn đã thêm
+		return;
+	}
+
+	// Nếu wave_number là 0 (lần đầu tiên) thì tăng lên 1
+	if (wave_number == 0) {
+		wave_number = 1;
+	}
+
+	enemySpawnIndex = 0;
+	timeSinceLastWave = 0;
+	loadWaveFromFile(wave_number); // Load wave hiện tại
+
+	// Chỉ tăng wave_number để chuẩn bị cho lần gọi tiếp theo
+	wave_number++;
 }
 
 void WaveManager::loadWaveFromFile(int rwave_number) {
 
-	ifstream fin(filePath + to_string(rwave_number) + ".txt");
-	try {
-		if (fin.fail()) {//use catch throw here
-		throw std::runtime_error("ERROR Reading WaveSpawn File");
+	ifstream fin("Data\\1wave\\map1\\wave" + to_string(rwave_number) + ".txt");
+
+	if (fin.fail()) {//use catch throw here
+		cout << "ERROR Reading WaveSpawn File";
+		return;
 	}
-	}
-	catch (const std::runtime_error& e) {
-		// In lỗi ra console và ném lại để chương trình có thể dừng lại
-		std::cerr << "Resource loading failed: " << e.what() << std::endl;
-		throw;
-	}
-	
+
 	std::string line;
 	EnemyInfoForWave.clear();
 	while (getline(fin, line)) {
@@ -57,14 +62,15 @@ void WaveManager::loadWaveFromFile(int rwave_number) {
 		ss >> info.enemy_type;
 		ss >> info.health;
 		ss >> info.speed;
+		ss >> info.bounty;
 
 		EnemyInfoForWave.emplace_back(info);
 	}
-		fin.close();
+	fin.close();
 }
 
 void WaveManager::spawnEnemy(const EnemyInfo& info) {
-	enemy* e = new enemy(Resource_Management::getTexture(info.enemy_type), PathFinder::getPath(), info.health, info.speed);
+	enemy* e = new enemy(Resource_Management::getTexture(info.enemy_type), PathFinder::getPath(), info.health, info.speed, info.bounty);
 	activeEnemy.push_back(e);
 }
 
@@ -73,8 +79,7 @@ bool WaveManager::AllEnemySpawned() const {
 	return true;
 }
 
-bool WaveManager::WaveEnded()
-{
+bool WaveManager::WaveEnded() {
 	return activeEnemy.empty() && enemySpawnIndex >= EnemyInfoForWave.size();
 }
 
@@ -95,42 +100,34 @@ void WaveManager::update(float deltaTime) {
 			_enemyToRemove.push_back(activeEnemy[i]);
 		}
 	}
-	
+
 }
 
 void WaveManager::processRemovals(int* enemiesReachedEnd, int* moneyFromKills) {
-	// Reset các biến đếm
 	if (enemiesReachedEnd) *enemiesReachedEnd = 0;
 	if (moneyFromKills) *moneyFromKills = 0;
 
-	if (!_enemyToRemove.empty()) {
-		auto it = _enemyToRemove.begin();
-		while (it != _enemyToRemove.end()) {
-			enemy* toRemove = *it;
+	if (_enemyToRemove.empty()) return;
 
-			// Tìm và xóa khỏi activeEnemy
-			for (auto activeIt = activeEnemy.begin(); activeIt != activeEnemy.end(); ) {
-				if (*activeIt == toRemove) {
-					// Kiểm tra lý do bị xóa
-					if (toRemove->reachedEnd() && enemiesReachedEnd) {
-						(*enemiesReachedEnd)++;
-					}
-					if (!toRemove->isEnemyAlive() && moneyFromKills) {
-						// (*moneyFromKills) += toRemove->getBounty(); // Cần thêm hàm getBounty() cho enemy
-					}
-
-					delete* activeIt;
-					activeIt = activeEnemy.erase(activeIt); // Xóa và lấy iterator tiếp theo
-					goto next_removal; // Nhảy đến lần lặp tiếp theo của vòng lặp ngoài
-				}
-				else {
-					++activeIt;
-				}
+	for (enemy* toRemove : _enemyToRemove) {
+		auto it = std::find(activeEnemy.begin(), activeEnemy.end(), toRemove);
+		if (it != activeEnemy.end()) {
+			enemy* foundEnemy = *it;
+			if (foundEnemy->reachedEnd() && enemiesReachedEnd) {
+				(*enemiesReachedEnd)++;
 			}
-		next_removal:
-			it = _enemyToRemove.erase(it);
+			if (!foundEnemy->isEnemyAlive() && moneyFromKills) {
+				int bounty = foundEnemy->getBounty();
+				(*moneyFromKills) += bounty;
+				// --- THÊM COUT Ở ĐÂY ---
+				std::cout << "[WaveManager] Enemy killed! Bounty: " << bounty
+					<< ". Total moneyFromKills so far: " << *moneyFromKills << std::endl;
+			}
+			delete foundEnemy;
+			activeEnemy.erase(it);
 		}
 	}
+	_enemyToRemove.clear();
 }
 
 void WaveManager::draw(sf::RenderWindow& window) {

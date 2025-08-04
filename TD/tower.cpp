@@ -2,13 +2,13 @@
 #include "BulletManager.h"
 
 tower::tower(const std::vector<sf::Texture>& rtowerTexture, int row, int col, float rRange, float rFireRate)
-	: towerTexture(rtowerTexture), towerSprite(towerTexture[0]), range(rRange), FireRate(rFireRate), towerReloading(FireRate), row(row), col(col)
+	: towerTexture(rtowerTexture), towerSprite(towerTexture[0]), range(rRange), FireRate(rFireRate), towerReloading(FireRate), row(row), col(col), totalFrame(towerTexture.size())
 {
 	towerSprite.setPosition(sf::Vector2f(col * point::TileSize, row * point::TileSize));
 }
 
 void tower::update(const float& deltaTime, std::vector<enemy*>& enemies, BulletManager* bulletManager) {
-
+	animate(deltaTime);
 	towerReloading -= deltaTime;
 
 	enemy* target = findTheNearestEnemyInRange(enemies);
@@ -54,3 +54,13 @@ void tower::draw(sf::RenderWindow& window)
 //		}
 //	}
 //}
+
+void tower::animate(float deltaTime) {
+	timeSinceLastFrame += deltaTime; //Thoi gian giua cac Frame
+	if (timeSinceLastFrame >= frameTime) { //Neu du thoi gian chuyen frame
+		currentFrame = (currentFrame + 1) % totalFrame;
+
+		towerSprite.setTexture(towerTexture[currentFrame]);//Dat frame ke tiep
+		timeSinceLastFrame = 0.0F;
+	}
+}

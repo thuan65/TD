@@ -7,7 +7,7 @@
 #include "enemy.h"
 #include "Resource_Management.h"
 #include "PathFinder.h"
-#include <string>
+
 
 class WaveManager {
 
@@ -20,12 +20,13 @@ private:
 		std::string enemy_type;
 		int health;
 		int speed;
+		int bounty;
 		static const int TOTAL_WAVES = 3; // << TONG WAVE LA 3	
 	};
 
 	std::vector <EnemyInfo> EnemyInfoForWave;
 	std::vector<enemy*> activeEnemy;
-	int wave_number; 
+	int wave_number;
 	int enemySpawnIndex;
 	float timeSinceLastWave;
 	std::vector<enemy*> _enemyToRemove;
@@ -34,7 +35,7 @@ public:
 	static const int TOTAL_WAVES = 3; // << THÊM DÒNG NÀY
 	WaveManager();
 	~WaveManager();
-		
+
 	std::vector<enemy*>& getActiveEnemy() { return activeEnemy; }
 	void setFilePath(const std::string& rfilePath);
 	void startNewWave();

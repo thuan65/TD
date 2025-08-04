@@ -16,6 +16,12 @@ class tower {
 	float towerReloading = 0.0f;
 	int row, col;
 
+	////////////Animation_helper//////////
+	int currentFrame = 0;
+	float frameTime = 0.5F;
+	float timeSinceLastFrame = 0.0F;
+	int totalFrame;
+
 	//point _location; //This is location of the tower
 	//bullet _b;//Cái viên đạn mà tháp bắn ra
 
@@ -23,7 +29,7 @@ public:
 	tower(const std::vector<sf::Texture>& rtowerTexture, int row = 0, int col = 0, float rRange = 150.0f, float rFireRate = 2); //Change the range setting later
 	enemy* findTheNearestEnemyInRange(std::vector<enemy*>& enemies);
 
-
+	void animate(float deltaTime);
 	void update(const float& deltaTime, std::vector<enemy*>& enemies, BulletManager* bulletManager);
 	void draw(sf::RenderWindow& window);
 

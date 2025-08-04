@@ -5,8 +5,7 @@
 
 using namespace std;
 
-class enemy
-{
+class enemy {
 private:
 
 	std::vector<sf::Texture> textures;
@@ -16,6 +15,7 @@ private:
 	float _speed;
 	int _health;
 	int maxHealth; // Lưu lượng máu tối đa(dùng để tính % máu còn lại)
+	int bounty; // Biến lưu tiền thưởng khi diệt quái
 	sf::RectangleShape healthBarBackground; // Thanh nền màu đỏ
 	sf::RectangleShape healthBarForeground; // Thanh máu xanh lá
 
@@ -31,29 +31,30 @@ private:
 
 
 public:
-	enemy(const std::vector<sf::Texture>&, const vector<sf::Vector2f>& _rpath, int rMaxHealth, float rspeed = 50.0F); // Thêm maxHealth
-   
-	
+	enemy(const std::vector<sf::Texture>&, const vector<sf::Vector2f>& _rpath, int rMaxHealth, float rspeed = 50.0F, int rBounty = 0.0); // Thêm maxHealth
+
+
 	vector<sf::Vector2f> getP() { return _path; }
 	int getSpeed() { return _speed; }
 	sf::Vector2f getPosition() { return Enemysprite.getPosition(); }
 	void setSeed(int tspeed) {
 		if (tspeed > 0) _speed = tspeed;
 	}
-	void setTotalFrame(int rTotalFrame) { 
+	void setTotalFrame(int rTotalFrame) {
 		totalFrame = rTotalFrame;
 	}
 
 	sf::Vector2f getPositionAfter(float time);
 	void damageTake(int rdamage);
 	bool isEnemyAlive();
+	int getBounty() const { return bounty; }
 
-//////////////////////For_Animation///////////////////
-	void move(float);								
-	void animate(float);								
+	//////////////////////For_Animation///////////////////
+	void move(float);
+	void animate(float);
 	void Update(float);
 	void draw(sf::RenderWindow& window);
-//////////////////////For_Animation///////////////////
+	//////////////////////For_Animation///////////////////
 
 	bool reachedEnd(); //Enemy reached ended ?
 };

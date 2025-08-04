@@ -11,7 +11,8 @@ game::game()
     isBuildMenuOpen(false),
     // Khởi tạo các biến trạng thái
     lives(5), money(500), currentWave(0),
-    isGameOver(false), playerWon(false) {
+    isGameOver(false), playerWon(false),
+    timeUntilNextWave(TIME_BETWEEN_WAVES) {
     //window.setFramerateLimit(60);
     setupBuildMenu();
     updateGUISprites(); // Gọi để khởi tạo các sprite GUI ban đầu
@@ -116,22 +117,32 @@ void game::drawNumber(int number, float x, float y, std::vector<sf::Sprite>& spr
     sprite_vector.clear();
     std::string numStr = std::to_string(number);
     float currentX = x;
+
+    // Bạn có thể chỉnh sửa con số này để thay đổi kích thước
+    const float digitScale = 0.04f;
+
     for (char c : numStr) {
         int digit = c - '0';
         const sf::Texture& tex = Resource_Management::Digits[digit][0];
         sf::Sprite sprite(tex);
+
+        // --- THÊM DÒNG QUAN TRỌNG NÀY ---
+        sprite.setScale(sf::Vector2f(digitScale, digitScale));
+
         sprite.setPosition({ currentX, y });
         sprite_vector.push_back(sprite);
-        currentX += tex.getSize().x;
+
+        // --- SỬA LẠI DÒNG NÀY ---
+        // Phải tính khoảng cách dựa trên kích thước đã được scale
+        currentX += tex.getSize().x * digitScale;
     }
 }
-
 // --- HÀM RUN CHÍNH ---
 void game::Run() {
     vector<vector<point>> _Map_Game_Logic = gameMap.getMap_Game();
     currentWave = 1;
     mapSelection.selectMap(1); // This is for selecting map MOVE THIS TO THE LOOP AFTER
-    //waveControl.startNewWave();
+    waveControl.startNewWave();
 
     sf::Clock clock;
     while (window.isOpen()) {
@@ -144,23 +155,42 @@ void game::Run() {
                 if (mouseEvent && mouseEvent->button == sf::Mouse::Button::Left) {
                     sf::Vector2i pixelPos = mouseEvent->position;
                     sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos);
-             
+
                     if (isBuildMenuOpen) {
                         // TÍNH TOÁN BOUNDS NGAY TẠI ĐÂY
                         if (buildMenuTower1Icon->getGlobalBounds().contains(worldPos)) {
-                            towerControl.buildTower(buildMenuTilePosition.y, buildMenuTilePosition.x, "Tower1");
+                            if (money >= 100) {
+                                money -= 100;
+                                towerControl.buildTower(buildMenuTilePosition.y, buildMenuTilePosition.x, "Tower1");
+                                updateGUISprites(); // Cập nhật lại hiển thị tiền
+                            }
                             closeBuildMenu();
                         }
                         else if (buildMenuTower2Icon->getGlobalBounds().contains(worldPos)) {
-                            towerControl.buildTower(buildMenuTilePosition.y, buildMenuTilePosition.x, "Tower2");
+                            if (money >= 150) {
+                                money -= 150;
+                                towerControl.buildTower(buildMenuTilePosition.y, buildMenuTilePosition.x, "Tower2");
+                                updateGUISprites(); // Cập nhật lại hiển thị tiền
+                            }
+
                             closeBuildMenu();
                         }
                         else if (buildMenuTower3Icon->getGlobalBounds().contains(worldPos)) {
-                            towerControl.buildTower(buildMenuTilePosition.y, buildMenuTilePosition.x, "Tower3");
+                            if (money >= 200) {
+                                money -= 200;
+                                towerControl.buildTower(buildMenuTilePosition.y, buildMenuTilePosition.x, "Tower3");
+                                updateGUISprites(); // Cập nhật lại hiển thị tiền
+                            }
+
                             closeBuildMenu();
                         }
                         else if (buildMenuTower4Icon->getGlobalBounds().contains(worldPos)) {
-                            towerControl.buildTower(buildMenuTilePosition.y, buildMenuTilePosition.x, "Tower4");
+                            if (money >= 250) {
+                                money -= 250;
+                                towerControl.buildTower(buildMenuTilePosition.y, buildMenuTilePosition.x, "Tower4");
+                                updateGUISprites(); // Cập nhật lại hiển thị tiền
+                            }
+
                             closeBuildMenu();
                         }
                         else {
@@ -170,7 +200,7 @@ void game::Run() {
                     else {
                         int row = static_cast<int>(worldPos.y / point::TileSize);
                         int col = static_cast<int>(worldPos.x / point::TileSize);
-                      
+
                         if (row >= 0 && row < _Map_Game_Logic.size() && col >= 0 && col < _Map_Game_Logic[0].size()) {
                             if (towerControl.clickCheck(worldPos)) {
                                 openBuildMenu(row, col);
@@ -192,6 +222,28 @@ void game::Run() {
         float deltaTime = clock.restart().asSeconds();
 
         if (!isGameOver && !playerWon) {
+            if (waveControl.WaveEnded() && !isBetweenWaves) {
+                // Nếu wave vừa kết thúc và chưa bắt đầu đếm ngược
+                if (currentWave < WaveManager::TOTAL_WAVES) {
+                    // Bắt đầu trạng thái nghỉ
+                    isBetweenWaves = true;
+                    timeUntilNextWave = TIME_BETWEEN_WAVES;
+                }
+            }
+
+            // Nếu đang trong thời gian nghỉ, bắt đầu đếm ngược
+            if (isBetweenWaves) {
+                timeUntilNextWave -= deltaTime;
+                // Cập nhật sprite hiển thị thời gian
+                drawNumber(static_cast<int>(timeUntilNextWave) + 1, 250.f, 40.f, nextWaveTimerSprites);
+
+                if (timeUntilNextWave <= 0) {
+                    isBetweenWaves = false; // Kết thúc đếm ngược
+                    currentWave++;
+                    waveControl.startNewWave();
+                    updateGUISprites();
+                }
+            }
             waveControl.update(deltaTime);
             towerControl.update(deltaTime, waveControl.getActiveEnemy());
             bulletManager.update(deltaTime, waveControl.getActiveEnemy());
@@ -224,16 +276,16 @@ void game::Run() {
         towerControl.draw(window);
         bulletManager.draw(window);
 
-       // for (int i = 0; i < _Map_Game_Logic.size(); ++i) {
-        //    for (int j = 0; j < _Map_Game_Logic[0].size(); ++j) {
-        //        sf::RectangleShape cell(sf::Vector2f(point::TileSize, point::TileSize));
-        //        cell.setPosition(sf::Vector2f(j * point::TileSize, i * point::TileSize));
-        //        cell.setOutlineColor(sf::Color::White);
-        //        cell.setOutlineThickness(1);
-        //        cell.setFillColor(sf::Color::Transparent);
-         //       window.draw(cell);
-         //   }
-        //}
+        // for (int i = 0; i < _Map_Game_Logic.size(); ++i) {
+         //    for (int j = 0; j < _Map_Game_Logic[0].size(); ++j) {
+         //        sf::RectangleShape cell(sf::Vector2f(point::TileSize, point::TileSize));
+         //        cell.setPosition(sf::Vector2f(j * point::TileSize, i * point::TileSize));
+         //        cell.setOutlineColor(sf::Color::White);
+         //        cell.setOutlineThickness(1);
+         //        cell.setFillColor(sf::Color::Transparent);
+          //       window.draw(cell);
+          //   }
+         //}
 
         if (isBuildMenuOpen) {
             if (buildMenuBackground) window.draw(*buildMenuBackground);
@@ -244,8 +296,13 @@ void game::Run() {
         }
 
         for (const auto& sprite : livesSprites) window.draw(sprite);
-        /*     for (const auto& sprite : moneySprites) window.draw(sprite);*/
-           /*  for (const auto& sprite : waveSprites) window.draw(sprite);*/
+        for (const auto& sprite : moneySprites) window.draw(sprite);
+        for (const auto& sprite : waveSprites) window.draw(sprite);
+        if (isBetweenWaves) {
+            for (const auto& sprite : nextWaveTimerSprites) {
+                window.draw(sprite);
+            }
+        }
 
         if (isGameOver && gameOverSprite) window.draw(*gameOverSprite);
         if (playerWon && victorySprite) window.draw(*victorySprite);
