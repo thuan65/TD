@@ -1,6 +1,7 @@
-# Wave 1 - 5 enemy (For now) (Format: time_spawn  enemy_type  hp  speed)
-0.0	Sleame	100	50
-1.0	Sleame	100	50
-2.0	Mage_Sleame	70	80
-3.0	Knight_Sleame	300	30
-4.5	Sleame	100	50
+0.0 Sleame 100 50 10
+1.5 Sleame 100 50 10
+3.0 Mage_Sleame 80 75 15
+3.5 Mage_Sleame 80 75 15
+5.5 Knight_Sleame 400 35 50
+7.0 Sleame 100 50 10
+7.5 Sleame 100 50 10
