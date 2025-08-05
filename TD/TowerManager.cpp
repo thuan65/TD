@@ -1,10 +1,10 @@
 ﻿#include "TowerManager.h"
 
-TowerManager::TowerManager(BulletManager* rbulletManager)
-	: bulletManager(rbulletManager)
-{}
-
-
+TowerManager::TowerManager(sf::RenderWindow* window, BulletManager* rbulletManager)
+	: window(window), bulletManager(rbulletManager), isBuildMenuOpen(false)
+{
+	setupBuildMenu();
+}
 
 TowerManager::~TowerManager() {
 	for (int i = 0; i < towers.size(); ++i) {
@@ -14,6 +14,62 @@ TowerManager::~TowerManager() {
 	towers.clear();
 }
 
+void TowerManager::setupBuildMenu() {
+	buildMenuBackground = std::make_unique<sf::RectangleShape>();
+	buildMenuBackground->setSize({ 148.f, 37.f });
+	buildMenuBackground->setFillColor(sf::Color(100, 100, 100, 200));
+
+	buildMenuTower1Icon = std::make_unique<sf::Sprite>(Resource_Management::getTexture("Tower1_Icon")[0]);
+	buildMenuTower2Icon = std::make_unique<sf::Sprite>(Resource_Management::getTexture("Tower2_Icon")[0]);
+	buildMenuTower3Icon = std::make_unique<sf::Sprite>(Resource_Management::getTexture("Tower3_Icon")[0]);
+	buildMenuTower4Icon = std::make_unique<sf::Sprite>(Resource_Management::getTexture("Tower4_Icon")[0]);
+}
+
+
+void TowerManager::openBuildMenu(int row, int col) {
+	isBuildMenuOpen = true;
+	buildMenuTilePosition = { col, row }; // Gán vị trí ô đất (x=col, y=row)
+
+	// --- TÍNH TOÁN LẠI VỊ TRÍ MENU ---
+
+	// 1. Lấy tọa độ tâm của ô đất đã click
+	float tileCenterX = static_cast<float>(col * point::TileSize) + (point::TileSize / 2.f);
+	float tileCenterY = static_cast<float>(row * point::TileSize) + (point::TileSize / 2.f);
+
+	// 2. Lấy kích thước của nền menu
+	sf::Vector2f menuSize = buildMenuBackground->getSize();
+
+	// 3. Tính toán vị trí góc trên-trái của menu để nó được CĂN GIỮA
+	// so với tâm ô đất và nằm ngay PHÍA TRÊN ô đất
+	float menuX = tileCenterX - (menuSize.x / 2.f);
+	float menuY = tileCenterY - (point::TileSize / 2.f) - menuSize.y - 5.f; // 5.f là khoảng đệm
+
+	// Đảm bảo menu không bị vẽ ra ngoài màn hình
+	const sf::Vector2u windowSize = window->getSize();
+	if (menuX < 0) menuX = 0;
+	if (menuY < 0) menuY = 0;
+	if (menuX + menuSize.x > windowSize.x) menuX = windowSize.x - menuSize.x;
+	if (menuY + menuSize.y > windowSize.y) menuY = windowSize.y - menuSize.y;
+
+
+	// 4. Đặt vị trí cho nền và các icon
+	buildMenuBackground->setPosition(sf::Vector2f(menuX, menuY));
+
+	// Vị trí các icon được tính dựa trên vị trí mới của menu
+	buildMenuTower1Icon->setPosition(sf::Vector2f(menuX + 5.f, menuY + 2.5f));
+	buildMenuTower2Icon->setPosition(sf::Vector2f(menuX + 42.f, menuY + 2.5f));
+	buildMenuTower3Icon->setPosition(sf::Vector2f(menuX + 79.f, menuY + 2.5f));
+	buildMenuTower4Icon->setPosition(sf::Vector2f(menuX + 116.f, menuY + 2.5f));
+
+	// Cập nhật lại vùng clickable
+   /* tower1IconBounds = buildMenuTower1Icon->getGlobalBounds();
+	tower2IconBounds = buildMenuTower2Icon->getGlobalBounds();
+	tower3IconBounds = buildMenuTower3Icon->getGlobalBounds();
+	tower4IconBounds = buildMenuTower4Icon->getGlobalBounds();*/
+}
+void TowerManager::closeBuildMenu() {
+	isBuildMenuOpen = false;
+}
 
 
 void TowerManager::update(float deltaTime, std::vector<enemy*>& enemies) {
@@ -50,33 +106,78 @@ void TowerManager::ReadFile(const std::string& filePath) {
 	//std::cout << buildZones[1].bounds.position.x << " " << buildZones[1].bounds.position.y << "\n";
 }
 
-bool TowerManager::clickCheck(sf::Vector2f worldPos) {
-	for (int i = 0; i < buildZones.size(); ++i) {
+bool TowerManager::buildTower(sf::Vector2f worldPos, std::string towerType) {
+	tower* buildNewTower = new tower(Resource_Management::getTexture(towerType));
+	for (int i = 0; i < buildZones.size(); ++i) {//Tìm ô có thể xây khác
+
 		if (buildZones[i].bounds.contains(worldPos)) {
-			return true;
+			buildNewTower->setPosition(buildZones[i].bounds.getCenter());
+			buildZones[i].TowerExist = true;
+			//std::cout << "Build:  " << buildZones[i].bounds.getCenter().x << " " << buildZones[i].bounds.getCenter().y << "\n";
+			//std::cout << buildNewTower->getPosition().x << " " << buildNewTower->getPosition().y << "\n";
+			towers.emplace_back(buildNewTower);
+
+			break;
 		}
 	}
-	return false;
 }
 
-void TowerManager::buildTower(sf::Vector2f worldPos, const std::string& towerType) {
+void TowerManager::clickCheck(sf::Vector2f worldPos, int& money) {
 	//std::cout << worldPos.x << " " << worldPos.y << "\n";
 
 	if (towerTowerExisted(worldPos)) return;//If the tower exist do sth(sell, upgrate)
 	else {//Build place is valid and no tower there yet
-		tower* buildNewTower = new tower(Resource_Management::getTexture(towerType));
-		for (int i = 0; i < buildZones.size(); ++i) {//Tìm ô có thể xây khác
 
-			if (buildZones[i].bounds.contains(worldPos)) {
-				buildNewTower->setPosition(buildZones[i].bounds.getCenter());
-				buildZones[i].TowerExist = true;
-				//std::cout << "Build:  " << buildZones[i].bounds.getCenter().x << " " << buildZones[i].bounds.getCenter().y << "\n";
-				//std::cout << buildNewTower->getPosition().x << " " << buildNewTower->getPosition().y << "\n";
-				towers.emplace_back(buildNewTower);
-			
-				break;
+		
+
+		if (isBuildMenuOpen) {
+			// TÍNH TOÁN BOUNDS NGAY TẠI ĐÂY
+			if (buildMenuTower1Icon->getGlobalBounds().contains(worldPos)) {
+				if (money >= 100) {
+					money -= 100;
+					buildTower(worldPos, "Tower1");
+					
+				}
+				closeBuildMenu();
+			}
+			else if (buildMenuTower2Icon->getGlobalBounds().contains(worldPos)) {
+				if (money >= 150) {
+					money -= 150;
+					buildTower(worldPos, "Tower2");
+				}
+
+				closeBuildMenu();
+			}
+			else if (buildMenuTower3Icon->getGlobalBounds().contains(worldPos)) {
+				if (money >= 200) {
+					money -= 200;
+					buildTower(worldPos, "Tower3");
+				}
+
+				closeBuildMenu();
+			}
+			else if (buildMenuTower4Icon->getGlobalBounds().contains(worldPos)) {
+				if (money >= 250) {
+					money -= 250;
+					buildTower(worldPos, "Tower4");
+					
+				}
+
+				closeBuildMenu();
+			}
+			else {
+				closeBuildMenu();
 			}
 		}
+
+		int row = static_cast<int>(worldPos.y / point::TileSize);
+		int col = static_cast<int>(worldPos.x / point::TileSize);
+		/*if (row >= 0 && row < _Map_Game_Logic.size() && col >= 0 && col < _Map_Game_Logic[0].size()) {*/
+		if (clickCheck(worldPos)) {
+			openBuildMenu(row, col);
+		}
+		//}
+
 		}
 	
 }

@@ -31,16 +31,7 @@ private:
     bool playerWon;
 
 
-    bool isBuildMenuOpen;
-    sf::Vector2i buildMenuTilePosition; // Lưu vị trí (row, col) của ô đang mở menu
 
-    // Các đối tượng đồ họa cho menu
-    // Giả sử menu là một hình chữ nhật đơn giản chứa 2 icon
-    std::unique_ptr<sf::RectangleShape> buildMenuBackground;
-    std::unique_ptr<sf::Sprite> buildMenuTower1Icon;
-    std::unique_ptr<sf::Sprite> buildMenuTower2Icon;
-    std::unique_ptr<sf::Sprite> buildMenuTower3Icon; // << THÊM
-    std::unique_ptr<sf::Sprite> buildMenuTower4Icon; // << THÊM
 
     std::vector<sf::Sprite> livesSprites;
     std::vector<sf::Sprite> moneySprites;
@@ -66,10 +57,7 @@ private:
     //sf::FloatRect tower3IconBounds; // << THÊM
     //sf::FloatRect tower4IconBounds; // << THÊM
 
-    // Hàm trợ giúp để thiết lập các đối tượng menu
-    void setupBuildMenu();
-    void openBuildMenu(int row, int col);
-    void closeBuildMenu();
+  
     void updateGUISprites();
     void drawNumber(int number, float x, float y, std::vector<sf::Sprite>& sprite_vector);
 

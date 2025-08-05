@@ -6,15 +6,15 @@
 game::game()
     : window(sf::VideoMode({ 540, 360 }), "GAME"),
     gameMap(Resource_Management::getTexture("Map_Game1")),
-    towerControl(&bulletManager),
+    towerControl(&window, &bulletManager),
     mapSelection(&gameMap, &bulletManager, &waveControl, &towerControl),
-    isBuildMenuOpen(false),
+    
     // Khởi tạo các biến trạng thái
     lives(5), money(500), currentWave(0),
     isGameOver(false), playerWon(false),
     timeUntilNextWave(TIME_BETWEEN_WAVES) {
     //window.setFramerateLimit(60);
-    setupBuildMenu();
+
     updateGUISprites(); // Gọi để khởi tạo các sprite GUI ban đầu
 
     // Thiết lập sprite cho Game Over và Victory
@@ -41,62 +41,7 @@ game::game()
 game::~game() {}
 
 // --- CÁC HÀM TRỢ GIÚP ---
-void game::setupBuildMenu() {
-    buildMenuBackground = std::make_unique<sf::RectangleShape>();
-    buildMenuBackground->setSize({ 148.f, 37.f });
-    buildMenuBackground->setFillColor(sf::Color(100, 100, 100, 200));
 
-    buildMenuTower1Icon = std::make_unique<sf::Sprite>(Resource_Management::getTexture("Tower1_Icon")[0]);
-    buildMenuTower2Icon = std::make_unique<sf::Sprite>(Resource_Management::getTexture("Tower2_Icon")[0]);
-    buildMenuTower3Icon = std::make_unique<sf::Sprite>(Resource_Management::getTexture("Tower3_Icon")[0]);
-    buildMenuTower4Icon = std::make_unique<sf::Sprite>(Resource_Management::getTexture("Tower4_Icon")[0]);
-}
-// game.cpp
-
-void game::openBuildMenu(int row, int col) {
-    isBuildMenuOpen = true;
-    buildMenuTilePosition = { col, row }; // Gán vị trí ô đất (x=col, y=row)
-
-    // --- TÍNH TOÁN LẠI VỊ TRÍ MENU ---
-
-    // 1. Lấy tọa độ tâm của ô đất đã click
-    float tileCenterX = static_cast<float>(col * point::TileSize) + (point::TileSize / 2.f);
-    float tileCenterY = static_cast<float>(row * point::TileSize) + (point::TileSize / 2.f);
-
-    // 2. Lấy kích thước của nền menu
-    sf::Vector2f menuSize = buildMenuBackground->getSize();
-
-    // 3. Tính toán vị trí góc trên-trái của menu để nó được CĂN GIỮA
-    // so với tâm ô đất và nằm ngay PHÍA TRÊN ô đất
-    float menuX = tileCenterX - (menuSize.x / 2.f);
-    float menuY = tileCenterY - (point::TileSize / 2.f) - menuSize.y - 5.f; // 5.f là khoảng đệm
-
-    // Đảm bảo menu không bị vẽ ra ngoài màn hình
-    const sf::Vector2u windowSize = window.getSize();
-    if (menuX < 0) menuX = 0;
-    if (menuY < 0) menuY = 0;
-    if (menuX + menuSize.x > windowSize.x) menuX = windowSize.x - menuSize.x;
-    if (menuY + menuSize.y > windowSize.y) menuY = windowSize.y - menuSize.y;
-
-
-    // 4. Đặt vị trí cho nền và các icon
-    buildMenuBackground->setPosition(sf::Vector2f(menuX, menuY));
-
-    // Vị trí các icon được tính dựa trên vị trí mới của menu
-    buildMenuTower1Icon->setPosition(sf::Vector2f(menuX + 5.f, menuY + 2.5f));
-    buildMenuTower2Icon->setPosition(sf::Vector2f(menuX + 42.f, menuY + 2.5f));
-    buildMenuTower3Icon->setPosition(sf::Vector2f(menuX + 79.f, menuY + 2.5f));
-    buildMenuTower4Icon->setPosition(sf::Vector2f(menuX + 116.f, menuY + 2.5f));
-
-    // Cập nhật lại vùng clickable
-   /* tower1IconBounds = buildMenuTower1Icon->getGlobalBounds();
-    tower2IconBounds = buildMenuTower2Icon->getGlobalBounds();
-    tower3IconBounds = buildMenuTower3Icon->getGlobalBounds();
-    tower4IconBounds = buildMenuTower4Icon->getGlobalBounds();*/
-}
-void game::closeBuildMenu() {
-    isBuildMenuOpen = false;
-}
 
 void game::updateGUISprites() {
     livesSprites.clear();
@@ -155,60 +100,13 @@ void game::Run() {
             else if (!isGameOver && !playerWon && event->is<sf::Event::MouseButtonPressed>()) {
                 const auto* mouseEvent = event->getIf<sf::Event::MouseButtonPressed>();
                 if (mouseEvent && mouseEvent->button == sf::Mouse::Button::Left) {
+                    //Add a switch case here for later use (Event handler or smth)
                     sf::Vector2i pixelPos = mouseEvent->position;
                     sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos);
-                  
-                    if (isBuildMenuOpen) {
-                        // TÍNH TOÁN BOUNDS NGAY TẠI ĐÂY
-                        if (buildMenuTower1Icon->getGlobalBounds().contains(worldPos)) {
-                            if (money >= 100) {
-                                money -= 100;
-                                towerControl.buildTower(worldPos, "Tower1");
-                                updateGUISprites(); // Cập nhật lại hiển thị tiền
-                            }
-                            closeBuildMenu();
-                        }
-                        else if (buildMenuTower2Icon->getGlobalBounds().contains(worldPos)) {
-                            if (money >= 150) {
-                                money -= 150;
-                                towerControl.buildTower(worldPos, "Tower2");
-                                updateGUISprites(); // Cập nhật lại hiển thị tiền
-                            }
+                    towerControl.buildTower(worldPos, money);
+                    updateGUISprites(); // Cập nhật lại hiển thị tiền
 
-                            closeBuildMenu();
-                        }
-                        else if (buildMenuTower3Icon->getGlobalBounds().contains(worldPos)) {
-                            if (money >= 200) {
-                                money -= 200;
-                                towerControl.buildTower(worldPos, "Tower3");
-                                updateGUISprites(); // Cập nhật lại hiển thị tiền
-                            }
-
-                            closeBuildMenu();
-                        }
-                        else if (buildMenuTower4Icon->getGlobalBounds().contains(worldPos)) {
-                            if (money >= 250) {
-                                money -= 250;
-                                towerControl.buildTower(worldPos, "Tower4");
-                                updateGUISprites(); // Cập nhật lại hiển thị tiền
-                            }
-
-                            closeBuildMenu();
-                        }
-                        else {
-                            closeBuildMenu();
-                        }
-                    }
-                    else {
-                        int row = static_cast<int>(worldPos.y / point::TileSize);
-                        int col = static_cast<int>(worldPos.x / point::TileSize);
-
-                        if (row >= 0 && row < _Map_Game_Logic.size() && col >= 0 && col < _Map_Game_Logic[0].size()) {
-                            if (towerControl.clickCheck(worldPos)) {
-                                openBuildMenu(row, col);
-                            }
-                        }
-                    }
+                }
 
                     if (waveControl.WaveEnded()) {
                         if (currentWave < WaveManager::TOTAL_WAVES) {

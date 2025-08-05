@@ -10,6 +10,7 @@
 class TowerManager{
 
 private: 
+	sf::RenderWindow* window; // Giả sử bạn có một cửa sổ để vẽ
 
 	struct buildZone {
 		sf::FloatRect bounds;
@@ -20,16 +21,34 @@ private:
 	std::vector<tower*> towers;
 	std::vector<buildZone> buildZones;
 
+	bool isBuildMenuOpen;
+	sf::Vector2i buildMenuTilePosition; // Lưu vị trí (row, col) của ô đang mở menu
+
+	// Các đối tượng đồ họa cho menu
+	// Giả sử menu là một hình chữ nhật đơn giản chứa 2 icon
+	std::unique_ptr<sf::RectangleShape> buildMenuBackground;
+	std::unique_ptr<sf::Sprite> buildMenuTower1Icon;
+	std::unique_ptr<sf::Sprite> buildMenuTower2Icon;
+	std::unique_ptr<sf::Sprite> buildMenuTower3Icon; // << THÊM
+	std::unique_ptr<sf::Sprite> buildMenuTower4Icon; // << THÊM
+
+	sf::Vector2f theTowerPosition; // Vị trí của tháp
+
 public:
 
-	TowerManager(BulletManager* rbulletManager = nullptr);
+	// Hàm trợ giúp để thiết lập các đối tượng menu
+	void setupBuildMenu();
+	void openBuildMenu(int row, int col);
+	void closeBuildMenu();
+
+	TowerManager(sf::RenderWindow* window,BulletManager* rbulletManager = nullptr);
 	~TowerManager();
 
 	void update(float deltaTime, std::vector<enemy*>& enemies);//Kiem soat viec dan ban
 	bool towerTowerExisted(sf::Vector2f worldPos);
 	void ReadFile(const std::string& filePath);
-	bool clickCheck(sf::Vector2f);
-	void buildTower(sf::Vector2f worldPos, const std::string& towerType);
+	bool buildTower(sf::Vector2f worldPos, std::string towerType);
+	void clickCheck(sf::Vector2f worldPos, int& money);
 	void sellTower();
 	void upgrateTower();
 

@@ -9,7 +9,7 @@ bullet::bullet(const std::vector<sf::Texture>& bulletTexure, int rSpeed, int rda
 }
 
 void bullet::Initialize(tower* theTower, enemy* theTarget) {
-	if (theTower) {//if the tower is still exist
+	if (theTower) {//if the tower is still exist	
 		target = theTarget;
 		sf::Vector2f targetPosition = theTarget->getPosition();
 		sf::Vector2f towerPostion = theTower->getPosition();
