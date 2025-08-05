@@ -71,6 +71,7 @@ void WaveManager::loadWaveFromFile(int rwave_number) {
 
 void WaveManager::spawnEnemy(const EnemyInfo& info) {
 	enemy* e = new enemy(Resource_Management::getTexture(info.enemy_type), PathFinder::getPath(), info.health, info.speed, info.bounty);
+	std::cout << info.enemy_type << "\n";
 	activeEnemy.push_back(e);
 }
 

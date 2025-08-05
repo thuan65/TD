@@ -30,12 +30,41 @@ private:
 	static std::vector<sf::Texture> GameOver_Image;
 
 
+///////////////////Texture của các con enemy///////////////////
+	///////////////////Dumber///////////////////
+	static std::vector<sf::Texture> Dumber_Movement;
+	static std::vector<sf::Texture> Dumber_Hurt;
+	static std::vector<sf::Texture> Dumber_Dead;
+	///////////////////Dumber///////////////////
+
+	///////////////////Ghast///////////////////
+	static std::vector<sf::Texture> Ghast_Movement;
+	static std::vector<sf::Texture> Ghast_Hurt;
+	static std::vector<sf::Texture> Ghast_Dead;
+	///////////////////Ghast///////////////////
+
+	///////////////////Nightmare///////////////////
+	static std::vector<sf::Texture> Nightmare_Movement;
+	static std::vector<sf::Texture> Nightmare_Hurt;
+	static std::vector<sf::Texture> Nightmare_Dead;
+	///////////////////Nightmare///////////////////
+
+	///////////////////Runner///////////////////
+	static std::vector<sf::Texture> Runner_Movement;
+	static std::vector<sf::Texture> Runner_Hurt;
+	static std::vector<sf::Texture> Runner_Dead;
+	///////////////////Runner///////////////////
+
+///////////////////Texture của các con enemy///////////////////
+
+
 public:
 	// Các hàm là public static
 	static void init(); // Đổi tên loadTexture thành init cho rõ ràng
 	static const std::vector<sf::Texture>& getTexture(const std::string& name);
 	static std::vector<std::vector<sf::Texture>> Digits;
 	static void loadFrame(std::vector<sf::Texture>& textures, const std::string& filePath, int size);
+	static void loadFrame(std::vector<sf::Texture>& textures, const std::string& filePath, const std::string& baseName, int size);
 
 private:
 	// Biến cờ để đảm bảo chỉ load 1 lần

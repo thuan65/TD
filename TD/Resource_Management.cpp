@@ -27,6 +27,18 @@ std::vector<sf::Texture> Resource_Management::Heart_Icon;
 std::vector<std::vector<sf::Texture>> Resource_Management::Digits;
 std::vector<sf::Texture> Resource_Management::Victory_Image;
 std::vector<sf::Texture> Resource_Management::GameOver_Image;
+std::vector<sf::Texture> Resource_Management::Dumber_Movement;
+std::vector<sf::Texture> Resource_Management::Dumber_Hurt;
+std::vector<sf::Texture> Resource_Management::Dumber_Dead;
+std::vector<sf::Texture> Resource_Management::Ghast_Movement;
+std::vector<sf::Texture> Resource_Management::Ghast_Hurt;
+std::vector<sf::Texture> Resource_Management::Ghast_Dead;
+std::vector<sf::Texture> Resource_Management::Nightmare_Movement;
+std::vector<sf::Texture> Resource_Management::Nightmare_Hurt;
+std::vector<sf::Texture> Resource_Management::Nightmare_Dead;
+std::vector<sf::Texture> Resource_Management::Runner_Movement;
+std::vector<sf::Texture> Resource_Management::Runner_Hurt;
+std::vector<sf::Texture> Resource_Management::Runner_Dead;
 // --- Định nghĩa các hàm static ---
 
 // Hàm này sẽ được gọi một lần duy nhất từ game::game()
@@ -60,6 +72,24 @@ void Resource_Management::init() {
         loadFrame(Tower2_Icon, "Data\\2tower\\Tower\\IceTower\\IceTowerFrame", 2);
         loadFrame(Tower3_Icon, "Data\\2tower\\Tower\\ElectricTower\\ElectricTowerFrame", 2);
         loadFrame(Tower4_Icon, "Data\\2tower\\Tower\\FlameTower\\FlameTowerFrame", 2);
+
+
+        ///////////////////////Load Enemy Texture ///////////////////////////////////////
+        loadFrame(Dumber_Movement, "Data\\3enemy\\Dumber\\Movement\\DumperMovement_Frame", 4);
+        loadFrame(Dumber_Hurt, "Data\\3enemy\\Dumber\\Hurt\\DumperHurt_Frame", 4);
+        loadFrame(Dumber_Dead, "Data\\3enemy\\Dumber\\Dead\\Dumper Dead Frame ", 4);
+
+        loadFrame(Ghast_Movement, "Data\\3enemy\\Ghast\\Movement\\Ghast Movement Frame ", 4);
+        loadFrame(Ghast_Hurt, "Data\\3enemy\\Ghast\\Hurt\\Ghast Hurt Frame ", 4);
+        loadFrame(Ghast_Dead, "Data\\3enemy\\Ghast\\Dead\\Ghast Dead Frame ", 4);
+
+        loadFrame(Nightmare_Movement, "Data\\3enemy\\Nightmare\\Nightmare Movement\\Nightmare Movement Frame ", 4);
+        loadFrame(Nightmare_Hurt, "Data\\3enemy\\Nightmare\\Nightmare Hurt\\Nightmare Hurt Frame ", 4);
+        loadFrame(Nightmare_Dead, "Data\\3enemy\\Nightmare\\Nightmare Dead\\Nightmare Dead Frame ", 4);
+
+        loadFrame(Runner_Movement, "Data\\3enemy\\Runner\\Movement\\Runner Movement Frame ", 4);
+        loadFrame(Runner_Hurt, "Data\\3enemy\\Runner\\Hurt\\Runner Hurt Frame ", 4);
+        loadFrame(Runner_Hurt, "Data\\3enemy\\Runner\\Dead\\Runner Dead Frame ", 4);
 
         bullet1.resize(1);
         if (!bullet1[0].loadFromFile("Data\\5bullet\\test.png"))
@@ -112,6 +142,18 @@ void Resource_Management::loadFrame(std::vector<sf::Texture>& textures, const st
     }
 }
 
+void Resource_Management::loadFrame(std::vector<sf::Texture>& textures, const std::string& filePath, const std::string& baseName,int size) {
+    textures.reserve(size);
+
+    for (int i = 0; i < size; ++i) {
+        sf::Texture texture;
+        if (texture.loadFromFile(filePath + std::to_string(i + 1) + ".png") == false) {
+            throw std::invalid_argument("Erorr loading" + baseName + "frame!");
+        }
+        textures.push_back(texture);
+    }
+}
+
 const std::vector<sf::Texture>& Resource_Management::getTexture(const std::string& name) {
     if (!m_isInitialized) {
         // Đây là một chốt an toàn, nhưng tốt nhất là nên gọi init() một cách tường minh
@@ -121,6 +163,23 @@ const std::vector<sf::Texture>& Resource_Management::getTexture(const std::strin
     if (name == "Mage_Sleame") return Mage_Sleame;
     if (name == "Knight_Sleame") return Knight_Sleame;
     if (name == "Sleame") return Sleame;
+
+    if (name == "Dumber_Movement") return Dumber_Movement;
+    if (name == "Dumber_Hurt") return Dumber_Hurt;
+    if (name == "Dumber_Dead") return Dumber_Dead;
+
+    if (name == "Ghast_Movement") return Ghast_Movement;
+    if (name == "Dumber_Hurt") return Ghast_Hurt;
+    if (name == "Ghast_Dead") return Ghast_Dead;
+    
+    if (name == "Nightmare_Movement") return Nightmare_Movement;
+    if (name == "Nightmare_Hurt") return Nightmare_Hurt;
+    if (name == "Nightmare_Dead") return Nightmare_Dead;
+
+    if (name == "Runner_Movement") return Runner_Movement;
+    if (name == "Runner_Hurt") return Runner_Hurt;
+    if (name == "Runner_Dead") return Runner_Dead;
+
     if (name == "Map_Game1") return Map_Game1;
     if (name == "Map_Game2") return Map_Game2;
     if (name == "Map_Game3") return Map_Game3;

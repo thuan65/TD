@@ -91,9 +91,9 @@ void game::Run() {
 
     sf::Clock clock;
     while (window.isOpen()) {
+
+        //////////////All of Part is the in game when playing/////////////////////
         if (const auto event = window.pollEvent()) {
-            sf::Vector2i orldPos = sf::Mouse::getPosition(window);
-            //std::cout << "Mouse " << orldPos.x << " " << orldPos.y << "\n";
             if (event->is<sf::Event::Closed>()) {
                 window.close();
             }
@@ -190,4 +190,5 @@ void game::Run() {
 
         window.display();
     }
+    //////////////All of Part is the in game/////////////////////
 }
