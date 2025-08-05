@@ -1,3 +1,5 @@
 #Path For EnemyWave file
 #Map Name
+#File path to map logic matrix
+#File path to map Start End path
 #Build Position

@@ -8,15 +8,12 @@ set the new start and end point for pathfinder
 
 
 mapTowerDefense_Game::mapTowerDefense_Game(const std::vector<sf::Texture>& rMap_GameTexture)
-	: Map_GameTexture(rMap_GameTexture), Map_GameSprite(Map_GameTexture[0]) //set cho khung hinh dau tien
-{
-	makeMap_GameData();
+	: Map_GameTexture(rMap_GameTexture), startPos({ 3,0,0 }), endDes({ 8 , 15 ,0 }), Map_GameSprite(Map_GameTexture[0]) //set cho khung hinh dau tien
+{//The default of the startPos and endDes will be the matrix of the first map
+	//makeMap_GameData();
 
 	// Tính toán đường đi ban đầu
-	point s = { 3,0,0 }, e = { 8 , 15 ,0 };
-	PathFinder::setStart(s); PathFinder::setEnd(e);
-	PathFinder::findPath(_Map_Game_Logic);
-
+	//PathFinder::findPath(_Map_Game_Logic);
 }
 
 // -1 là tường, 0 là trống
@@ -24,7 +21,7 @@ mapTowerDefense_Game::mapTowerDefense_Game(const std::vector<sf::Texture>& rMap_
 bool mapTowerDefense_Game::ReadFile(std::string fileName) {
 	std::ifstream fin(fileName);
 	if (fin.fail()) {
-		std::cout << "Cannot read Map_Game logic matrix";//Put throw catch here
+		throw std::runtime_error("Cannot read Map_Game logic matrix");//Put throw catch here
 		return false;
 	}
 
@@ -40,7 +37,22 @@ bool mapTowerDefense_Game::ReadFile(std::string fileName) {
 		}
 	}
 	fin.close();
+
+	fin.open(filePathForStartEndPosition);//Read the start and end of the walking path
+	if (fin.fail()) {
+		throw std::runtime_error("Cannot Read Start/End Path");
+	}
+	fin >> startPos >> endDes;
+	fin.close();
 	return true;
+}
+
+void mapTowerDefense_Game::setFilePath(const std::string& rfilePath) {
+	filePathForMatrixLogic = rfilePath;
+}
+
+void mapTowerDefense_Game::setFilePathForStartEnd(const std::string& rfilePath) {
+	filePathForStartEndPosition = rfilePath;
 }
 
 void mapTowerDefense_Game::reset() {
@@ -55,7 +67,8 @@ void mapTowerDefense_Game::reset() {
 void mapTowerDefense_Game::makeMap_GameData() {
 
 	setTotalFrame(Map_GameTexture.size());//Set the total frame for animation
-	ReadFile("Data\\4map\\Logic\\Map1.txt");;
+	ReadFile(filePathForMatrixLogic);
+	PathFinder::setStart(startPos); PathFinder::setEnd(endDes);
 }
 
 
@@ -83,6 +96,7 @@ void mapTowerDefense_Game::draw(sf::RenderWindow& window) {
 
 void mapTowerDefense_Game::setTexture(const std::vector<sf::Texture>& rMap_GameTexture) {
 	Map_GameTexture = rMap_GameTexture;
+	Map_GameSprite.setTexture(Map_GameTexture[0]);
 }
 
 //for (int i = 0; i < point::Map_Game_SIZE; i++) {

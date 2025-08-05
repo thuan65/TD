@@ -51,6 +51,7 @@ public:
 	bool buildTower(sf::Vector2f worldPos, std::string towerType);
 	bool clickCheck(sf::Vector2f worldPos);//Is this a build zone
 	void resolveTowerAt(sf::Vector2f worldPos, int& money); //Giải quyết việc xây tháp / nâng cấp tháp, bán tháp
+	void reset();
 	void sellTower();
 	void upgrateTower();
 

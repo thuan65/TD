@@ -18,6 +18,18 @@ void WaveManager::setFilePath(const std::string& rfilePath) {
 	filePath = rfilePath;
 }
 
+void WaveManager::reset() {
+	wave_number = 1;
+	enemySpawnIndex = 0; 
+	//clear all enemy from past game
+	for (int i = 0; i < activeEnemy.size(); ++i) {
+		delete activeEnemy[i];
+		activeEnemy[i] = nullptr;
+	}
+	activeEnemy.clear();
+	_enemyToRemove.clear();
+}
+
 void WaveManager::startNewWave() {
 	// Nếu không phải là wave đầu tiên và wave cũ chưa kết thúc, thì không làm gì cả
 	if (wave_number > 1 && !WaveEnded()) {
@@ -71,7 +83,6 @@ void WaveManager::loadWaveFromFile(int rwave_number) {
 
 void WaveManager::spawnEnemy(const EnemyInfo& info) {
 	enemy* e = new enemy(Resource_Management::getTexture(info.enemy_type), PathFinder::getPath(), info.health, info.speed, info.bounty);
-	std::cout << info.enemy_type << "\n";
 	activeEnemy.push_back(e);
 }
 
@@ -98,8 +109,11 @@ void WaveManager::update(float deltaTime) {
 		activeEnemy[i]->Update(deltaTime);
 
 		if (!activeEnemy[i]->isEnemyAlive() || activeEnemy[i]->reachedEnd()) {
+		
 			_enemyToRemove.push_back(activeEnemy[i]);
+	
 		}
+
 	}
 
 }

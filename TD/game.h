@@ -7,6 +7,7 @@
 #include "SFML/Graphics.hpp"
 #include "SFML/Window.hpp"
 #include "Resource_Management.h"
+#include "gameSate.h"
 #include "PathFinder.h"
 #include <iostream>
 #include <memory>

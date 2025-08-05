@@ -105,9 +105,18 @@ void TowerManager::ReadFile(const std::string& filePath) {
 		sf::FloatRect zone(sf::Vector2f{ col * point::TileSize, row * point::TileSize }, sf::Vector2f{ point::TileSize, point::TileSize } *1.5F);
 
 		zone.position = zone.position - (zone.size / 2.0F); // To center the box
-		buildZones.push_back(buildZone({ zone, false })); //Gồm vòng spaw khác và có Tháp hay không
+		buildZones.push_back(buildZone({ zone, false })); //Gồm vòng spaw tháp và có Tháp hay không
 	}
 	//std::cout << buildZones[1].bounds.position.x << " " << buildZones[1].bounds.position.y << "\n";
+}
+
+void TowerManager::reset() {
+	for (int i = 0; i < towers.size(); ++i) {
+		delete towers[i];
+		towers[i] = nullptr;
+	}
+	towers.clear();
+	closeBuildMenu();
 }
 
 bool TowerManager::buildTower(sf::Vector2f worldPos, std::string towerType) {

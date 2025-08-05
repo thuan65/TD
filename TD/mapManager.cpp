@@ -3,30 +3,41 @@
 #include "BulletManager.h"
 #include "mapTowerDefense_Game.h"
 #include "TowerManager.h"
-#include "Resource_Management.h"
 
-mapManager::mapManager(mapTowerDefense_Game* rgameMap, BulletManager* rbulletManager, WaveManager* rwaveControl, TowerManager* rtowerControl, int rmapSelection) // cjamge rmapSelection dataType later
-	:gameMap(rgameMap), bulletManager(rbulletManager), waveControl(rwaveControl), towerControl(rtowerControl), mapSelection(rmapSelection)
+
+mapManager::mapManager(mapTowerDefense_Game* rgameMap, BulletManager* rbulletManager, WaveManager* rwaveControl, TowerManager* rtowerControl, PlayState mapSelection) // cjamge rmapSelection dataType later
+	:gameMap(rgameMap), bulletManager(rbulletManager), waveControl(rwaveControl), towerControl(rtowerControl), mapSelection(mapSelection)
 {
+
 }
 
-void mapManager::selectMap(int rmapSelection) {//Add arguement later
+void mapManager::selectMap(PlayState rmapSelection) {//Already choose the map
+	mapSelection = rmapSelection;
 
-	if (rmapSelection == 1) {
-		loadMapConfig("Data\\6mapSelection\\mapconfig1.txt");
+	switch (mapSelection) {
+	case PlayState::Map1:
+	{
+		loadMapConfig("Data\\6mapSelection\\mapconfig1.txt"); break;
 	}
-	if (rmapSelection == 2) {
-		loadMapConfig("Data\\6mapSelection\\mapconfig2.txt");
+	case PlayState::Map2:
+	{
+		loadMapConfig("Data\\6mapSelection\\mapconfig2.txt"); break;
 	}
-	if (rmapSelection == 3) {
-		loadMapConfig("Data\\6mapSelection\\mapconfig3.txt");
+	case PlayState::Map3:
+	{
+		loadMapConfig("Data\\6mapSelection\\mapconfig3.txt");; break;
 	}
-	if (rmapSelection == 4) {
-		loadMapConfig("Data\\6mapSelection\\mapconfig4.txt");
+	case PlayState::Map4:
+	{
+		loadMapConfig("Data\\6mapSelection\\mapconfig4.txt"); break;
 	}
-	//add a exception catch error here
+	default:
+	{
+		throw std::invalid_argument("Cannot load Map config");
+	}
+	}
 
-	setMap();
+	setUpMap();//Set up everything about the map ... reset everything
 }
 
 void mapManager::loadMapConfig(std::string filePathMapconfg) {
@@ -36,16 +47,30 @@ void mapManager::loadMapConfig(std::string filePathMapconfg) {
 		std::string line;
 		std::getline(fin, line);
 		mapcfg.filePathForEnemyWave = line;
+
 		std::getline(fin, line);
 		mapcfg.mapName = line;
+
+		std::getline(fin, line);
+		mapcfg.filePathForMapLogic = line;
+
+		std::getline(fin, line);
+		mapcfg.filePathForStartEndPositon = line;
+
 		std::getline(fin, line);
 		mapcfg.filePathForBuildPosition = line;
 
 }
 
-void mapManager::setMap() {
+void mapManager::setUpMap() {
 	waveControl->setFilePath(mapcfg.filePathForEnemyWave);
 	gameMap->setTexture(Resource_Management::getTexture(mapcfg.mapName));
+	gameMap->setFilePath(mapcfg.filePathForMapLogic);
+	gameMap->setFilePathForStartEnd(mapcfg.filePathForStartEndPositon);
 	towerControl->ReadFile(mapcfg.filePathForBuildPosition);
+
+	waveControl->reset();
+	gameMap->reset();
+	towerControl->reset();
 }
 

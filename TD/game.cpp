@@ -37,8 +37,6 @@ game::game()
 game::~game() {}
 
 // --- CÁC HÀM TRỢ GIÚP ---
-
-
 void game::updateGUISprites() {
     livesSprites.clear();
     const sf::Texture& heartTex = Resource_Management::getTexture("Heart_Icon")[0];
@@ -82,12 +80,11 @@ void game::drawNumber(int number, float x, float y, std::vector<sf::Sprite>& spr
 void game::Run() {
     vector<vector<point>> _Map_Game_Logic = gameMap.getMap_Game();
     currentWave = 1;
-    mapSelection.selectMap(1); // This is for selecting map MOVE THIS TO THE LOOP AFTER
+    mapSelection.selectMap(PlayState::Map1); // This is for selecting map MOVE THIS TO THE LOOP AFTER For now map 1 is set
     waveControl.startNewWave();
-
+  
     sf::Clock clock;
     while (window.isOpen()) {
-
         //////////////All of Part is the in game when playing/////////////////////
         if (const auto event = window.pollEvent()) {
             if (event->is<sf::Event::Closed>()) {
@@ -101,7 +98,6 @@ void game::Run() {
                     sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos);
                     towerControl.resolveTowerAt(worldPos, money);
                     updateGUISprites(); // Cập nhật lại hiển thị tiền
-
                 }
 
                 if (waveControl.WaveEnded()) {
@@ -140,11 +136,12 @@ void game::Run() {
                     updateGUISprites();
                 }
             }
+          
             waveControl.update(deltaTime);
             towerControl.update(deltaTime, waveControl.getActiveEnemy());
             bulletManager.update(deltaTime, waveControl.getActiveEnemy());
             gameMap.Update(deltaTime);
-
+            	
             int enemiesReachedEnd = 0;
             int moneyFromKills = 0;
             waveControl.processRemovals(&enemiesReachedEnd, &moneyFromKills);

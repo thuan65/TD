@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 #include <fstream>
+#include "gameSate.h"
+#include "Resource_Management.h"
 
 class mapTowerDefense_Game;
 class BulletManager;
@@ -9,11 +11,11 @@ class TowerManager;
 
 class mapManager {
 public:
-	mapManager(mapTowerDefense_Game* rgameMap, BulletManager* rbulletManager, WaveManager* rwaveControl, TowerManager* rtowerControl , int rmapSelection = 1);
+	mapManager(mapTowerDefense_Game* rgameMap, BulletManager* rbulletManager, WaveManager* rwaveControl, TowerManager* rtowerControl, PlayState mapSelection = PlayState::Map1);//For debug map 1 is default
 
-	void selectMap(int rmapSelection);//Give arguement a dataType
+	void selectMap(PlayState rmapSelection);//Give arguement a dataType
 	void loadMapConfig(std::string filePathMapconfg);
-	void setMap();
+	void setUpMap();
 
 private:
 
@@ -22,11 +24,13 @@ private:
 	WaveManager* waveControl;
 	TowerManager* towerControl;
 
-	int mapSelection;
+	PlayState mapSelection;
 
 	struct mapConfig{
 		std::string filePathForEnemyWave;
 		std::string mapName;
+		std::string filePathForMapLogic;
+		std::string filePathForStartEndPositon;
 		std::string filePathForBuildPosition;
 	};
 

@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <iostream>
 class point {
 public:
 	const static int TileSize = 32;
@@ -21,5 +22,8 @@ public:
 	void setC(int tc) { c = tc; }
 	//static point fromXYtoRowCol(point v);
 	//static point fromRowColtoXY(point s);
+
+	friend std::istream& operator>>(std::istream& iDev, point& rpoint);
+
 };
 

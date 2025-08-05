@@ -8,13 +8,19 @@
 #include "enemy.h"
 #include "tower.h"
 #include "PathFinder.h"
+#include "gameSate.h"
 
 class mapTowerDefense_Game {
 
 private:
 
+	std::string filePathForMatrixLogic;
+	std::string filePathForStartEndPosition;
+
+	/////////////////Map Logic////////////////////////////////
 	//Matrix mapTowerDefense_Game
 	std::vector<std::vector<point>> _Map_Game_Logic;
+	point startPos, endDes;//Starting Point and destination point of the path
 
 	//////////////////Texture///////////////////////////////////
 	int totalFrame = 0;
@@ -33,6 +39,8 @@ public:
 	//void resetMap_GameData();
 	void makeMap_GameData();
 	bool ReadFile(std::string fileName);
+	void setFilePath(const::string& filePath);//The file path to the map logic matrix
+	void setFilePathForStartEnd(const std::string& rfilePath);
 	void reset();//Reset the map to the original state
 
 	void Update(float);

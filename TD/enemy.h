@@ -35,9 +35,9 @@ public:
 
 
 	vector<sf::Vector2f> getP() { return _path; }
-	int getSpeed() { return _speed; }
+	float getSpeed() { return _speed; }
 	sf::Vector2f getPosition() { return Enemysprite.getPosition(); }
-	void setSeed(int tspeed) {
+	void setSeed(float tspeed) {
 		if (tspeed > 0) _speed = tspeed;
 	}
 	void setTotalFrame(int rTotalFrame) {

@@ -181,7 +181,9 @@ const std::vector<sf::Texture>& Resource_Management::getTexture(const std::strin
     if (name == "Runner_Hurt") return Runner_Hurt;
     if (name == "Runner_Dead") return Runner_Dead;
 
-    if (name == "Map_Game1") return Map_Game1;
+    if (name == "Map_Game1") {
+        return Map_Game1;
+    }
     if (name == "Map_Game2") return Map_Game2;
     if (name == "Map_Game3") return Map_Game3;
     if (name == "Map_Game4") return Map_Game4;
