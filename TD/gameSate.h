@@ -1,8 +1,8 @@
 #pragma once 
 
-enum class GaneState
-{
+enum class GaneState {
 	MainMenu,
+	MapSelection,
 	Play
 };
 

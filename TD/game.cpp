@@ -90,7 +90,8 @@ void game::Run() {
             if (event->is<sf::Event::Closed>()) {
                 window.close();
             }
-            else if (!isGameOver && !playerWon && event->is<sf::Event::MouseButtonPressed>()) {
+
+            if (!isGameOver && !playerWon && event->is<sf::Event::MouseButtonPressed>()) {
                 const auto* mouseEvent = event->getIf<sf::Event::MouseButtonPressed>();
                 if (mouseEvent && mouseEvent->button == sf::Mouse::Button::Left) {
                     //Add a switch case here for later use (Event handler or smth)
@@ -180,6 +181,9 @@ void game::Run() {
 
         if (isGameOver && gameOverSprite) window.draw(*gameOverSprite);
         if (playerWon && victorySprite) window.draw(*victorySprite);
+
+
+
 
         window.display();
     }

@@ -9,7 +9,7 @@
 //}
 
 
-tower::tower(const std::string& type, const std::vector<sf::Texture>& rtowerTexture, int row, int col)
+tower::tower(const std::string& type, const std::vector<sf::Texture>& rtowerTexture)
 	: towerTexture(rtowerTexture),
 	towerSprite(rtowerTexture[0]),
 	row(row), col(col),

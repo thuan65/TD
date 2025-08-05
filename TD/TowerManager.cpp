@@ -94,7 +94,14 @@ void TowerManager::openBuildMenu(int row, int col) {
 
 
 
-
+void TowerManager::reset() {
+	for (int i = 0; i < towers.size(); ++i) {
+		delete towers[i];
+		towers[i] = nullptr;
+	}
+	towers.clear();
+	closeBuildMenu();
+}
 
 void TowerManager::closeBuildMenu() {
 	isBuildMenuOpen = false;
@@ -141,7 +148,7 @@ void TowerManager::ReadFile(const std::string& filePath) {
 }
 
 bool TowerManager::buildTower(sf::Vector2f worldPos, std::string towerType) {
-	tower* buildNewTower = new tower(Resource_Management::getTexture(towerType));
+	tower* buildNewTower = new tower(towerType, Resource_Management::getTexture(towerType));
 	for (int i = 0; i < buildZones.size(); ++i) {//Tìm ô có thể xây tháp
 
 		if (buildZones[i].bounds.contains(worldPos)) {
