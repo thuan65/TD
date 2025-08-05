@@ -135,8 +135,8 @@ void WaveManager::processRemovals(int* enemiesReachedEnd, int* moneyFromKills) {
 				int bounty = foundEnemy->getBounty();
 				(*moneyFromKills) += bounty;
 				// --- THÊM COUT Ở ĐÂY ---
-				std::cout << "[WaveManager] Enemy killed! Bounty: " << bounty
-					<< ". Total moneyFromKills so far: " << *moneyFromKills << std::endl;
+				/*std::cout << "[WaveManager] Enemy killed! Bounty: " << bounty
+					<< ". Total moneyFromKills so far: " << *moneyFromKills << std::endl;*/
 			}
 			delete foundEnemy;
 			activeEnemy.erase(it);

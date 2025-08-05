@@ -1,12 +1,71 @@
 ﻿#include "tower.h"
 #include "BulletManager.h"
 
-tower::tower(const std::vector<sf::Texture>& rtowerTexture, int row, int col, float rRange, float rFireRate)
-	: towerTexture(rtowerTexture), towerSprite(towerTexture[0]), range(rRange), FireRate(rFireRate), towerReloading(FireRate), totalFrame(towerTexture.size())
+//tower::tower(const std::vector<sf::Texture>& rtowerTexture, int row, int col, float rRange, float rFireRate)
+//	: towerTexture(rtowerTexture), towerSprite(towerTexture[0]), range(rRange), FireRate(rFireRate), towerReloading(FireRate), totalFrame(towerTexture.size())
+//{
+//	//towerSprite.setPosition(sf::Vector2f(col * point::TileSize, row * point::TileSize));
+//	towerSprite.setOrigin(sf::Vector2f{ towerSprite.getLocalBounds().size / 2.f });//Canh giữa cho ảnh tháp
+//}
+
+
+tower::tower(const std::string& type, const std::vector<sf::Texture>& rtowerTexture, int row, int col)
+	: towerTexture(rtowerTexture),
+	towerSprite(rtowerTexture[0]),
+	row(row), col(col),
+	towerType(type),
+	level(1),
+	towerReloading(0.0f)
 {
-	//towerSprite.setPosition(sf::Vector2f(col * point::TileSize, row * point::TileSize));
-	towerSprite.setOrigin(sf::Vector2f{ towerSprite.getLocalBounds().size / 2.f });//Canh giữa cho ảnh tháp
+	// Lấy thông tin ban đầu từ TowerManager (giả sử đã có)
+	// Tạm thời gán cứng
+	if (type == "Tower1") {
+		damage = 25;
+		range = 150.f;
+		FireRate = 2.0f;
+		upgradeCost = 100;
+		sellValue = 50;
+	}
+	else if (type == "Tower2") {
+		damage = 15;
+		range = 160.f;
+		FireRate = 2.5f;
+		upgradeCost = 120;
+		sellValue = 75;
+	}
+	else if (type == "Tower3") {
+		damage = 20;
+		range = 120.f;
+		FireRate = 2.5f;
+		upgradeCost = 90;
+		sellValue = 70;
+	}
+	else if (type == "Tower4") {
+		damage = 20;
+		range = 120.f;
+		FireRate = 2.5f;
+		upgradeCost = 90;
+		sellValue = 70;
+	}
+
+
+	totalFrame = towerTexture.size();
+	towerSprite.setOrigin(towerSprite.getLocalBounds().size / 2.f);
 }
+
+
+void tower::upgrade() {
+	level++;
+	// Tăng chỉ số (ví dụ)
+	range *= 1.1f;
+	damage = static_cast<int>(damage * 1.2f);
+	FireRate *= 0.9f; // Bắn nhanh hơn
+
+	// Cập nhật giá trị mới
+	sellValue += upgradeCost / 2;
+	upgradeCost = static_cast<int>(upgradeCost * 1.5f);
+}
+
 
 void tower::update(const float& deltaTime, std::vector<enemy*>& enemies, BulletManager* bulletManager) {
 	animate(deltaTime);

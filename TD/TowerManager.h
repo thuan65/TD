@@ -6,6 +6,15 @@
 #include <SFML/Graphics.hpp>
 #include <fstream>
 #include <vector>
+#include <string>
+
+
+// Hằng số giá tiền (đặt ở đây hoặc file config chung)
+const int TOWER1_COST = 100;
+const int TOWER2_COST = 150;
+const int TOWER3_COST = 200;
+const int TOWER4_COST = 250;
+
 
 class TowerManager{
 
@@ -16,6 +25,11 @@ private:
 		sf::FloatRect bounds;
 		bool TowerExist = false;
 	};
+
+	std::vector<sf::Sprite> tower1CostSprites;
+	std::vector<sf::Sprite> tower2CostSprites;
+	std::vector<sf::Sprite> tower3CostSprites;
+	std::vector<sf::Sprite> tower4CostSprites;
 	
 	BulletManager* bulletManager;
 	std::vector<tower*> towers;
@@ -32,7 +46,11 @@ private:
 	std::unique_ptr<sf::Sprite> buildMenuTower3Icon; // << THÊM
 	std::unique_ptr<sf::Sprite> buildMenuTower4Icon; // << THÊM
 
+
+	std::vector<sf::Sprite> costSprites;
+
 	sf::Vector2f theTowerPosition; // Vị trí của tháp
+	void drawNumber(int number, float x, float y, std::vector<sf::Sprite>& sprite_vector);
 
 public:
 

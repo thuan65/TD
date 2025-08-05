@@ -16,7 +16,7 @@ TowerManager::~TowerManager() {
 
 void TowerManager::setupBuildMenu() {
 	buildMenuBackground = std::make_unique<sf::RectangleShape>();
-	buildMenuBackground->setSize({ 148.f, 37.f });
+	buildMenuBackground->setSize({ 148.f, 60.f });
 	buildMenuBackground->setFillColor(sf::Color(100, 100, 100, 200));
 
 	buildMenuTower1Icon = std::make_unique<sf::Sprite>(Resource_Management::getTexture("Tower1_Icon")[0]);
@@ -24,6 +24,24 @@ void TowerManager::setupBuildMenu() {
 	buildMenuTower3Icon = std::make_unique<sf::Sprite>(Resource_Management::getTexture("Tower3_Icon")[0]);
 	buildMenuTower4Icon = std::make_unique<sf::Sprite>(Resource_Management::getTexture("Tower4_Icon")[0]);
 }
+
+void TowerManager::drawNumber(int number, float x, float y, std::vector<sf::Sprite>& sprite_vector) {
+	sprite_vector.clear();
+	std::string numStr = std::to_string(number);
+	float currentX = x;
+	const float digitScale = 0.015f; // Chỉnh size số
+	for (char c : numStr) {
+		int digit = c - '0';
+		const sf::Texture& tex = Resource_Management::Digits[digit][0];
+		sf::Sprite sprite(tex);
+        sprite.setScale(sf::Vector2f(digitScale, digitScale));
+		sprite.setPosition({ currentX, y });
+		sprite_vector.push_back(sprite);
+		currentX += tex.getSize().x * digitScale;
+	}
+}
+
+
 
 
 void TowerManager::openBuildMenu(int row, int col) {
@@ -66,7 +84,18 @@ void TowerManager::openBuildMenu(int row, int col) {
 	tower2IconBounds = buildMenuTower2Icon->getGlobalBounds();
 	tower3IconBounds = buildMenuTower3Icon->getGlobalBounds();
 	tower4IconBounds = buildMenuTower4Icon->getGlobalBounds();*/
+
+	drawNumber(TOWER1_COST, buildMenuTower1Icon->getPosition().x, buildMenuTower1Icon->getPosition().y + 50, tower1CostSprites);
+	drawNumber(TOWER2_COST, buildMenuTower2Icon->getPosition().x, buildMenuTower2Icon->getPosition().y + 50, tower2CostSprites);
+	drawNumber(TOWER3_COST, buildMenuTower3Icon->getPosition().x, buildMenuTower3Icon->getPosition().y + 50, tower3CostSprites);
+	drawNumber(TOWER4_COST, buildMenuTower4Icon->getPosition().x, buildMenuTower4Icon->getPosition().y + 50, tower4CostSprites);
+
 }
+
+
+
+
+
 void TowerManager::closeBuildMenu() {
 	isBuildMenuOpen = false;
 }
@@ -97,6 +126,7 @@ void TowerManager::ReadFile(const std::string& filePath) {
 		throw std::runtime_error("Fail to open build_Position.txt");
 	}
 
+	buildZones.clear(); // Xóa các zone cũ
 	float row, col;
 	std::string ignoreline;
 	getline(fin, ignoreline);
@@ -108,15 +138,6 @@ void TowerManager::ReadFile(const std::string& filePath) {
 		buildZones.push_back(buildZone({ zone, false })); //Gồm vòng spaw tháp và có Tháp hay không
 	}
 	//std::cout << buildZones[1].bounds.position.x << " " << buildZones[1].bounds.position.y << "\n";
-}
-
-void TowerManager::reset() {
-	for (int i = 0; i < towers.size(); ++i) {
-		delete towers[i];
-		towers[i] = nullptr;
-	}
-	towers.clear();
-	closeBuildMenu();
 }
 
 bool TowerManager::buildTower(sf::Vector2f worldPos, std::string towerType) {
@@ -148,32 +169,32 @@ void TowerManager::resolveTowerAt(sf::Vector2f worldPos, int& money) {
 		if (isBuildMenuOpen) {
 			// TÍNH TOÁN BOUNDS NGAY TẠI ĐÂY
 			if (buildMenuTower1Icon->getGlobalBounds().contains(worldPos)) {
-				if (money >= 100) {
-					money -= 100;
+				if (money >= TOWER1_COST) {
+					money -= TOWER1_COST;
 					buildTower(theTowerPosition, "Tower1");
 
 				}
 				closeBuildMenu();
 			}
 			else if (buildMenuTower2Icon->getGlobalBounds().contains(worldPos)) {
-				if (money >= 150) {
-					money -= 150;
+				if (money >= TOWER2_COST) {
+					money -= TOWER2_COST;
 					buildTower(theTowerPosition, "Tower2");
 				}
 
 				closeBuildMenu();
 			}
 			else if (buildMenuTower3Icon->getGlobalBounds().contains(worldPos)) {
-				if (money >= 200) {
-					money -= 200;
+				if (money >= TOWER3_COST) {
+					money -= TOWER3_COST;
 					buildTower(theTowerPosition, "Tower3");
 				}
 
 				closeBuildMenu();
 			}
 			else if (buildMenuTower4Icon->getGlobalBounds().contains(worldPos)) {
-				if (money >= 250) {
-					money -= 250;
+				if (money >= TOWER4_COST) {
+					money -= TOWER4_COST;
 					buildTower(theTowerPosition, "Tower4");
 
 				}
@@ -225,6 +246,14 @@ void TowerManager::draw(sf::RenderWindow& window) {
 		if (buildMenuTower2Icon) window.draw(*buildMenuTower2Icon);
 		if (buildMenuTower3Icon) window.draw(*buildMenuTower3Icon);
 		if (buildMenuTower4Icon) window.draw(*buildMenuTower4Icon);
+
+
+		for (const auto& s : tower1CostSprites) window.draw(s);
+		for (const auto& s : tower2CostSprites) window.draw(s);
+		for (const auto& s : tower3CostSprites) window.draw(s);
+		for (const auto& s : tower4CostSprites) window.draw(s);
+
+
 	}
 
 	//for (const auto& zone : buildZones) {
