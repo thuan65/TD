@@ -74,7 +74,7 @@ void TowerManager::closeBuildMenu() {
 
 void TowerManager::update(float deltaTime, std::vector<enemy*>& enemies) {
 	for (int i = 0; i < towers.size(); ++i) {
-		towers[i]->update(deltaTime, enemies, bulletManager);	
+		towers[i]->update(deltaTime, enemies, bulletManager);
 	}
 }
 
@@ -85,6 +85,10 @@ bool TowerManager::towerTowerExisted(sf::Vector2f worldPos) {
 		}
 	}
 	return false;
+}
+
+bool TowerManager::towerTowerExisted(const buildZone& zone) {
+	return zone.TowerExist;
 }
 
 void TowerManager::ReadFile(const std::string& filePath) {
@@ -101,49 +105,51 @@ void TowerManager::ReadFile(const std::string& filePath) {
 		sf::FloatRect zone(sf::Vector2f{ col * point::TileSize, row * point::TileSize }, sf::Vector2f{ point::TileSize, point::TileSize } *1.5F);
 
 		zone.position = zone.position - (zone.size / 2.0F); // To center the box
-		buildZones.push_back(buildZone({zone, false})); //Gồm vòng spaw khác và có Tháp hay không
+		buildZones.push_back(buildZone({ zone, false })); //Gồm vòng spaw khác và có Tháp hay không
 	}
 	//std::cout << buildZones[1].bounds.position.x << " " << buildZones[1].bounds.position.y << "\n";
 }
 
 bool TowerManager::buildTower(sf::Vector2f worldPos, std::string towerType) {
 	tower* buildNewTower = new tower(Resource_Management::getTexture(towerType));
-	for (int i = 0; i < buildZones.size(); ++i) {//Tìm ô có thể xây khác
+	for (int i = 0; i < buildZones.size(); ++i) {//Tìm ô có thể xây tháp
 
 		if (buildZones[i].bounds.contains(worldPos)) {
-			buildNewTower->setPosition(buildZones[i].bounds.getCenter());
+			buildNewTower->setPosition(buildZones[i].bounds.getCenter());//Set the tower position in the middle of the Tile
 			buildZones[i].TowerExist = true;
 			//std::cout << "Build:  " << buildZones[i].bounds.getCenter().x << " " << buildZones[i].bounds.getCenter().y << "\n";
 			//std::cout << buildNewTower->getPosition().x << " " << buildNewTower->getPosition().y << "\n";
 			towers.emplace_back(buildNewTower);
-
+			return true;
 			break;
 		}
 	}
 }
 
-void TowerManager::clickCheck(sf::Vector2f worldPos, int& money) {
+
+void TowerManager::resolveTowerAt(sf::Vector2f worldPos, int& money) {
 	//std::cout << worldPos.x << " " << worldPos.y << "\n";
 
-	if (towerTowerExisted(worldPos)) return;//If the tower exist do sth(sell, upgrate)
-	else {//Build place is valid and no tower there yet
+	if (towerTowerExisted(worldPos)) {
+		return;//If the tower exist do sth(sell, upgrate)
 
-		
+	}
 
+	else {//There is no tower in this Build Zone
 		if (isBuildMenuOpen) {
 			// TÍNH TOÁN BOUNDS NGAY TẠI ĐÂY
 			if (buildMenuTower1Icon->getGlobalBounds().contains(worldPos)) {
 				if (money >= 100) {
 					money -= 100;
-					buildTower(worldPos, "Tower1");
-					
+					buildTower(theTowerPosition, "Tower1");
+
 				}
 				closeBuildMenu();
 			}
 			else if (buildMenuTower2Icon->getGlobalBounds().contains(worldPos)) {
 				if (money >= 150) {
 					money -= 150;
-					buildTower(worldPos, "Tower2");
+					buildTower(theTowerPosition, "Tower2");
 				}
 
 				closeBuildMenu();
@@ -151,7 +157,7 @@ void TowerManager::clickCheck(sf::Vector2f worldPos, int& money) {
 			else if (buildMenuTower3Icon->getGlobalBounds().contains(worldPos)) {
 				if (money >= 200) {
 					money -= 200;
-					buildTower(worldPos, "Tower3");
+					buildTower(theTowerPosition, "Tower3");
 				}
 
 				closeBuildMenu();
@@ -159,8 +165,8 @@ void TowerManager::clickCheck(sf::Vector2f worldPos, int& money) {
 			else if (buildMenuTower4Icon->getGlobalBounds().contains(worldPos)) {
 				if (money >= 250) {
 					money -= 250;
-					buildTower(worldPos, "Tower4");
-					
+					buildTower(theTowerPosition, "Tower4");
+
 				}
 
 				closeBuildMenu();
@@ -169,25 +175,33 @@ void TowerManager::clickCheck(sf::Vector2f worldPos, int& money) {
 				closeBuildMenu();
 			}
 		}
-
-		int row = static_cast<int>(worldPos.y / point::TileSize);
-		int col = static_cast<int>(worldPos.x / point::TileSize);
-		/*if (row >= 0 && row < _Map_Game_Logic.size() && col >= 0 && col < _Map_Game_Logic[0].size()) {*/
-		if (clickCheck(worldPos)) {
-			openBuildMenu(row, col);
+		else {
+			int row = static_cast<int>(worldPos.y / point::TileSize);
+			int col = static_cast<int>(worldPos.x / point::TileSize);
+			if (clickCheck(worldPos)) {//Check to see if there is a BuildZone here (Tile that can build tower)
+				openBuildMenu(row, col);
+				theTowerPosition = worldPos;//Save the Placing Position for Tower
+			}
 		}
-		//}
+	}
 
-		}
-	
 }
-	
+
+bool TowerManager::clickCheck(sf::Vector2f worldPos) {
+	for (int i = 0; i < buildZones.size(); ++i) {//Check all the Building Tile avaiable
+		if (buildZones[i].bounds.contains(worldPos)) {
+			return true;//If there are return true
+		}
+	}
+	return false;//No Building tile here
+}
+
 
 void TowerManager::sellTower() {
 
 }
 
-void TowerManager::upgrateTower() 
+void TowerManager::upgrateTower()
 {
 }
 
@@ -196,20 +210,23 @@ void TowerManager::draw(sf::RenderWindow& window) {
 		towers[i]->draw(window);
 	}
 
-	for (const auto& zone : buildZones) {
-	sf::RectangleShape shape;
-	shape.setPosition(sf::Vector2f(zone.bounds.position));
-	shape.setSize(sf::Vector2f(zone.bounds.size));
-	shape.setFillColor(sf::Color::Transparent);
-	shape.setOutlineColor(sf::Color::Green);
-	shape.setOutlineThickness(1.f);
-
-	window.draw(shape);
+	if (isBuildMenuOpen) {
+		if (buildMenuBackground) window.draw(*buildMenuBackground);
+		if (buildMenuTower1Icon) window.draw(*buildMenuTower1Icon);
+		if (buildMenuTower2Icon) window.draw(*buildMenuTower2Icon);
+		if (buildMenuTower3Icon) window.draw(*buildMenuTower3Icon);
+		if (buildMenuTower4Icon) window.draw(*buildMenuTower4Icon);
 	}
 
-
-
-
+	//for (const auto& zone : buildZones) {
+	//sf::RectangleShape shape;
+	//shape.setPosition(sf::Vector2f(zone.bounds.position));
+	//shape.setSize(sf::Vector2f(zone.bounds.size));
+	//shape.setFillColor(sf::Color::Transparent);
+	//shape.setOutlineColor(sf::Color::Green);
+	//shape.setOutlineThickness(1.f);
+	//window.draw(shape);
+	//}
 
 }
 

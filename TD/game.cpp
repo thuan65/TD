@@ -8,7 +8,7 @@ game::game()
     gameMap(Resource_Management::getTexture("Map_Game1")),
     towerControl(&window, &bulletManager),
     mapSelection(&gameMap, &bulletManager, &waveControl, &towerControl),
-    
+
     // Khởi tạo các biến trạng thái
     lives(5), money(500), currentWave(0),
     isGameOver(false), playerWon(false),
@@ -103,21 +103,21 @@ void game::Run() {
                     //Add a switch case here for later use (Event handler or smth)
                     sf::Vector2i pixelPos = mouseEvent->position;
                     sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos);
-                    towerControl.buildTower(worldPos, money);
+                    towerControl.resolveTowerAt(worldPos, money);
                     updateGUISprites(); // Cập nhật lại hiển thị tiền
 
                 }
 
-                    if (waveControl.WaveEnded()) {
-                        if (currentWave < WaveManager::TOTAL_WAVES) {
-                            waveControl.startNewWave();
-                            currentWave++;
-                            updateGUISprites();
-                        }
+                if (waveControl.WaveEnded()) {
+                    if (currentWave < WaveManager::TOTAL_WAVES) {
+                        waveControl.startNewWave();
+                        currentWave++;
+                        updateGUISprites();
                     }
                 }
             }
         }
+
 
         float deltaTime = clock.restart().asSeconds();
 
@@ -175,25 +175,6 @@ void game::Run() {
         waveControl.draw(window);
         towerControl.draw(window);
         bulletManager.draw(window);
-
-        // for (int i = 0; i < _Map_Game_Logic.size(); ++i) {
-         //    for (int j = 0; j < _Map_Game_Logic[0].size(); ++j) {
-         //        sf::RectangleShape cell(sf::Vector2f(point::TileSize, point::TileSize));
-         //        cell.setPosition(sf::Vector2f(j * point::TileSize, i * point::TileSize));
-         //        cell.setOutlineColor(sf::Color::White);
-         //        cell.setOutlineThickness(1);
-         //        cell.setFillColor(sf::Color::Transparent);
-          //       window.draw(cell);
-          //   }
-         //}
-
-        if (isBuildMenuOpen) {
-            if (buildMenuBackground) window.draw(*buildMenuBackground);
-            if (buildMenuTower1Icon) window.draw(*buildMenuTower1Icon);
-            if (buildMenuTower2Icon) window.draw(*buildMenuTower2Icon);
-            if (buildMenuTower3Icon) window.draw(*buildMenuTower3Icon);
-            if (buildMenuTower4Icon) window.draw(*buildMenuTower4Icon);
-        }
 
         for (const auto& sprite : livesSprites) window.draw(sprite);
         for (const auto& sprite : moneySprites) window.draw(sprite);

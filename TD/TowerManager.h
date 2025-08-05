@@ -46,9 +46,11 @@ public:
 
 	void update(float deltaTime, std::vector<enemy*>& enemies);//Kiem soat viec dan ban
 	bool towerTowerExisted(sf::Vector2f worldPos);
+	bool towerTowerExisted(const buildZone& zone);//Check to see if tower exist in some Title
 	void ReadFile(const std::string& filePath);
 	bool buildTower(sf::Vector2f worldPos, std::string towerType);
-	void clickCheck(sf::Vector2f worldPos, int& money);
+	bool clickCheck(sf::Vector2f worldPos);//Is this a build zone
+	void resolveTowerAt(sf::Vector2f worldPos, int& money); //Giải quyết việc xây tháp / nâng cấp tháp, bán tháp
 	void sellTower();
 	void upgrateTower();
 
