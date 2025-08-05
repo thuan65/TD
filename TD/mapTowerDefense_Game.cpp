@@ -1,14 +1,25 @@
 ﻿#include "mapTowerDefense_Game.h"
 
+/*
+To do
+set a new path for map matrix logic
+set the new start and end point for pathfinder
+*/
 
 
 mapTowerDefense_Game::mapTowerDefense_Game(const std::vector<sf::Texture>& rMap_GameTexture)
 	: Map_GameTexture(rMap_GameTexture), Map_GameSprite(Map_GameTexture[0]) //set cho khung hinh dau tien
 {
 	makeMap_GameData();
+
+	// Tính toán đường đi ban đầu
+	point s = { 3,0,0 }, e = { 8 , 15 ,0 };
+	PathFinder::setStart(s); PathFinder::setEnd(e);
+	PathFinder::findPath(_Map_Game_Logic);
+
 }
 
-// -1 là tường, 0 là trống, 1 là tower
+// -1 là tường, 0 là trống
 
 bool mapTowerDefense_Game::ReadFile(std::string fileName) {
 	std::ifstream fin(fileName);
@@ -20,21 +31,30 @@ bool mapTowerDefense_Game::ReadFile(std::string fileName) {
 	int row, col;
 	fin >> row >> col;
 
-	_m.resize(row, std::vector<point>(col));
+	_Map_Game_Logic.resize(row, std::vector<point>(col));
 	for (int i = 0; i < row; ++i) {
 		for (int j = 0; j < col; ++j) {
 			int c;
 			fin >> c;
-			_m[i][j].setC(c);
+			_Map_Game_Logic[i][j].setC(c);
 		}
 	}
 	fin.close();
 	return true;
 }
 
+void mapTowerDefense_Game::reset() {
+	// Reset the map to the original state
+
+	makeMap_GameData();
+	PathFinder::findPath(_Map_Game_Logic);//Find a new path
+	currentFrame = 0; // Reset animation frame
+	timeSinceLastFrame = 0.0F; // Reset animation timer
+}
+
 void mapTowerDefense_Game::makeMap_GameData() {
 
-	setTotalFrame(Map_GameTexture.size()); // For now it is 1 frame
+	setTotalFrame(Map_GameTexture.size());//Set the total frame for animation
 	ReadFile("Data\\4map\\Logic\\Map1.txt");;
 }
 

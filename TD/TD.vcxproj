@@ -135,6 +135,7 @@
     <ClCompile Include="BulletManager.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="gameSate.cpp" />
     <ClCompile Include="mapManager.cpp" />
     <ClCompile Include="mapTowerDefense_Game.cpp" />
     <ClCompile Include="PathFinder.cpp" />

@@ -96,8 +96,9 @@ void Resource_Management::init() {
             throw std::runtime_error("Failed to load bullet texture");
 
         Heart_Icon.resize(1);
-        if (!Heart_Icon[0].loadFromFile("Data/GUI/heart.png"))
-            throw std::runtime_error("Failed to load Heart_Icon");
+        if (!Heart_Icon[0].loadFromFile("Data/GUI/heart.png")) {
+				throw std::runtime_error("Failed to load Heart_Icon");
+        }
 
         Digits.resize(10); // Có 10 chữ số từ 0 đến 9
         for (int i = 0; i < 10; ++i) {

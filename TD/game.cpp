@@ -30,11 +30,7 @@ game::game()
     gameOverSprite->setOrigin(sf::Vector2f(goBounds.size.x / 2.f, goBounds.size.y / 2.f));
     gameOverSprite->setPosition({ window.getSize().x / 2.0f, window.getSize().y / 2.0f });
 
-    // Tính toán đường đi ban đầu
-    vector<vector<point>> _Map_Game_Logic = gameMap.getMap_Game();
-    point s = { 3,0,0 }, e = { 8 , 15 ,0 };
-    PathFinder::setStart(s); PathFinder::setEnd(e);
-    PathFinder::findPath(_Map_Game_Logic);
+
 }
 
 // --- HÀM HỦY ---

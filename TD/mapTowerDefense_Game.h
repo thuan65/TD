@@ -7,13 +7,14 @@
 #include "SFML\Graphics.hpp"
 #include "enemy.h"
 #include "tower.h"
+#include "PathFinder.h"
 
 class mapTowerDefense_Game {
 
 private:
 
 	//Matrix mapTowerDefense_Game
-	std::vector<std::vector<point>> _m;
+	std::vector<std::vector<point>> _Map_Game_Logic;
 
 	//////////////////Texture///////////////////////////////////
 	int totalFrame = 0;
@@ -32,6 +33,7 @@ public:
 	//void resetMap_GameData();
 	void makeMap_GameData();
 	bool ReadFile(std::string fileName);
+	void reset();//Reset the map to the original state
 
 	void Update(float);
 	void draw(sf::RenderWindow& window);
@@ -39,7 +41,7 @@ public:
 	void setTotalFrame(int rFrameNum) { totalFrame = rFrameNum; }
 	void setTexture(const std::vector<sf::Texture>&);
 	vector<vector<point>>& getMap_Game() {
-		return _m;
+		return _Map_Game_Logic;
 	}
 };
 
