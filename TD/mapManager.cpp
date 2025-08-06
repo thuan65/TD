@@ -9,7 +9,7 @@
 mapManager::mapManager(mapTowerDefense_Game* rgameMap, BulletManager* rbulletManager, WaveManager* rwaveControl, TowerManager* rtowerControl, PlayState mapSelection) // cjamge rmapSelection dataType later
 	:gameMap(rgameMap), bulletManager(rbulletManager), waveControl(rwaveControl), towerControl(rtowerControl), mapSelection(mapSelection)
 {
-
+	selectMap(mapSelection);//Delete or keep this line later
 }
 
 void mapManager::selectMap(PlayState rmapSelection) {//Already choose the map
@@ -47,21 +47,23 @@ void mapManager::loadMapConfig(std::string filePathMapconfg) {
 		throw std::runtime_error("Cannot open map config file: " + filePathMapconfg);
 	}
 
-	std::string key;
 	std::string value;
-
 	// Đọc từng cặp key-value
-	while (fin >> key >> value) {
-		if (key == "wave_path") {
-			mapcfg.filePathForEnemyWave = value;
-		}
-		else if (key == "map_texture") {
-			mapcfg.mapName = value;
-		}
-		else if (key == "build_pos") {
-			mapcfg.filePathForBuildPosition = value;
-		}
-	}
+
+	fin >> value;
+	mapcfg.filePathForEnemyWave = value;
+	fin >> value;
+	mapcfg.mapName = value;
+
+	fin >> value;
+	mapcfg.filePathForMapLogic = value;
+	fin >> value;
+	mapcfg.filePathForStartEndPositon = value;
+	
+	fin >> value;
+	mapcfg.filePathForBuildPosition = value;
+
+
 
 	// In ra để debug
 	std::cout << "Loaded map config:" << std::endl;

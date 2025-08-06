@@ -204,7 +204,7 @@ game::game()
     isGameOver(false), playerWon(false),
     isBetweenWaves(false), timeUntilNextWave(0.f)
 {
-    window.setFramerateLimit(60);
+    //window.setFramerateLimit(60);
     updateGUISprites();
 
     
@@ -222,9 +222,6 @@ game::game()
     gameOverSprite->setOrigin(sf::Vector2f(goBounds.size.x / 2.f, goBounds.size.y / 2.f));
     gameOverSprite->setPosition({ window.getSize().x / 2.0f, window.getSize().y / 2.0f });
 
-
-    // Tạm thời hard-code map 1
-    towerControl.ReadFile("Data\\6mapSelection\\buildPos1.txt"); // Load build zones cho map 1
 }
 
 // --- HÀM HỦY ---
@@ -248,6 +245,7 @@ void game::Run() {
     isBetweenWaves = true;
     timeUntilNextWave = TIME_BETWEEN_WAVES;
     currentWave = 0;
+    mapSelection.selectMap(PlayState::Map1);
 
     sf::Clock clock;
     while (window.isOpen()) {

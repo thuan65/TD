@@ -387,6 +387,7 @@ void TowerManager::ReadFile(const std::string& filePath) {
 }
 
 void TowerManager::handleMouseClick(sf::Vector2f worldPos, int& money) {
+    std::cout << "gfqgqsdafcg";
     // 1. Ưu tiên xử lý click vào menu đang mở
     if (m_isUpgradeMenuOpen) {
         if (m_upgradeIcon->getGlobalBounds().contains(worldPos)) {
