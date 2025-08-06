@@ -13,9 +13,12 @@ private:
 	std::vector<sf::Texture> towerTexture;
 	sf::Sprite towerSprite;
 
+	// Chỉ số chiến đấu
 	float range;//Phạm vi bắn
 	float FireRate;//Tốc độ bắn
 	int damage;
+
+	// Trạng thái và vị trí
 	float towerReloading = 0.0f;//Thời gian hồi tới lượt bắn kế
 	int row, col;
 
@@ -36,11 +39,8 @@ private:
 	//bullet _b;//Cái viên đạn mà tháp bắn ra
 
 public:
-	//tower(const std::vector<sf::Texture>& rtowerTexture, int row = 0, int col = 0, float rRange = 150.0f, float rFireRate = 2); //Change the range setting later
-	tower(const std::string& type, const std::vector<sf::Texture>& rtowerTexture);
-	/*enemy* findTheNearestEnemyInRange(std::vector<enemy*>& enemies);*/ // Thành private 
-
-	/*void animate(float deltaTime);*/ // private
+	tower(const std::string& type, const std::vector<sf::Texture>& rtowerTexture, int row, int col);
+	
 	void update(const float& deltaTime, std::vector<enemy*>& enemies, BulletManager* bulletManager);
 	void draw(sf::RenderWindow& window);
 
@@ -48,21 +48,17 @@ public:
 	void upgrade();
 
 	// Các hàm getter
-
+	void setPosition(sf::Vector2f position);
+	sf::Vector2f getPosition() const;
 	sf::FloatRect getGlobalBounds() const;
 	int getRow() const { return row; }
 	int getCol() const { return col; }
 	int getUpgradeCost() const { return upgradeCost; }
 	int getSellValue() const { return sellValue; }
-	int getLevel() const { return level; }
-	std::string getType() const { return towerType; }
 
-	void setPosition(sf::Vector2f _rlocation) {
-		towerSprite.setPosition(_rlocation);
-	}
-	sf::Vector2f getPosition() const {
-		return towerSprite.getPosition();
-	}
+
+
+	
 	//int getRow() { return row; }
 	//int getCol() { return col; }
 

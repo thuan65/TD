@@ -3,8 +3,8 @@
 
 BulletManager::BulletManager() {}
 
-void BulletManager::spawBullet(tower* theTower, enemy* enemies) {
-	bullets.emplace_back(new bullet(Resource_Management::getTexture("bullet")));
+void BulletManager::spawBullet(tower* theTower, enemy* enemies, int damage) {
+	bullets.emplace_back(new bullet(Resource_Management::getTexture("bullet"), 500, damage));
 	bullets.back()->Initialize(theTower, enemies);
 }
 

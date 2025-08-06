@@ -1,8 +1,9 @@
-#include "mapManager.h"
+﻿#include "mapManager.h"
 #include "WaveManager.h" //For 
 #include "BulletManager.h"
 #include "mapTowerDefense_Game.h"
 #include "TowerManager.h"
+#include <fstream>
 
 
 mapManager::mapManager(mapTowerDefense_Game* rgameMap, BulletManager* rbulletManager, WaveManager* rwaveControl, TowerManager* rtowerControl, PlayState mapSelection) // cjamge rmapSelection dataType later
@@ -39,29 +40,35 @@ void mapManager::selectMap(PlayState rmapSelection) {//Already choose the map
 
 	setUpMap();//Set up everything about the map ... reset everything
 }
-
+// mapManager.cpp
 void mapManager::loadMapConfig(std::string filePathMapconfg) {
 	std::ifstream fin(filePathMapconfg);
-	//put a throw catch here later (fin.fail())
+	if (fin.fail()) {
+		throw std::runtime_error("Cannot open map config file: " + filePathMapconfg);
+	}
 
-		std::string line;
-		std::getline(fin, line);
-		mapcfg.filePathForEnemyWave = line;
+	std::string key;
+	std::string value;
 
-		std::getline(fin, line);
-		mapcfg.mapName = line;
+	// Đọc từng cặp key-value
+	while (fin >> key >> value) {
+		if (key == "wave_path") {
+			mapcfg.filePathForEnemyWave = value;
+		}
+		else if (key == "map_texture") {
+			mapcfg.mapName = value;
+		}
+		else if (key == "build_pos") {
+			mapcfg.filePathForBuildPosition = value;
+		}
+	}
 
-		std::getline(fin, line);
-		mapcfg.filePathForMapLogic = line;
-
-		std::getline(fin, line);
-		mapcfg.filePathForStartEndPositon = line;
-
-		std::getline(fin, line);
-		mapcfg.filePathForBuildPosition = line;
-
+	// In ra để debug
+	std::cout << "Loaded map config:" << std::endl;
+	std::cout << " - Wave Path: " << mapcfg.filePathForEnemyWave << std::endl;
+	std::cout << " - Map Texture: " << mapcfg.mapName << std::endl;
+	std::cout << " - Build Positions: " << mapcfg.filePathForBuildPosition << std::endl;
 }
-
 void mapManager::setUpMap() {
 	waveControl->setFilePath(mapcfg.filePathForEnemyWave);
 	gameMap->setTexture(Resource_Management::getTexture(mapcfg.mapName));

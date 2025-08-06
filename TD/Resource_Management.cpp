@@ -39,6 +39,8 @@ std::vector<sf::Texture> Resource_Management::Nightmare_Dead;
 std::vector<sf::Texture> Resource_Management::Runner_Movement;
 std::vector<sf::Texture> Resource_Management::Runner_Hurt;
 std::vector<sf::Texture> Resource_Management::Runner_Dead;
+std::vector<sf::Texture> Resource_Management::Upgrade_Icon;
+std::vector<sf::Texture> Resource_Management::Sell_Icon;
 // --- Định nghĩa các hàm static ---
 
 // Hàm này sẽ được gọi một lần duy nhất từ game::game()
@@ -113,6 +115,15 @@ void Resource_Management::init() {
         GameOver_Image.resize(1);
         if (!GameOver_Image[0].loadFromFile("Data/GUI/game_over.png"))
             throw std::runtime_error("Failed to load GameOver_Image");
+
+		Upgrade_Icon.resize(1);
+        if (!Upgrade_Icon[0].loadFromFile("Data/GUI/UpgradeTowerButton.png"))
+			throw std::runtime_error("Failed to load Upgrade_Icon");
+        
+		Sell_Icon.resize(1);
+		if (!Sell_Icon[0].loadFromFile("Data/GUI/sell.png"))
+			throw std::runtime_error("Failed to load Sell_Icon");
+
         // Đánh dấu đã khởi tạo thành công
         m_isInitialized = true;
     }
@@ -199,6 +210,8 @@ const std::vector<sf::Texture>& Resource_Management::getTexture(const std::strin
     if (name == "Heart_Icon") return Heart_Icon;
     if (name == "Victory_Image") return Victory_Image;
     if (name == "GameOver_Image") return GameOver_Image;
+	if (name == "Upgrade_Icon") return Upgrade_Icon;
+	if (name == "Sell_Icon") return Sell_Icon;
 
     // Nếu không tìm thấy, ném một ngoại lệ rõ ràng
     throw std::runtime_error("Texture not found: " + name);

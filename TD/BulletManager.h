@@ -11,7 +11,7 @@ public:
 	BulletManager();
 	~BulletManager();
 
-	void spawBullet(tower* theTower, enemy* enemies);
+	void spawBullet(tower* theTower, enemy* enemies, int damage);
 	void update(float deltatime, const std::vector<enemy*>& activeEnemies); // Sửa ở đây
 	void processRemovals();
 	void draw(sf::RenderWindow& window);

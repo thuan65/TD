@@ -28,6 +28,8 @@ private:
 	static std::vector<sf::Texture> Heart_Icon;
 	static std::vector<sf::Texture> Victory_Image;
 	static std::vector<sf::Texture> GameOver_Image;
+	static std::vector<sf::Texture> Upgrade_Icon;
+	static std::vector<sf::Texture> Sell_Icon;
 
 
 ///////////////////Texture của các con enemy///////////////////

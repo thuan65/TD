@@ -1,56 +1,36 @@
 ﻿#include "tower.h"
 #include "BulletManager.h"
-
-//tower::tower(const std::vector<sf::Texture>& rtowerTexture, int row, int col, float rRange, float rFireRate)
-//	: towerTexture(rtowerTexture), towerSprite(towerTexture[0]), range(rRange), FireRate(rFireRate), towerReloading(FireRate), totalFrame(towerTexture.size())
-//{
-//	//towerSprite.setPosition(sf::Vector2f(col * point::TileSize, row * point::TileSize));
-//	towerSprite.setOrigin(sf::Vector2f{ towerSprite.getLocalBounds().size / 2.f });//Canh giữa cho ảnh tháp
-//}
+#include "enemy.h"
 
 
-tower::tower(const std::string& type, const std::vector<sf::Texture>& rtowerTexture)
+
+tower::tower(const std::string& type, const std::vector<sf::Texture>& rtowerTexture, int row, int col)
 	: towerTexture(rtowerTexture),
 	towerSprite(rtowerTexture[0]),
 	row(row), col(col),
 	towerType(type),
 	level(1),
-	towerReloading(0.0f)
+	towerReloading(0.0f),
+	currentFrame(0),
+	frameTime(0.2f), // Giảm thời gian để animation nhanh hơn
+	timeSinceLastFrame(0.0f)
 {
-	// Lấy thông tin ban đầu từ TowerManager (giả sử đã có)
-	// Tạm thời gán cứng
-	if (type == "Tower1") {
-		damage = 25;
-		range = 150.f;
-		FireRate = 2.0f;
-		upgradeCost = 100;
-		sellValue = 50;
-	}
-	else if (type == "Tower2") {
-		damage = 15;
-		range = 160.f;
-		FireRate = 2.5f;
-		upgradeCost = 120;
-		sellValue = 75;
-	}
-	else if (type == "Tower3") {
-		damage = 20;
-		range = 120.f;
-		FireRate = 2.5f;
-		upgradeCost = 90;
-		sellValue = 70;
-	}
-	else if (type == "Tower4") {
-		damage = 20;
-		range = 120.f;
-		FireRate = 2.5f;
-		upgradeCost = 90;
-		sellValue = 70;
-	}
-
-
 	totalFrame = towerTexture.size();
 	towerSprite.setOrigin(towerSprite.getLocalBounds().size / 2.f);
+
+	// Gán chỉ số ban đầu dựa trên loại trụ (bạn có thể chỉnh lại các con số này)
+	if (type == "Tower1") {
+		damage = 25; range = 150.f; FireRate = 1.0f; upgradeCost = 75; sellValue = 50;
+	}
+	else if (type == "Tower2") {
+		damage = 15; range = 170.f; FireRate = 1.2f; upgradeCost = 100; sellValue = 75;
+	}
+	else if (type == "Tower3") {
+		damage = 40; range = 140.f; FireRate = 1.5f; upgradeCost = 150; sellValue = 100;
+	}
+	else if (type == "Tower4") {
+		damage = 60; range = 120.f; FireRate = 2.0f; upgradeCost = 200; sellValue = 125;
+	}
 }
 
 
@@ -67,6 +47,8 @@ void tower::upgrade() {
 }
 
 
+
+
 void tower::update(const float& deltaTime, std::vector<enemy*>& enemies, BulletManager* bulletManager) {
 	animate(deltaTime);
 	towerReloading -= deltaTime;
@@ -74,11 +56,15 @@ void tower::update(const float& deltaTime, std::vector<enemy*>& enemies, BulletM
 	enemy* target = findTheNearestEnemyInRange(enemies);
 
 	if (target && towerReloading <= 0.00f) {
-		bulletManager->spawBullet(this, target);
+		bulletManager->spawBullet(this, target, this->damage);
 
 		towerReloading = FireRate;
 
 	}
+}
+
+sf::FloatRect tower::getGlobalBounds() const {
+	return towerSprite.getGlobalBounds();
 }
 
 enemy* tower::findTheNearestEnemyInRange(std::vector<enemy*>& enemies) {
@@ -123,4 +109,12 @@ void tower::animate(float deltaTime) {
 		towerSprite.setTexture(towerTexture[currentFrame]);//Dat frame ke tiep
 		timeSinceLastFrame = 0.0F;
 	}
+}
+
+void tower::setPosition(sf::Vector2f position) {
+	towerSprite.setPosition(position);
+}
+
+sf::Vector2f tower::getPosition() const {
+	return towerSprite.getPosition();
 }
