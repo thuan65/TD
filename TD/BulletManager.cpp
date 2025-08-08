@@ -1,7 +1,10 @@
 ﻿#include "BulletManager.h"
+#include "WaveManager.h"
 #include <algorithm> // Thêm thư viện
 
-BulletManager::BulletManager() {}
+BulletManager::BulletManager(WaveManager *waveControl)
+	:waveControl(waveControl)
+{}
 
 void BulletManager::spawBullet(tower* theTower, enemy* enemies, int damage) {
 	bullets.emplace_back(new bullet(Resource_Management::getTexture("bullet"), 500, damage));
@@ -9,7 +12,9 @@ void BulletManager::spawBullet(tower* theTower, enemy* enemies, int damage) {
 }
 
 // Sửa lại hoàn toàn hàm update
-void BulletManager::update(float deltaTime, const std::vector<enemy*>& activeEnemies) {
+void BulletManager::update(float deltaTime) {
+	std::vector<enemy*>& activeEnemies = waveControl->getActiveEnemy();
+
 	for (int i = 0; i < bullets.size(); ++i) {
 		bullets[i]->Update(deltaTime);
 

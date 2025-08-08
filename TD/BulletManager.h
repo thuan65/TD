@@ -6,17 +6,20 @@
 #include "Resource_Management.h"
 #include <vector>
 
+class WaveManager;
+
 class BulletManager {
 public:
-	BulletManager();
+	BulletManager(WaveManager* waveControl);
 	~BulletManager();
 
 	void spawBullet(tower* theTower, enemy* enemies, int damage);
-	void update(float deltatime, const std::vector<enemy*>& activeEnemies); // Sửa ở đây
+	void update(float deltatime);
 	void processRemovals();
 	void draw(sf::RenderWindow& window);
 
 private:
+	WaveManager* waveControl;
 	std::vector<bullet*> bullets;
 	std::vector<bullet*> _bulletToRemove;
 };

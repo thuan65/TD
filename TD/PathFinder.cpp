@@ -1,5 +1,4 @@
 ﻿#include "PathFinder.h"
-#include <iostream>
 
 //Hướng		dd[i]	dc[i]	Di chuyển
 //Lên		 -1		  0		Giảm hàng

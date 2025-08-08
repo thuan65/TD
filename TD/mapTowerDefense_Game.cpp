@@ -20,6 +20,7 @@ mapTowerDefense_Game::mapTowerDefense_Game(const std::vector<sf::Texture>& rMap_
 // -1 là tường, 0 là trống
 
 bool mapTowerDefense_Game::ReadFile(std::string fileName) {
+
 	std::ifstream fin(fileName);
 	if (fin.fail()) {
 		throw std::runtime_error("Cannot read Map_Game logic matrix");//Put throw catch here
@@ -99,14 +100,3 @@ void mapTowerDefense_Game::setTexture(const std::vector<sf::Texture>& rMap_GameT
 	Map_GameTexture = rMap_GameTexture;
 	Map_GameSprite.setTexture(Map_GameTexture[0]);
 }
-
-//for (int i = 0; i < point::Map_Game_SIZE; i++) {
-//	for (int j = 0; j < point::Map_Game_SIZE; j++) {
-//		tool::GotoXY(_m[i][j].getX(), _m[i][j].getY());//Đưa con trỏ vẻ (cái nhập ký tự) tới vị trí tương ứng
-//		if (_m[i][j].getC() == -1) cout << '+';
-//		else if (_m[i][j].getC() == -2) cout << 'U';
-//	}
-//}
-
-//tool::GotoXY(_tw.getLocation().getX(), _tw.getLocation().getY());
-//cout << "T";

@@ -24,9 +24,8 @@ int main() {
 
         // BƯỚC 2: Tạo đối tượng game (bây giờ nó có thể gọi getTexture một cách an toàn)
         game myGame;
-
         // BƯỚC 3: Chạy game
-        myGame.Run();
+        myGame.run();
     }
     catch (const std::exception& e) {
         // Bắt lỗi nếu có gì đó sai (ví dụ: không tìm thấy file ảnh)
@@ -39,7 +38,7 @@ int main() {
 //////////////////////This is how we deal with mouse//////////////////
 //if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
     //	sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
-    //	sf::Vector2f ReadlCord = window.Map_GamePixelToCoords(pixelPos);
+    //	sf::Vector2f ReadlCord = window.Map_GamePixelToCoords(pixelPos);+
     //	int row = ReadlCord.y / point::TileSize;
     //	int col = ReadlCord.x / point::TileSize;
     // if (

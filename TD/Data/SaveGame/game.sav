@@ -1,0 +1,14 @@
+Map1
+Lives 5
+Gold 210
+CurrentWave 1
+isGameOver 0
+PlayerWon 0
+wave_number 1
+enemySpawnIndex 5
+timeSinceLastWave 6.38084
+Nightmare_Movement 100 50 10
+ Runner_Movement 80 75 15
+ Dumber_Movement 80 75 15
+ Knight_Sleame 400 35 50
+ 

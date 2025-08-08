@@ -6,12 +6,23 @@
 // Biến cờ
 bool Resource_Management::m_isInitialized = false;
 
+sf::Font Resource_Management::arialFont;
+sf::Texture Resource_Management::mainMenuBackgroundTexture;
+sf::Texture Resource_Management::mapSelectBackgroundTexture;
+std::vector<sf::Texture> Resource_Management::Map1BackgroundTexture(2);
+std::vector<sf::Texture> Resource_Management::Map2BackgroundTexture(2);
+std::vector<sf::Texture> Resource_Management::Map3BackgroundTexture(2);
+std::vector<sf::Texture> Resource_Management::Map4BackgroundTexture(2);
+sf::Texture Resource_Management::arrowTexture;
+sf::Texture Resource_Management::pauseIconTexture;
+sf::Texture Resource_Management::victoryBackgroundTexture;
+sf::Texture Resource_Management::loseBackgroundTexture;
+
 // Các vector texture
 std::vector<sf::Texture> Resource_Management::Map_Game1;
 std::vector<sf::Texture> Resource_Management::Map_Game2;
 std::vector<sf::Texture> Resource_Management::Map_Game3;
 std::vector<sf::Texture> Resource_Management::Map_Game4;
-std::vector<sf::Texture> Resource_Management::Mage_Sleame;
 std::vector<sf::Texture> Resource_Management::Knight_Sleame;
 std::vector<sf::Texture> Resource_Management::Sleame;
 std::vector<sf::Texture> Resource_Management::Tower1;
@@ -39,6 +50,8 @@ std::vector<sf::Texture> Resource_Management::Nightmare_Dead;
 std::vector<sf::Texture> Resource_Management::Runner_Movement;
 std::vector<sf::Texture> Resource_Management::Runner_Hurt;
 std::vector<sf::Texture> Resource_Management::Runner_Dead;
+std::vector<sf::Texture> Resource_Management::Mage_Sleame_Movement;
+std::vector<sf::Texture> Resource_Management::Mage_Sleame_Hurt;
 std::vector<sf::Texture> Resource_Management::Upgrade_Icon;
 std::vector<sf::Texture> Resource_Management::Sell_Icon;
 // --- Định nghĩa các hàm static ---
@@ -52,9 +65,8 @@ void Resource_Management::init() {
 
     try {
         ///////////////////////Load Enemy Texture///////////////////////////////////////
-        loadFrame(Mage_Sleame, "Data\\3enemy\\MageSleame\\Mage Sleame", 3);
         loadFrame(Knight_Sleame, "Data\\3enemy\\KnightSleame\\KnightSleame", 2);
-        loadFrame(Mage_Sleame, "Data\\3enemy\\MageSleame\\Mage Sleame", 3);
+    ;
         loadFrame(Sleame, "Data\\3enemy\\Sleame\\Sleame", 3);
 
         ///////////////////////Load Map Texture///////////////////////////////////////
@@ -93,6 +105,18 @@ void Resource_Management::init() {
         loadFrame(Runner_Hurt, "Data\\3enemy\\Runner\\Hurt\\Runner Hurt Frame ", 4);
         loadFrame(Runner_Hurt, "Data\\3enemy\\Runner\\Dead\\Runner Dead Frame ", 4);
 
+        loadFrame(Mage_Sleame_Movement, "Data\\3enemy\\MageSleame\\Mage_Sleame Movement\\Mage Sleame_Movement", 3);
+        loadFrame(Mage_Sleame_Hurt, "Data\\3enemy\\MageSleame\\Mage_Sleame Hurt\\MageSleame Hurt", 3);
+        loadFont(arialFont, "Data\\GUI\\fonts\\arial.ttf");
+        loadTexture(mainMenuBackgroundTexture, "Data/GUI/mainmenu/background.png");
+        loadTexture(mapSelectBackgroundTexture, "Data\\GUI\\mapselect\\background.png");
+        loadTexture(arrowTexture, "Data\\GUI\\mapselect\\arrow.png");
+
+        loadTexture(pauseIconTexture, "Data\\GUI\\pause\\pause.png");
+        loadTexture(victoryBackgroundTexture, "Data\\GUI\\victory\\background.png");
+        loadTexture(loseBackgroundTexture, "Data\\GUI\\lose\\background.png");
+
+   
         bullet1.resize(1);
         if (!bullet1[0].loadFromFile("Data\\5bullet\\test.png"))
             throw std::runtime_error("Failed to load bullet texture");
@@ -117,13 +141,11 @@ void Resource_Management::init() {
             throw std::runtime_error("Failed to load GameOver_Image");
 
 		Upgrade_Icon.resize(1);
-        if (!Upgrade_Icon[0].loadFromFile("Data/GUI/UpgradeTowerButton.png"))
+        if (!Upgrade_Icon[0].loadFromFile("Data/GUI/UpgrateTowerButton.png"))
 			throw std::runtime_error("Failed to load Upgrade_Icon");
-        
 		Sell_Icon.resize(1);
-		if (!Sell_Icon[0].loadFromFile("Data/GUI/sell.png"))
+		if (!Sell_Icon[0].loadFromFile("Data/GUI/SellTowerButton.png"))
 			throw std::runtime_error("Failed to load Sell_Icon");
-
         // Đánh dấu đã khởi tạo thành công
         m_isInitialized = true;
     }
@@ -172,7 +194,6 @@ const std::vector<sf::Texture>& Resource_Management::getTexture(const std::strin
         init();
     }
 
-    if (name == "Mage_Sleame") return Mage_Sleame;
     if (name == "Knight_Sleame") return Knight_Sleame;
     if (name == "Sleame") return Sleame;
 
@@ -181,7 +202,7 @@ const std::vector<sf::Texture>& Resource_Management::getTexture(const std::strin
     if (name == "Dumber_Dead") return Dumber_Dead;
 
     if (name == "Ghast_Movement") return Ghast_Movement;
-    if (name == "Dumber_Hurt") return Ghast_Hurt;
+    if (name == "Ghast_Hurt") return Ghast_Hurt;
     if (name == "Ghast_Dead") return Ghast_Dead;
     
     if (name == "Nightmare_Movement") return Nightmare_Movement;
@@ -191,6 +212,10 @@ const std::vector<sf::Texture>& Resource_Management::getTexture(const std::strin
     if (name == "Runner_Movement") return Runner_Movement;
     if (name == "Runner_Hurt") return Runner_Hurt;
     if (name == "Runner_Dead") return Runner_Dead;
+
+    if (name == "Mage_Sleame_Movement") return Mage_Sleame_Movement;
+    if (name == "Mage_Sleame_Hurt") return Mage_Sleame_Hurt;
+    //if (name == "Dumber_Dead") return Dumber_Dead;
 
     if (name == "Map_Game1") {
         return Map_Game1;
@@ -213,6 +238,25 @@ const std::vector<sf::Texture>& Resource_Management::getTexture(const std::strin
 	if (name == "Upgrade_Icon") return Upgrade_Icon;
 	if (name == "Sell_Icon") return Sell_Icon;
 
+
     // Nếu không tìm thấy, ném một ngoại lệ rõ ràng
     throw std::runtime_error("Texture not found: " + name);
 }
+
+void Resource_Management::loadTexture(sf::Texture& texture, const std::string& filepath) {
+    if (!texture.loadFromFile(filepath)) {
+        std::cerr << "cannot load texture " << filepath << std::endl;
+    }
+}
+
+void Resource_Management::loadFont(sf::Font& font, const std::string& filepath) {
+    if (!font.openFromFile(filepath)) {
+        std::cerr << "cannot load texture " << filepath << std::endl;
+    }
+}
+
+const unsigned int Resource_Management::WINDOW_WIDTH = 540;
+const unsigned int Resource_Management::WINDOW_HEIGHT = 360;
+
+sf::Color Resource_Management::buttonShapeFillColor = sf::Color(111, 111, 111);
+sf::Color Resource_Management::colorWhenClickOnButton = sf::Color(125, 134, 189);

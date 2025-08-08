@@ -133,32 +133,52 @@
   <ItemGroup>
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="BulletManager.cpp" />
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="gameSate.h" />
+    <ClCompile Include="GameSaver.cpp" />
+    <ClCompile Include="LoseState.cpp" />
+    <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="mapManager.cpp" />
+    <ClCompile Include="MapSelectState.cpp" />
     <ClCompile Include="mapTowerDefense_Game.cpp" />
     <ClCompile Include="PathFinder.cpp" />
+    <ClCompile Include="PauseState.cpp" />
+    <ClCompile Include="PlayState.cpp" />
     <ClCompile Include="point.cpp" />
     <ClCompile Include="Resource_Management.cpp" />
     <ClCompile Include="MainProgram.cpp" />
+    <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="State.cpp" />
     <ClCompile Include="tower.cpp" />
     <ClCompile Include="TowerManager.cpp" />
+    <ClCompile Include="VictoryState.cpp" />
     <ClCompile Include="WaveManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bullet.h" />
     <ClInclude Include="BulletManager.h" />
+    <ClInclude Include="Button.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="GameSaver.h" />
+    <ClInclude Include="LoseState.h" />
+    <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="mapManager.h" />
+    <ClInclude Include="MapSelectState.h" />
     <ClInclude Include="mapTowerDefense_Game.h" />
     <ClInclude Include="MathHelpers.h" />
     <ClInclude Include="PathFinder.h" />
+    <ClInclude Include="PauseState.h" />
+    <ClInclude Include="PlayState.h" />
     <ClInclude Include="point.h" />
     <ClInclude Include="Resource_Management.h" />
+    <ClInclude Include="Sprite.h" />
+    <ClInclude Include="State.h" />
     <ClInclude Include="tower.h" />
     <ClInclude Include="TowerManager.h" />
+    <ClInclude Include="VictoryState.h" />
     <ClInclude Include="WaveManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

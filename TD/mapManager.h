@@ -11,11 +11,13 @@ class TowerManager;
 
 class mapManager {
 public:
-	mapManager(mapTowerDefense_Game* rgameMap, BulletManager* rbulletManager, WaveManager* rwaveControl, TowerManager* rtowerControl, PlayState mapSelection = PlayState::Map1);//For debug map 1 is default
+	mapManager(mapTowerDefense_Game* rgameMap, BulletManager* rbulletManager, WaveManager* rwaveControl, TowerManager* rtowerControl, MapID mapSelection = MapID::Map1);//For debug map 1 is default
 
-	void selectMap(PlayState rmapSelection);//Give arguement a dataType
+	void selectMap(MapID rmapSelection);//Give arguement a dataType
 	void loadMapConfig(std::string filePathMapconfg);
 	void setUpMap();
+	
+	MapID getMapSelection() { return mapSelection; }
 
 private:
 
@@ -24,7 +26,7 @@ private:
 	WaveManager* waveControl;
 	TowerManager* towerControl;
 
-	PlayState mapSelection;
+	MapID mapSelection;
 
 	struct mapConfig{
 		std::string filePathForEnemyWave;

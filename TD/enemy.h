@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "point.h"
+#include "Resource_Management.h"
 #include <vector>
 #include <iostream>
 
@@ -8,8 +9,12 @@ using namespace std;
 class enemy {
 private:
 
-	std::vector<sf::Texture> textures;
+	std::vector<sf::Texture> textures;//This is for moving
+	std::vector<sf::Texture> hurt_textures;
+
 	sf::Sprite Enemysprite;
+
+	std::string enemyType;
 
 	//Atribute of enemy
 	float _speed;
@@ -29,10 +34,16 @@ private:
 	float timeSinceLastFrame = 0.0F;
 	int totalFrame = 4;
 
+	float durationOfAnimation = 0.0f;
+	////////////////////////////////////
+
 
 public:
 	enemy(const std::vector<sf::Texture>&, const vector<sf::Vector2f>& _rpath, int rMaxHealth, float rspeed = 50.0F, int rBounty = 0.0); // Thêm maxHealth
+	enemy(const std::vector<sf::Texture>&, const vector<sf::Vector2f>& _rpath, std::string enemyType, int rMaxHealth, float rspeed = 50.0F, int rBounty = 0.0);
+	enemy(const std::vector<sf::Texture>&, const std::vector<sf::Texture>& hurt_texture, const std::vector<sf::Texture>& dead_texture, const vector<sf::Vector2f>& _rpath, int rMaxHealth, float rspeed = 50.0F, int rBounty = 0.0);
 
+	friend std::ostream& operator<<(std::ostream& oDev, enemy& cenemy);
 
 	vector<sf::Vector2f> getP() { return _path; }
 	float getSpeed() { return _speed; }
@@ -54,9 +65,25 @@ public:
 	void animate(float);
 	void Update(float);
 	void draw(sf::RenderWindow& window);
+
+	bool inHurt = false;
+	void hurt();
 	//////////////////////For_Animation///////////////////
 
 	bool reachedEnd(); //Enemy reached ended ?
+
+
+	std::string getEnemyType() { return enemyType; }
+	int getMaxHealth() { return maxHealth; }
+	int getHealth() { return _health; }
+	int getBounty() { return bounty; }
+
+	void setEnemyType(std::string renemyType) { enemyType = renemyType; }
+	void setMaxHealth(int rmaxHealth) {  maxHealth = rmaxHealth; }
+	void setSpeed(float rspeed) {  _speed = rspeed; }
+	void setHealth(int rhealth) {  _health = rhealth; }
+	void setBounty(int rbounty) {  bounty = rbounty; }
+
 };
 
 

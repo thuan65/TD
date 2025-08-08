@@ -22,6 +22,55 @@ enemy::enemy(const std::vector<sf::Texture>& rTextures, const vector<sf::Vector2
 	healthBarForeground.setSize(sf::Vector2f(32.f, 5.f));
 	healthBarForeground.setFillColor(sf::Color::Green);
 }
+
+enemy::enemy(const std::vector<sf::Texture>& rTextures, const vector<sf::Vector2f>& _rpath, std::string enemyType, int rMaxHealth, float rspeed, int rBounty)
+	: textures(rTextures),
+Enemysprite(textures[0]),
+enemyType(enemyType),
+_speed(rspeed),
+maxHealth(rMaxHealth), // Khởi tạo máu tối đa
+_health(rMaxHealth), bounty(rBounty)    // Máu hiện tại bắt đầu bằng máu tối đa
+{
+	totalFrame = rTextures.size();
+	_path = _rpath;
+	if (!_path.empty()) {
+		Enemysprite.setPosition(_path[0] - sf::Vector2f{ 32.0, 0.0 });//Sau sẽ có chỉnh sai số
+	}
+
+	// --- KHỞI TẠO THANH MÁU ---
+	// Thanh nền (màu đỏ)
+	healthBarBackground.setSize(sf::Vector2f(32.f, 5.f)); // Chiều dài 32, cao 5
+	healthBarBackground.setFillColor(sf::Color::Red);
+
+	// Thanh máu hiện tại (màu xanh)
+	healthBarForeground.setSize(sf::Vector2f(32.f, 5.f));
+	healthBarForeground.setFillColor(sf::Color::Green);
+}
+
+enemy::enemy(const std::vector<sf::Texture>& rTextures, const std::vector<sf::Texture>& hurt_texture, const std::vector<sf::Texture>& dead_texture, const vector<sf::Vector2f>& _rpath, int rMaxHealth, float rspeed, int rBounty)
+	: textures(rTextures),
+	Enemysprite(textures[0]),
+	_speed(rspeed),
+	maxHealth(rMaxHealth), // Khởi tạo máu tối đa
+	_health(rMaxHealth), bounty(rBounty)    // Máu hiện tại bắt đầu bằng máu tối đa
+
+{
+	totalFrame = rTextures.size();
+	_path = _rpath;
+	if (!_path.empty()) {
+		Enemysprite.setPosition(_path[0] - sf::Vector2f{ 32.0, 0.0 });//Sau sẽ có chỉnh sai số
+	}
+
+	// --- KHỞI TẠO THANH MÁU ---
+	// Thanh nền (màu đỏ)
+	healthBarBackground.setSize(sf::Vector2f(32.f, 5.f)); // Chiều dài 32, cao 5
+	healthBarBackground.setFillColor(sf::Color::Red);
+
+	// Thanh máu hiện tại (màu xanh)
+	healthBarForeground.setSize(sf::Vector2f(32.f, 5.f));
+	healthBarForeground.setFillColor(sf::Color::Green);
+}
+
 sf::Vector2f enemy::getPositionAfter(float time) {
 
 	sf::Vector2f currentPosition = getPosition();
@@ -53,6 +102,7 @@ sf::Vector2f enemy::getPositionAfter(float time) {
 }
 
 void enemy::damageTake(int rdamage) {
+	hurt();
 	_health -= rdamage;
 	if (_health < 0) {
 		_health = 0;
@@ -88,6 +138,8 @@ void enemy::draw(sf::RenderWindow& window) {
 	window.draw(healthBarBackground);
 	window.draw(healthBarForeground);
 }
+
+
 
 bool enemy::reachedEnd() {
 	if (Enemysprite.getPosition() == _path.back()) return true;
@@ -127,4 +179,24 @@ void enemy::animate(float deltaTime) {
 		Enemysprite.setTexture(textures[currentFrame]);//Dat frame ke tiep
 		timeSinceLastFrame = 0.0F;
 	}
+
+	if (inHurt) {
+		durationOfAnimation -= deltaTime;
+		if (durationOfAnimation < 1e-9) {
+			inHurt = false;
+		}
+	}
+
+}
+
+//Kich hoat animation trúng sát thương của enemy
+void enemy::hurt() {
+	inHurt = true;
+	//textures = Resource_Management::getTexture("Ghast_Hurt");
+	durationOfAnimation = 0.5F;
+}
+
+std::ostream& operator<<(std::ostream& oDev, enemy& cenemy) {//Use this for save file
+	oDev << cenemy.enemyType << " " << cenemy.maxHealth << " " << cenemy._speed << " " << cenemy.bounty << "\n";
+	return oDev;
 }
