@@ -1,6 +1,7 @@
 ﻿#include "PlayState.h"
 
 PlayState::PlayState(sf::RenderWindow* window, std::stack<std::unique_ptr<State>>* states, MapID mapID) :
+    currentMap(mapID),
 	State(window, states),
     gameMap(Resource_Management::getTexture("Map_Game1")),
     waveControl(),
@@ -13,13 +14,48 @@ PlayState::PlayState(sf::RenderWindow* window, std::stack<std::unique_ptr<State>
     lives(5), money(500), currentWave(0),
     isGameOver(false), playerWon(false),
     timeUntilNextWave(TIME_BETWEEN_WAVES)
-	//backgroundSprite(getBackgroundTexture(mapID, currentFrame)) 
+	//backgroundSprite(getBackgroundTexture(mapID, currentFrame))    
 {
+    GameSaver::setPlayState(this);
 	pauseIconSprite.setScale({ 0.15f, 0.15f });
     towerControl.setWaveManager(&waveControl);
     updateGUISprites();
     mapSelection.selectMap(mapID);
 }
+
+//Phuong thuc ho tro save/load
+void PlayState::save(std::ostream& fileOut) {
+
+    switch (currentMap) {
+    case MapID::Map1: {
+        fileOut << "Map1\n"; break;
+    }
+    case MapID::Map2:
+    {
+        fileOut << "Map2\n"; break;
+    }
+    case MapID::Map3:
+    {
+        fileOut << "Map3\n"; break;
+    }
+    case MapID::Map4:
+    {
+        fileOut << "Map4\n"; break;
+    }
+    }
+
+    fileOut << lives << " " << money << " " << currentWave << " " << isGameOver << " " << playerWon << " " << isBetweenWaves << " " << timeUntilNextWave << "\n";
+
+    waveControl.save(fileOut);
+    towerControl.save(fileOut);
+}
+
+void PlayState::load(std::istream& fileIn) {
+    fileIn >> lives >> money >> currentWave >> isGameOver >> playerWon >> isBetweenWaves >> timeUntilNextWave;
+    waveControl.loadSave(fileIn);
+    towerControl.loadSave(fileIn);
+}
+
 
 // --- CÁC HÀM TRỢ GIÚP ---
 void PlayState::updateGUISprites() {
@@ -138,14 +174,14 @@ void PlayState::update(float deltaTime){
 	towerControl.update(deltaTime);
 	bulletManager.update(deltaTime);
 	gameMap.Update(deltaTime);
-	
+    updateGUISprites();
     handleEnemyResults();
 
-	/*if (timeAccumulator >= 0.5f) {
-		timeAccumulator -= 0.5f;
-		currentFrame = 1 - currentFrame;
-		backgroundSprite.setTexture(getBackgroundTexture(currentMap, currentFrame));
-	}*/
+	//if (timeAccumulator >= 0.5f) {
+	//	timeAccumulator -= 0.5f;
+	//	currentFrame = 1 - currentFrame;
+	//	backgroundSprite.setTexture(getBackgroundTexture(currentMap, currentFrame));
+	//}
 
     // Check thắng
     if (currentWave >= WaveManager::TOTAL_WAVES && waveControl.WaveEnded()) {

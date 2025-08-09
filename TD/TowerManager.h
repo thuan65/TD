@@ -2,6 +2,7 @@
 #include "tower.h"
 #include "enemy.h"
 #include "BulletManager.h"
+#include "ISaveable.h"
 #include "Resource_Management.h"
 #include "WaveManager.h"
 #include <SFML/Graphics.hpp>
@@ -18,7 +19,7 @@ const int TOWER4_COST = 250;
 
 class WaveManager;
 
-class TowerManager{
+class TowerManager : public ISaveable{
 
 private: 
 	sf::RenderWindow* window; // Giả sử bạn có một cửa sổ để vẽ
@@ -87,5 +88,10 @@ public:
 	void draw(sf::RenderWindow& window);
 	void openUpgradeMenu(tower* targetTower);
 	void closeUpgradeMenu();
+
+	//Logic cho save file
+	void save(std::ostream& fileOut) const override;
+	void loadSave(std::istream& fileOut) override;
+	void addTower(const string& towerType, sf::Vector2f towerPositon, int TowerLevel);
 };
 

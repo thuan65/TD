@@ -89,5 +89,8 @@ public:
 	void setIsGameOver(bool risGameOver) { isGameOver = risGameOver; }
 	void setPlayerWon(bool rplayerWon) { playerWon = rplayerWon; }
 
+	void load(std::istream& fileIn);
+	void save(std::ostream& fileOut);
+
 };
 

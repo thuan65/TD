@@ -231,7 +231,9 @@ bool TowerManager::buildTower(sf::Vector2f worldPos, std::string towerType) {
     for (int i = 0; i < buildZones.size(); ++i) {//Tìm ô có thể xây tháp
 
         if (buildZones[i].bounds.contains(worldPos)) {
-            buildNewTower->setPosition(buildZones[i].bounds.getCenter());//Set the tower position in the middle of the Tile
+            sf::Vector2f towerPosition = buildZones[i].bounds.getCenter();
+            towerPosition.y -= 12.5f;
+            buildNewTower->setPosition(towerPosition);//Set the tower position in the middle of the Tile
             buildZones[i].TowerExist = true;
             //std::cout << "Build:  " << buildZones[i].bounds.getCenter().x << " " << buildZones[i].bounds.getCenter().y << "\n";
             //std::cout << buildNewTower->getPosition().x << " " << buildNewTower->getPosition().y << "\n";
@@ -329,6 +331,36 @@ void TowerManager::drawNumber(int number, float x, float y, std::vector<sf::Spri
         sprite_vector.push_back(sprite);
         currentX += sprite.getGlobalBounds().size.x;
     }
+}
+
+void TowerManager::save(std::ostream& fileOut) const {
+    fileOut << towers.size() << "\n"; //Số lượng tower đang có
+    for (int i = 0; i < towers.size(); ++i) {
+        fileOut << towers[i]->getTowerType() << " " << towers[i]->getTowerLevel() << " " << towers[i]->getPosition().x << " " << towers[i]->getPosition().y << "\n";
+    }
+}
+
+void TowerManager::loadSave(std::istream& fileIn) {
+    size_t towersSize;
+    fileIn >> towersSize;//Số lượng tower đang có
+    towers.reserve(towersSize);
+    for (int i = 0; i < towersSize; ++i) {
+        std::string TowerType;
+        int TowerLevel;
+        sf::Vector2f towerPosition;
+        fileIn >> TowerType
+            >> TowerLevel
+            >> towerPosition.x >> towerPosition.y;
+
+        addTower(TowerType, towerPosition, TowerLevel);
+    }
+}
+
+void TowerManager::addTower(const string& towerType, sf::Vector2f towerPositon, int TowerLevel) {
+    tower* buildNewTower = new tower(towerType, Resource_Management::getTexture(towerType));
+    buildNewTower->setPosition(towerPositon);
+    buildNewTower->updadeToLevel(TowerLevel);//Upgrate cho den level hien tai
+    towers.emplace_back(buildNewTower);
 }
 
 // --- CÁC HÀM CHƯA DÙNG ĐẾN ---

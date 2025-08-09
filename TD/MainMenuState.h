@@ -5,6 +5,7 @@
 #include "State.h"
 #include "Button.h"
 #include "MapSelectState.h"
+#include "LoadGameState.h"
 #include "Sprite.h"
 
 class MainMenuState : public State {

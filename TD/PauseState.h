@@ -3,6 +3,7 @@
 #include "State.h"
 #include "Resource_Management.h"
 #include "Button.h"
+#include "SaveGameState.h"
 #include "Sprite.h"
 
 class PauseState : public State {

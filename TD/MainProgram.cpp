@@ -18,6 +18,7 @@ float Vector_Length(sf::Vector2f rVector) {
 
 
 int main() {
+
     try {
         // BƯỚC 1: Tải tất cả tài nguyên TRƯỚC KHI làm bất cứ điều gì khác
         Resource_Management::init();

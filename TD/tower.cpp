@@ -46,6 +46,12 @@ void tower::upgrade() {
 	upgradeCost = static_cast<int>(upgradeCost * 1.5f);
 }
 
+void tower::updadeToLevel(int toLevel) {//Upgrade to a specific level
+	if (level < toLevel) {
+		upgrade();
+	}
+}
+
 void tower::update(float deltaTime, std::vector<enemy*>& enemies, BulletManager* bulletManager) {
 	animate(deltaTime);
 	towerReloading -= deltaTime;

@@ -120,7 +120,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp14</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -138,6 +138,8 @@
     <ClCompile Include="game.cpp" />
     <ClCompile Include="gameSate.h" />
     <ClCompile Include="GameSaver.cpp" />
+    <ClCompile Include="ISaveable.cpp" />
+    <ClCompile Include="LoadGameState.cpp" />
     <ClCompile Include="LoseState.cpp" />
     <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="mapManager.cpp" />
@@ -149,6 +151,8 @@
     <ClCompile Include="point.cpp" />
     <ClCompile Include="Resource_Management.cpp" />
     <ClCompile Include="MainProgram.cpp" />
+    <ClCompile Include="SaveGameState.cpp" />
+    <ClCompile Include="SaveSlotConfirmOverwriteState.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="tower.cpp" />
@@ -163,6 +167,8 @@
     <ClInclude Include="enemy.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="GameSaver.h" />
+    <ClInclude Include="ISaveable.h" />
+    <ClInclude Include="LoadGameState.h" />
     <ClInclude Include="LoseState.h" />
     <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="mapManager.h" />
@@ -174,6 +180,8 @@
     <ClInclude Include="PlayState.h" />
     <ClInclude Include="point.h" />
     <ClInclude Include="Resource_Management.h" />
+    <ClInclude Include="SaveGameState.h" />
+    <ClInclude Include="SaveSlotConfirmOverwriteState.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="tower.h" />

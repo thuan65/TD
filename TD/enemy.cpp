@@ -1,8 +1,9 @@
 ﻿#include "enemy.h"
 
-enemy::enemy(const std::vector<sf::Texture>& rTextures, const vector<sf::Vector2f>& _rpath, int rMaxHealth, float rspeed, int rBounty) // thêm max_Health
+enemy::enemy(const std::vector<sf::Texture>& rTextures, const vector<sf::Vector2f>& _rpath, std::string enemyType, int rMaxHealth, float rspeed, int rBounty) // thêm max_Health
 	: textures(rTextures),
 	Enemysprite(textures[0]),
+	enemyType(enemyType),
 	_speed(rspeed),
 	maxHealth(rMaxHealth), // Khởi tạo máu tối đa
 	_health(rMaxHealth), bounty(rBounty)    // Máu hiện tại bắt đầu bằng máu tối đa
@@ -23,18 +24,19 @@ enemy::enemy(const std::vector<sf::Texture>& rTextures, const vector<sf::Vector2
 	healthBarForeground.setFillColor(sf::Color::Green);
 }
 
-enemy::enemy(const std::vector<sf::Texture>& rTextures, const vector<sf::Vector2f>& _rpath, std::string enemyType, int rMaxHealth, float rspeed, int rBounty)
+enemy::enemy(const std::vector<sf::Texture>& rTextures, const vector<sf::Vector2f>& _rpath, std::string enemyType, int rMaxHealth, int rHealth, float rspeed, int rBounty, float x, float y, int currentWayPoint)//This is constructor for load Enemey
 	: textures(rTextures),
 Enemysprite(textures[0]),
 enemyType(enemyType),
 _speed(rspeed),
 maxHealth(rMaxHealth), // Khởi tạo máu tối đa
-_health(rMaxHealth), bounty(rBounty)    // Máu hiện tại bắt đầu bằng máu tối đa
+_health(rHealth), bounty(rBounty),    // Máu hiện tại bắt đầu bằng máu tối đa
+currentWayPoint(currentWayPoint)
 {
 	totalFrame = rTextures.size();
 	_path = _rpath;
 	if (!_path.empty()) {
-		Enemysprite.setPosition(_path[0] - sf::Vector2f{ 32.0, 0.0 });//Sau sẽ có chỉnh sai số
+		Enemysprite.setPosition(sf::Vector2f(x,y));//Sau sẽ có chỉnh sai số
 	}
 
 	// --- KHỞI TẠO THANH MÁU ---
@@ -160,7 +162,7 @@ void enemy::move(float deltaTime) {
 	sf::Vector2f direction = TargetPosition - currentPosition;
 
 	float distance = std::sqrt(direction.x * direction.x + direction.y * direction.y);
-
+	//std::cout << "Speed: " << _speed << "\n";
 	if (distance > 1.0f) {
 		direction /= distance;
 		Enemysprite.move(direction * _speed * deltaTime);

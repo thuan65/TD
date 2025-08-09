@@ -5,7 +5,7 @@
 #include "TowerManager.h"
 
 
-mapManager::mapManager(mapTowerDefense_Game* rgameMap, BulletManager* rbulletManager, WaveManager* rwaveControl, TowerManager* rtowerControl, MapID mapSelection)// change rmapSelection dataType later
+mapManager::mapManager(mapTowerDefense_Game* rgameMap, BulletManager* rbulletManager, WaveManager* rwaveControl, TowerManager* rtowerControl, MapID mapSelection)
 	:gameMap(rgameMap), bulletManager(rbulletManager), waveControl(rwaveControl), towerControl(rtowerControl), mapSelection(mapSelection)
 {
 }
@@ -41,7 +41,10 @@ void mapManager::selectMap(MapID rmapSelection) {//Already choose the map
 
 void mapManager::loadMapConfig(std::string filePathMapconfg) {
 	std::ifstream fin(filePathMapconfg);
-	//put a throw catch here later (fin.fail())
+	if (fin.fail()) {
+		throw std::invalid_argument("Cannot open file Map config");
+	}
+	
 
 		std::string line;
 		std::getline(fin, line);

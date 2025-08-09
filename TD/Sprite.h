@@ -17,8 +17,9 @@ public:
 		this->setPosition(initialPosition);
 	}
 
-private:
+public:
 	sf::Vector2f initialPosition;
+private:
 
 	friend class MapSelectState;
 	friend class PlayState;

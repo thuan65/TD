@@ -31,7 +31,7 @@ void MainMenuState::handleInput(const std::optional<sf::Event>& event) {
 		loadGameButton.shape.setPosition({ loadGameButton.getInitialPosition().x,  loadGameButton.getInitialPosition().y - 2.0f });
 		if (const auto* keyPressed = event->getIf<sf::Event::MouseButtonPressed>()) {
 			if (keyPressed->button == sf::Mouse::Button::Left) {
-
+				states->push(std::make_unique<LoadGameState>(window, states));
 			}
 		}
 	}

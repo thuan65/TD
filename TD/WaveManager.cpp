@@ -1,5 +1,6 @@
 ﻿#include "WaveManager.h"
 #include "enemy.h"
+#include "PlayState.h"
 
 WaveManager::WaveManager()
 	: filePath("No path for wave loading yet"), wave_number(0), enemySpawnIndex(0) //Start from wave 1
@@ -96,7 +97,8 @@ void WaveManager::loadWaveFromFile(int rwave_number) {
 }
 
 void WaveManager::spawnEnemy(const EnemyInfo& info) {
-	enemy* e = new enemy(Resource_Management::getTexture(info.enemy_type), PathFinder::getPath(), info.enemy_type,info.health, info.speed, info.bounty);
+
+	enemy* e = new enemy(Resource_Management::getTexture(info.enemy_type), PathFinder::getPath(), info.enemy_type, info.health, info.speed, info.bounty);
 	activeEnemy.push_back(e);
 }
 
@@ -164,3 +166,48 @@ void WaveManager::draw(sf::RenderWindow& window) {
 		activeEnemy[i]->draw(window);
 	}
 }
+//enemy* e = new enemy(Resource_Management::getTexture(info.enemy_type), PathFinder::getPath(), info.enemy_type, info.health, info.speed, info.bounty);
+void WaveManager::save(std::ostream& fileOut) const {
+	fileOut << activeEnemy.size() << "\n";
+	fileOut << wave_number << "\n";
+	fileOut << enemySpawnIndex << "\n";
+	fileOut << timeSinceLastWave << "\n";
+
+	for (const auto& TheEnemy : activeEnemy) {
+		fileOut << TheEnemy->getEnemyType() << " "
+			<< TheEnemy->getMaxHealth() << " "
+			<< TheEnemy->getHealth() << " "
+			<< TheEnemy->getSpeed() << " "
+			<< TheEnemy->getBounty() << " "
+			<< TheEnemy->getPosition().x << "  "
+			<< TheEnemy->getPosition().y << " "
+			<< TheEnemy->getCurrentWayPoint() << "\n";
+	}
+
+}
+
+void WaveManager::loadSave(std::istream& fileIn) {
+	size_t waveSize; //Number of active enemy now in the wave
+	fileIn >> waveSize;
+	fileIn >> wave_number >> enemySpawnIndex >> timeSinceLastWave;
+	activeEnemy.reserve(waveSize);
+	for (size_t i = 0; i < waveSize; ++i) {
+		std::string enemy_type;
+		int rMaxHealth, rhealth; float rspeed; int rBounty; int currentWayPoint;
+		float x, y;
+
+		fileIn >> enemy_type
+			>> rMaxHealth
+			>> rhealth
+			>> rspeed
+			>> rBounty
+			>> x >> y
+			>> currentWayPoint;
+	
+		activeEnemy.emplace_back(new enemy(Resource_Management::getTexture(enemy_type), PathFinder::getPath(), enemy_type, rMaxHealth, rhealth, rspeed, rBounty,x, y, currentWayPoint));
+	}
+
+	loadWaveFromFile(wave_number);
+
+}
+

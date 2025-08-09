@@ -10,9 +10,10 @@ class VictoryState;
 class LoseState;
 
 class Button : public sf::Drawable {
+public:
+	sf::RectangleShape shape;
 
 private:
-	sf::RectangleShape shape;
 	sf::Text text;
 	sf::Vector2f initialPosition;
 

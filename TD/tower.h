@@ -33,7 +33,7 @@ private:
 
 public:
 	// CONSTRUCTOR ĐÚNG
-	tower(const std::string& type, const std::vector<sf::Texture>& rtowerTexture, int row, int col);
+	tower(const std::string& type, const std::vector<sf::Texture>& rtowerTexture, int row = 0, int col = 0);
 
 	void update(float deltaTime, std::vector<enemy*>& enemies, BulletManager* bulletManager);
 	void draw(sf::RenderWindow& window);
@@ -46,4 +46,8 @@ public:
 	int getCol() const { return col; }
 	int getUpgradeCost() const { return upgradeCost; }
 	int getSellValue() const { return sellValue; }
+	int getTowerLevel() { return level; }
+	std::string getTowerType() { return towerType; }
+
+	void updadeToLevel(int level);
 };

@@ -7,13 +7,14 @@
 #include "enemy.h"
 #include "Resource_Management.h"
 #include "PathFinder.h"
+#include "ISaveable.h"
 
 struct RemovalResult {//Sau khi xóa, kiểm tra có enemy nào về đích, hoặc bị kill
 	int enemiesReachedEnd = 0;
 	int moneyFromKills = 0;
 };
 
-class WaveManager {
+class WaveManager : public ISaveable {
 
 private:
 
@@ -30,7 +31,7 @@ private:
 
 	std::vector <EnemyInfo> EnemyInfoForWave;
 	std::vector<enemy*> activeEnemy;
-	int wave_number;
+	int wave_number;//The number of wave of a map
 	int enemySpawnIndex;
 	float timeSinceLastWave;
 	std::vector<enemy*> _enemyToRemove;
@@ -53,6 +54,8 @@ public:
 	int getEnemySpawnIndex() { return enemySpawnIndex; }
 	float getTimeSinceLastWave() { return timeSinceLastWave; }
 
+
+
 	void startWave(int waveNum);
 	void startNewWave();
 	bool AllEnemySpawned() const;
@@ -63,6 +66,10 @@ public:
 	void draw(sf::RenderWindow& window);
 
 	bool WaveEnded();
+
+	//Logic cho save file
+	void save(std::ostream& fileOut) const override;
+	void loadSave(std::istream& fileOut) override;
 
 };
 

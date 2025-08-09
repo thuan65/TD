@@ -30,6 +30,7 @@ void PauseState::handleInput(const std::optional<sf::Event>& event) {
 		resumeButton.shape.setPosition({ resumeButton.getInitialPosition().x,  resumeButton.getInitialPosition().y - 2.0f });
 		if (const auto* keyPressed = event->getIf<sf::Event::MouseButtonPressed>()) {
 			if (keyPressed->button == sf::Mouse::Button::Left) {
+
 				quit = true;
 				numPop = 1;
 				return;
@@ -46,7 +47,7 @@ void PauseState::handleInput(const std::optional<sf::Event>& event) {
 		saveGameButton.shape.setPosition({ saveGameButton.getInitialPosition().x,  saveGameButton.getInitialPosition().y - 2.0f });
 		if (const auto* keyPressed = event->getIf<sf::Event::MouseButtonPressed>()) {
 			if (keyPressed->button == sf::Mouse::Button::Left) {
-
+				states->push(std::make_unique<SaveGameState>(window, states));
 			}
 		}
 	}

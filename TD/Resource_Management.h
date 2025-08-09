@@ -8,10 +8,6 @@ private:
 	// Constructor private để không ai tạo đối tượng được
 	Resource_Management() = default;
 
-	
-
-
-
 	// Các biến texture vẫn là static private
 	
 	static std::vector<sf::Texture> Knight_Sleame;

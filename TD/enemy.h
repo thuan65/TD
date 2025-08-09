@@ -39,15 +39,20 @@ private:
 
 
 public:
-	enemy(const std::vector<sf::Texture>&, const vector<sf::Vector2f>& _rpath, int rMaxHealth, float rspeed = 50.0F, int rBounty = 0.0); // Thêm maxHealth
-	enemy(const std::vector<sf::Texture>&, const vector<sf::Vector2f>& _rpath, std::string enemyType, int rMaxHealth, float rspeed = 50.0F, int rBounty = 0.0);
+	enemy(const std::vector<sf::Texture>&, const vector<sf::Vector2f>& _rpath, std::string enemyType, int rMaxHealth = 100, float rspeed = 50.0F, int rBounty = 0.0); 
+	enemy(const std::vector<sf::Texture>&, const vector<sf::Vector2f>& _rpath, std::string enemyType, int rMaxHealth, int rHealth ,float rspeed, int rBounty, float x, float y, int currentWayPoint);// Thêm rHealth
 	enemy(const std::vector<sf::Texture>&, const std::vector<sf::Texture>& hurt_texture, const std::vector<sf::Texture>& dead_texture, const vector<sf::Vector2f>& _rpath, int rMaxHealth, float rspeed = 50.0F, int rBounty = 0.0);
 
 	friend std::ostream& operator<<(std::ostream& oDev, enemy& cenemy);
 
 	vector<sf::Vector2f> getP() { return _path; }
 	float getSpeed() { return _speed; }
+	int getCurrentWayPoint() { return currentWayPoint; }
 	sf::Vector2f getPosition() { return Enemysprite.getPosition(); }
+
+	void setCurrentWayPoint(int rCurrentWayPoint) { currentWayPoint = currentWayPoint; }
+	void getEnemyType(const std::string& renemyType) { enemyType = renemyType; }
+	void setPosition(sf::Vector2f rPosition) {  Enemysprite.setPosition(rPosition); }
 	void setSeed(float tspeed) {
 		if (tspeed > 0) _speed = tspeed;
 	}
