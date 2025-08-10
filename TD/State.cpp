@@ -2,7 +2,8 @@
 
 State::State(sf::RenderWindow* window, std::stack<std::unique_ptr<State>>* states) :
 	window(window),
-	states(states) {
+	states(states) 
+{
 }
 
 bool State::shouldQuit() const {

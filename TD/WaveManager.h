@@ -54,8 +54,6 @@ public:
 	int getEnemySpawnIndex() { return enemySpawnIndex; }
 	float getTimeSinceLastWave() { return timeSinceLastWave; }
 
-
-
 	void startWave(int waveNum);
 	void startNewWave();
 	bool AllEnemySpawned() const;

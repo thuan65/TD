@@ -1,8 +1,8 @@
 #	SwapTime 	EnemyType 	Health Speed Bouty
-	0.0 	Nightmare_Movement 	100 50 10
-	1.5 	Nightmare_Movement 	100 50 10
-	3.0 	Runner_Movement		80 75 15
-	3.5 	Dumber_Movement 	80 75 15
+	0.0 	Mage_Sleame		100 50 10
+	1.5 	Mage_Sleame		100 50 10
+	3.0 	Runner			80 75 15
+	3.5 	Dumber	 		80 75 15
 	5.5 	Knight_Sleame 		400 35 50
-	7.0 	Sleame 			100 50 10
-	7.5 	Sleame 			100 50 10
+	7.0 	Mage_Sleame		100 50 10
+	7.5 	Mage_Sleame		100 50 10

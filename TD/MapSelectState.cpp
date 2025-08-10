@@ -3,6 +3,8 @@
 MapSelectState::MapSelectState(sf::RenderWindow* window, std::stack<std::unique_ptr<State>>* states) :
 	State(window, states) {
 
+	dimOverlay.setFillColor(sf::Color(0, 0, 0, 128));
+
 	mapSelectText.setFillColor(sf::Color::White);
 	mapSelectText.setOutlineColor(sf::Color::Black);
 	mapSelectText.setOutlineThickness(5.0f);
@@ -14,79 +16,65 @@ MapSelectState::MapSelectState(sf::RenderWindow* window, std::stack<std::unique_
 	map2Sprite.setScale({ (1.0f / 3.0f), (1.0f / 3.0f) });
 	map3Sprite.setScale({ (1.0f / 3.0f), (1.0f / 3.0f) });
 	map4Sprite.setScale({ (1.0f / 3.0f), (1.0f / 3.0f) });
-	goBackArrowSprite.setScale({ 0.2f, 0.2f });
-	goBackArrowSprite.rotate(sf::degrees(180));
+	goBackArrowSprite.setScale({ 0.4f, 0.4f });
 }
 
-void MapSelectState::handleInput(const std::optional<sf::Event>& event) {
+void MapSelectState::handleInput(const std::optional<sf::Event>& event, sf::Vector2f mouseCoords) {
 
 	if (!event.has_value()) return;
 
-	sf::Vector2f mouseCoords = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
-
-	if (goBackArrowSprite.getGlobalBounds().contains(mouseCoords)) {
-		goBackArrowSprite.setPosition(goBackArrowSprite.initialPosition + sf::Vector2f(0.0f, -2.0f));
-		if (const auto* keyPressed = event->getIf<sf::Event::MouseButtonPressed>()) {
-			if (keyPressed->button == sf::Mouse::Button::Left) {
-				quit = true;
-				numPop = 1;
-				return;
-			}
-		}
+	if (goBackArrowSprite.isClicked(event, mouseCoords)) {
+		quit = true;
+		numPop = 1;
+		SoundManager::playSound(Resource_Management::buttonClickSound);
+		return;
 	}
-	else goBackArrowSprite.setPosition(goBackArrowSprite.initialPosition);
 
-	if (map1Sprite.getGlobalBounds().contains(mouseCoords)) {
-		map1Sprite.setPosition(map1Sprite.initialPosition + sf::Vector2f(0.0f, -2.0f));
-		if (const auto* keyPressed = event->getIf<sf::Event::MouseButtonPressed>()) {
-			if (keyPressed->button == sf::Mouse::Button::Left) {
-				states->push(std::make_unique<PlayState>(window, states, MapID::Map1));
-				return;
-			}
-		}
+	if (map1Sprite.isClicked(event, mouseCoords)) {
+		states->push(std::make_unique<PlayState>(window, states, MapID::Map1));
+		states->push(std::make_unique<LoadingBeforePlayState>(window, states));
+		SoundManager::playSound(Resource_Management::buttonClickSound);
+		return;
 	}
-	else map1Sprite.setPosition(map1Sprite.initialPosition);
 
-	if (map2Sprite.getGlobalBounds().contains(mouseCoords)) {
-		map2Sprite.setPosition(map2Sprite.initialPosition + sf::Vector2f(0.0f, -2.0f));
-		if (const auto* keyPressed = event->getIf<sf::Event::MouseButtonPressed>()) {
-			if (keyPressed->button == sf::Mouse::Button::Left) {
-				states->push(std::make_unique<PlayState>(window, states, MapID::Map2));
-				return;
-			}
-		}
+	if (map2Sprite.isClicked(event, mouseCoords)) {
+		states->push(std::make_unique<PlayState>(window, states, MapID::Map2));
+		states->push(std::make_unique<LoadingBeforePlayState>(window, states));
+		SoundManager::playSound(Resource_Management::buttonClickSound);
+		return;
 	}
-	else map2Sprite.setPosition(map2Sprite.initialPosition);
 
-	if (map3Sprite.getGlobalBounds().contains(mouseCoords)) {
-		map3Sprite.setPosition(map3Sprite.initialPosition + sf::Vector2f(0.0f, -2.0f));
-		if (const auto* keyPressed = event->getIf<sf::Event::MouseButtonPressed>()) {
-			if (keyPressed->button == sf::Mouse::Button::Left) {
-				states->push(std::make_unique<PlayState>(window, states, MapID::Map3));
-				return;
-			}
-		}
+	if (map3Sprite.isClicked(event, mouseCoords)) {
+		states->push(std::make_unique<PlayState>(window, states, MapID::Map3));
+		states->push(std::make_unique<LoadingBeforePlayState>(window, states));
+		SoundManager::playSound(Resource_Management::buttonClickSound);
+		return;
 	}
-	else map3Sprite.setPosition(map3Sprite.initialPosition);
 
-	if (map4Sprite.getGlobalBounds().contains(mouseCoords)) {
-		map4Sprite.setPosition(map4Sprite.initialPosition + sf::Vector2f(0.0f, -2.0f));
-		if (const auto* keyPressed = event->getIf<sf::Event::MouseButtonPressed>()) {
-			if (keyPressed->button == sf::Mouse::Button::Left) {
-				states->push(std::make_unique<PlayState>(window, states, MapID::Map4));
-				return;
-			}
-		}
+	if (map4Sprite.isClicked(event, mouseCoords)) {
+		states->push(std::make_unique<PlayState>(window, states, MapID::Map4));
+		states->push(std::make_unique<LoadingBeforePlayState>(window, states));
+		SoundManager::playSound(Resource_Management::buttonClickSound);
+		return;
 	}
-	else map4Sprite.setPosition(map4Sprite.initialPosition);
 }
 
-void MapSelectState::update(float dt) {
+void MapSelectState::update(float dt, sf::Vector2f mouseCoords) {
 
+	goBackArrowSprite.update(mouseCoords);
+	map1Sprite.update(mouseCoords);
+	map2Sprite.update(mouseCoords);
+	map3Sprite.update(mouseCoords);
+	map4Sprite.update(mouseCoords);
+
+	if (SoundManager::getMusicStatus() != sf::Music::SoundSource::Status::Playing) {
+		SoundManager::playMainMenuMusic();
+	}
 }
 
 void MapSelectState::render() {
 	window->draw(backgroundSprite);
+	window->draw(dimOverlay);
 	window->draw(mapSelectText);
 	window->draw(map1Sprite);
 	window->draw(map2Sprite);

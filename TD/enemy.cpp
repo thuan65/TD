@@ -22,6 +22,7 @@ enemy::enemy(const std::vector<sf::Texture>& rTextures, const vector<sf::Vector2
 	// Thanh máu hiện tại (màu xanh)
 	healthBarForeground.setSize(sf::Vector2f(32.f, 5.f));
 	healthBarForeground.setFillColor(sf::Color::Green);
+	addAnimation();
 }
 
 enemy::enemy(const std::vector<sf::Texture>& rTextures, const vector<sf::Vector2f>& _rpath, std::string enemyType, int rMaxHealth, int rHealth, float rspeed, int rBounty, float x, float y, int currentWayPoint)//This is constructor for load Enemey
@@ -47,6 +48,7 @@ currentWayPoint(currentWayPoint)
 	// Thanh máu hiện tại (màu xanh)
 	healthBarForeground.setSize(sf::Vector2f(32.f, 5.f));
 	healthBarForeground.setFillColor(sf::Color::Green);
+	addAnimation();
 }
 
 enemy::enemy(const std::vector<sf::Texture>& rTextures, const std::vector<sf::Texture>& hurt_texture, const std::vector<sf::Texture>& dead_texture, const vector<sf::Vector2f>& _rpath, int rMaxHealth, float rspeed, int rBounty)
@@ -103,24 +105,41 @@ sf::Vector2f enemy::getPositionAfter(float time) {
 	return currentPosition;
 }
 
+bool enemy::isEnemyAlive() {
+	return !((enemyState == EnemyState::Dead) && deadAnimationFinished);
+}
+
 void enemy::damageTake(int rdamage) {
-	hurt();
+	//if (enemyState == EnemyState::Dead) return;
 	_health -= rdamage;
-	if (_health < 0) {
-		_health = 0;
+
+	if (_health < 0.1f) {//If the enemy is dead, play hurt Animation then dead animation
+		//_health = 0;
+		hurtTimer = durationOfHurtAnimation;
+		enemyState = EnemyState::Dead;
+		frameTime = hurtFrameTime;
+		currentFrame = 0;
+		totalFrame = hurt_textures.size();
+	}
+	else {//Play hurt animation
+		hurtTimer = durationOfHurtAnimation;
+		enemyState = EnemyState::Hurt;
+		frameTime = hurtFrameTime;
+		currentFrame = 0;
+		totalFrame = hurt_textures.size();
 	}
 
 	// CẬP NHẬT CHIỀU DÀI THANH MÁU KHI NHẬN SÁT THƯƠNG
+	if (_health <= 0) {
+		healthBarForeground.setSize(sf::Vector2f(32.f * 0, 5.f));
+		return;
+	}
 	float healthPercent = static_cast<float>(_health) / maxHealth;
 	healthBarForeground.setSize(sf::Vector2f(32.f * healthPercent, 5.f));
 }
 
-bool enemy::isEnemyAlive() {
-	if (_health <= 0) return false;
-	return true;
-}
-
 void enemy::Update(float deltaTime) {
+	
 	move(deltaTime);
 	animate(deltaTime);
 
@@ -131,6 +150,87 @@ void enemy::Update(float deltaTime) {
 	// Update the code to use sf::Vector2f for setPosition to fix the error
 	healthBarBackground.setPosition(sf::Vector2f(enemyPos.x, enemyPos.y - 10.f)); // -10.f để nó ở trên đầu
 	healthBarForeground.setPosition(sf::Vector2f(enemyPos.x, enemyPos.y - 10.f));
+
+	if (enemyState == EnemyState::Hurt && hurtTimer < 0.0f) {//If the hurt Animation is over
+		if (enemyState != EnemyState::Dead) {//enemy still have some hp leaft
+			enemyState = EnemyState::Walk;
+			frameTime = walkFrameTime;
+			currentFrame = 0;
+			totalFrame = textures.size();
+		}
+	}
+	
+}
+
+
+
+void enemy::animate(float deltaTime) {
+	if (enemyState == EnemyState::Dead) {//Enemy Death, play dead animation only
+		playLastAnimation(deltaTime);
+		return;
+	}
+
+	timeSinceLastFrame += deltaTime; //Thoi gian giua cac Frame
+
+	if (timeSinceLastFrame >= frameTime) { //Neu du thoi gian chuyen frame
+
+		currentFrame = (currentFrame + 1) % totalFrame;
+		timeSinceLastFrame = 0.0F;
+
+		if (enemyState == EnemyState::Walk) {
+			Enemysprite.setTexture(textures[currentFrame]);//Dat frame ke tiep
+			Enemysprite.setColor(sf::Color::White);
+		}
+		else if (enemyState == EnemyState::Hurt) {
+			Enemysprite.setColor(sf::Color(255, 180, 180));
+			Enemysprite.setTexture(hurt_textures[currentFrame]);
+			hurtTimer -= deltaTime;
+		}
+	}
+
+}
+
+void enemy::playLastAnimation(float deltaTime) {
+	timeSinceLastFrame += deltaTime; //Thoi gian giua cac Frame
+
+	//if (!LastHurtAnimation) {
+	//	// Chạy hurt animation
+	//	if (timeSinceLastFrame >= frameTime) {
+	//		timeSinceLastFrame = 0.0f;
+	//		currentFrame++;
+
+	//		if (currentFrame >= hurt_textures.size()) {
+	//			currentFrame = hurt_textures.size() - 1; // Giữ frame cuối
+	//		}
+
+	//		Enemysprite.setTexture(hurt_textures[currentFrame]);
+	//		Enemysprite.setColor(sf::Color(255, 180, 180)); // Hiệu ứng hurt
+	//	}
+
+	//	hurtTimer -= deltaTime;
+	//	if (hurtTimer <= 0.0f) {
+	//		// Chuyển sang dead animation
+	//		LastHurtAnimation = true;
+	//		Enemysprite.setColor(sf::Color(255, 255, 255)); // Reset màu
+	//		//currentFrame = 0;
+	//		timeSinceLastFrame = 0.0f;
+	//	}
+	//}
+	
+		// Chạy dead animation
+		if (timeSinceLastFrame >= deadFrameTime) {
+			timeSinceLastFrame = 0.0f;
+			DeadCurrentFrame++;
+
+			if (DeadCurrentFrame < dead_textures.size()) {
+				Enemysprite.setTexture(dead_textures[DeadCurrentFrame]);
+				//Enemysprite.setTextureRect(sf::IntRect({ 0, 14 }, { 38, 32 }));
+			}
+			else {
+				deadAnimationFinished = true;
+			}
+		}
+
 }
 
 void enemy::draw(sf::RenderWindow& window) {
@@ -140,8 +240,6 @@ void enemy::draw(sf::RenderWindow& window) {
 	window.draw(healthBarBackground);
 	window.draw(healthBarForeground);
 }
-
-
 
 bool enemy::reachedEnd() {
 	if (Enemysprite.getPosition() == _path.back()) return true;
@@ -155,6 +253,7 @@ void enemy::move(float deltaTime) {
 	//std::cin.get();
 
 	if (currentWayPoint >= _path.size()) return;
+	if (enemyState == EnemyState::Dead) return; //If enemy is dead, it won't move
 
 	sf::Vector2f currentPosition = Enemysprite.getPosition();
 	sf::Vector2f TargetPosition = _path[currentWayPoint]; //The next point it need to go to
@@ -173,32 +272,10 @@ void enemy::move(float deltaTime) {
 	}
 }
 
-void enemy::animate(float deltaTime) {
-	timeSinceLastFrame += deltaTime; //Thoi gian giua cac Frame
-	if (timeSinceLastFrame >= frameTime) { //Neu du thoi gian chuyen frame
-		currentFrame = (currentFrame + 1) % totalFrame;
-
-		Enemysprite.setTexture(textures[currentFrame]);//Dat frame ke tiep
-		timeSinceLastFrame = 0.0F;
-	}
-
-	if (inHurt) {
-		durationOfAnimation -= deltaTime;
-		if (durationOfAnimation < 1e-9) {
-			inHurt = false;
-		}
-	}
-
+void enemy::addAnimation() {
+	hurt_textures = Resource_Management::getTexture(enemyType + "_Hurt");
+	dead_textures = Resource_Management::getTexture(enemyType + "_Dead");
 }
 
-//Kich hoat animation trúng sát thương của enemy
-void enemy::hurt() {
-	inHurt = true;
-	//textures = Resource_Management::getTexture("Ghast_Hurt");
-	durationOfAnimation = 0.5F;
-}
 
-std::ostream& operator<<(std::ostream& oDev, enemy& cenemy) {//Use this for save file
-	oDev << cenemy.enemyType << " " << cenemy.maxHealth << " " << cenemy._speed << " " << cenemy.bounty << "\n";
-	return oDev;
-}
+

@@ -2,56 +2,48 @@
 
 SaveGameState::SaveGameState(sf::RenderWindow* window, std::stack<std::unique_ptr<State>>* states) :
 	State(window, states) {
+	dimOverlay.setFillColor(sf::Color(0, 0, 0, 128));
+
 	saveGameText.setFillColor(sf::Color::White);
 	saveGameText.setOutlineColor(sf::Color::Black);
 	saveGameText.setOutlineThickness(5.0f);
 	saveGameText.setCharacterSize(32);
 	saveGameText.setOrigin({ saveGameText.getLocalBounds().position + saveGameText.getLocalBounds().size / 2.0f });
 	saveGameText.setPosition({ Resource_Management::WINDOW_WIDTH / 2.0f, 30 });
-	goBackArrowSprite.setScale({ 0.2f, 0.2f });
-	goBackArrowSprite.rotate(sf::degrees(180));
+	goBackArrowSprite.setScale({ 0.4f, 0.4f });
 	checkSaveSlots();
 }
 
-void SaveGameState::handleInput(const std::optional<sf::Event>& event) {
+void SaveGameState::handleInput(const std::optional<sf::Event>& event, sf::Vector2f mouseCoords) {
 
 	if (!event.has_value()) return;
 
-	sf::Vector2f mouseCoords = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
-
-	if (goBackArrowSprite.getGlobalBounds().contains(mouseCoords)) {
-		goBackArrowSprite.setPosition(goBackArrowSprite.initialPosition + sf::Vector2f(0.0f, -2.0f));
-		if (const auto* keyPressed = event->getIf<sf::Event::MouseButtonPressed>()) {
-			if (keyPressed->button == sf::Mouse::Button::Left) {
-				quit = true;
-				numPop = 1;
-				return;
-			}
-		}
+	if (goBackArrowSprite.isClicked(event, mouseCoords)) {
+		quit = true;
+		numPop = 1;
+		SoundManager::playSound(Resource_Management::buttonClickSound);
+		return;
 	}
-	else goBackArrowSprite.setPosition(goBackArrowSprite.initialPosition);
 
 	if (saveSlot1Button.shape.getGlobalBounds().contains(mouseCoords)) {
 		saveSlot1Button.shape.setFillColor(Resource_Management::colorWhenClickOnButton);
 		saveSlot1Button.shape.setPosition({ saveSlot1Button.getInitialPosition().x,  saveSlot1Button.getInitialPosition().y - 2.0f });
 		if (const auto* keyPressed = event->getIf<sf::Event::MouseButtonPressed>()) {
 			if (keyPressed->button == sf::Mouse::Button::Left) {
-			
 				if (!isFullSaveSlot1) {
 					// save file
-					std::ofstream fout(saveFileName1);
-					if (fout.fail()) {
-						throw std::runtime_error("Cannot Save File write File");
-					}
-					GameSaver::saveGame(fout);
+					states->push(std::make_unique<SaveSlotSuccessfulState>(window, states));
+					isFullSaveSlot1 = true;
+					saveGame(saveFileName1);
 					quit = true;
 					numPop = 1;
-					fout.close();
 					return;
 				}
 				else {
 					states->push(std::make_unique<SaveSlotConfirmOverwriteState>(window, states, saveFileName1));
 				}
+				SoundManager::playSound(Resource_Management::buttonClickSound);
+				return;
 			}
 		}
 	}
@@ -67,18 +59,17 @@ void SaveGameState::handleInput(const std::optional<sf::Event>& event) {
 			if (keyPressed->button == sf::Mouse::Button::Left) {
 				if (!isFullSaveSlot2) {
 					// save file
-					std::ofstream fout(saveFileName2);
-					if (fout.fail()) {
-						throw std::runtime_error("Cannot Save File write File");
-					}
-					GameSaver::saveGame(fout);
+					states->push(std::make_unique<SaveSlotSuccessfulState>(window, states));
+					isFullSaveSlot2 = true;
+					saveGame(saveFileName2);
 					quit = true;
 					numPop = 1;
-					fout.close();
 				}
 				else {
 					states->push(std::make_unique<SaveSlotConfirmOverwriteState>(window, states, saveFileName2));
 				}
+				SoundManager::playSound(Resource_Management::buttonClickSound);
+				return;
 			}
 		}
 	}
@@ -94,18 +85,18 @@ void SaveGameState::handleInput(const std::optional<sf::Event>& event) {
 			if (keyPressed->button == sf::Mouse::Button::Left) {
 				if (!isFullSaveSlot3) {
 					// save file
-					std::ofstream fout(saveFileName3);
-					if (fout.fail()) {
-						throw std::runtime_error("Cannot Save File write File");
-					}
-					GameSaver::saveGame(fout);
+					states->push(std::make_unique<SaveSlotSuccessfulState>(window, states));
+					isFullSaveSlot3 = true;
+					saveGame(saveFileName3);
 					quit = true;
 					numPop = 1;
-					fout.close();
+					
 				}
 				else {
 					states->push(std::make_unique<SaveSlotConfirmOverwriteState>(window, states, saveFileName3));
 				}
+				SoundManager::playSound(Resource_Management::buttonClickSound);
+				return;
 			}
 		}
 	}
@@ -121,18 +112,17 @@ void SaveGameState::handleInput(const std::optional<sf::Event>& event) {
 			if (keyPressed->button == sf::Mouse::Button::Left) {
 				if (!isFullSaveSlot4) {
 					// save file
-					std::ofstream fout(saveFileName4);
-					if (fout.fail()) {
-						throw std::runtime_error("Cannot Save File write File");
-					}
-					GameSaver::saveGame(fout);
+					states->push(std::make_unique<SaveSlotSuccessfulState>(window, states));
+					isFullSaveSlot4 = true;
+					saveGame(saveFileName4);
 					quit = true;
 					numPop = 1;
-					fout.close();
 				}
 				else {
 					states->push(std::make_unique<SaveSlotConfirmOverwriteState>(window, states, saveFileName4));
 				}
+				SoundManager::playSound(Resource_Management::buttonClickSound);
+				return;
 			}
 		}
 	}
@@ -142,10 +132,13 @@ void SaveGameState::handleInput(const std::optional<sf::Event>& event) {
 	}
 }
 
-void SaveGameState::update(float dt) {}
+void SaveGameState::update(float dt, sf::Vector2f mouseCoords) {
+	goBackArrowSprite.update(mouseCoords);
+}
 
 void SaveGameState::render() {
 	window->draw(loadGameBackgroundSprite);
+	window->draw(dimOverlay);
 	window->draw(saveGameText);
 	window->draw(goBackArrowSprite);
 	window->draw(saveSlot1Button);
@@ -164,4 +157,13 @@ void SaveGameState::checkSaveSlots() {//Check see if file save already exist
 	isFullSaveSlot2 = fileExist(saveFileName2);
 	isFullSaveSlot3 = fileExist(saveFileName3);
 	isFullSaveSlot4 = fileExist(saveFileName4);
+}
+
+void SaveGameState::saveGame(const std::string& fileName) {
+	std::ofstream fout(fileName);
+	if (fout.fail()) {
+		throw std::runtime_error("Cannot Save File write File");
+	}
+	GameSaver::saveGame(fout);
+	fout.close();
 }

@@ -6,15 +6,23 @@
 
 using namespace std;
 
+enum class EnemyState {
+	Walk,
+	Hurt,
+	Dead
+};
+
 class enemy {
 private:
 
-	std::vector<sf::Texture> textures;//This is for moving
+	std::vector<sf::Texture> textures;//This is for moving (Default textures)
 	std::vector<sf::Texture> hurt_textures;
+	std::vector<sf::Texture> dead_textures;
 
 	sf::Sprite Enemysprite;
 
 	std::string enemyType;
+	EnemyState enemyState = EnemyState::Walk; //The normal State of enemy
 
 	//Atribute of enemy
 	float _speed;
@@ -26,15 +34,25 @@ private:
 
 	//Mảng đường đi của con enemy đã tính trước
 	vector<sf::Vector2f> _path;
+	int currentWayPoint = 0;//Index của Path
 
 	////////////Animation_helper//////////
-	int currentWayPoint = 0;
 	int currentFrame = 0;
-	float frameTime = 0.5F;
+	int DeadCurrentFrame = 0;
+	float frameTime = 0.15F;
+	float walkFrameTime = 0.10f;
+	float hurtFrameTime = 0.10f;
+	float deadFrameTime = 0.15f;
 	float timeSinceLastFrame = 0.0F;
-	int totalFrame = 4;
+	int totalFrame;
+	float durationOfHurtAnimation = 0.025;
+	float durationOfDeadtAnimation = 0.15;
+	float hurtTimer = 0.0f;//Thời gian từ lúc phát animation
+	bool deadAnimationFinished = false;
+	bool LastHurtAnimation = false;
+	void addAnimation();
+	void playLastAnimation(float deltaTime);//Dead animation before delete
 
-	float durationOfAnimation = 0.0f;
 	////////////////////////////////////
 
 
@@ -43,7 +61,7 @@ public:
 	enemy(const std::vector<sf::Texture>&, const vector<sf::Vector2f>& _rpath, std::string enemyType, int rMaxHealth, int rHealth ,float rspeed, int rBounty, float x, float y, int currentWayPoint);// Thêm rHealth
 	enemy(const std::vector<sf::Texture>&, const std::vector<sf::Texture>& hurt_texture, const std::vector<sf::Texture>& dead_texture, const vector<sf::Vector2f>& _rpath, int rMaxHealth, float rspeed = 50.0F, int rBounty = 0.0);
 
-	friend std::ostream& operator<<(std::ostream& oDev, enemy& cenemy);
+
 
 	vector<sf::Vector2f> getP() { return _path; }
 	float getSpeed() { return _speed; }
@@ -70,9 +88,8 @@ public:
 	void animate(float);
 	void Update(float);
 	void draw(sf::RenderWindow& window);
-
-	bool inHurt = false;
-	void hurt();
+	
+	bool lastHurtAnimationFinished(int currentFrame, float deltaTime);
 	//////////////////////For_Animation///////////////////
 
 	bool reachedEnd(); //Enemy reached ended ?

@@ -13,10 +13,13 @@
 #include "BulletManager.h"
 #include "TowerManager.h"
 #include "SFML/Graphics.hpp"
+#include "SoundManager.h"
 #include "SFML/Window.hpp"
 #include "GameSaver.h"
 #include "PathFinder.h"
 #include <iostream>
+#include "CountdownState.h"
+#include <stack>
 #include <memory>
 #include <stack>
 
@@ -28,17 +31,21 @@ class PlayState : public State {
 
 public:
 	PlayState(sf::RenderWindow* window, std::stack<std::unique_ptr<State>>* states, MapID mapID);
-	void handleInput(const std::optional<sf::Event>& event) override;
-	void update(float dt) override;
+	void handleInput(const std::optional<sf::Event>& event, sf::Vector2f mouseCoords) override;
+	void update(float dt, sf::Vector2f mouseCoords) override;
 	void render() override;
 
 private:
 	MapID currentMap;
 	float timeAccumulator = 0.0f;
 	int currentFrame = 0;
+	float playSpeed = 2;
 
 	//Sprite backgroundSprite;
 	Sprite pauseIconSprite = Sprite(Resource_Management::pauseIconTexture, { 518, 24 });
+	Sprite speedUpIconSprite = Sprite(Resource_Management::speedUpIconTexture, { 478, 24 });
+	Sprite playIconSprite = Sprite(Resource_Management::playIconTexture, { 22, 24 });
+	sf::Text pressToStartText = sf::Text(Resource_Management::font, "Press to start", 12);
 
 private:
 	//static const sf::Texture& getBackgroundTexture(MapID mapID, int index = 0);
@@ -53,6 +60,9 @@ private:
 	int currentWave;
 	bool isGameOver;
 	bool playerWon;
+
+	bool startPlaying = false; // to change from ready to actual gameplay
+	bool alreadySpeedUp = false;
 
 	std::vector<sf::Sprite> livesSprites;
 	std::vector<sf::Sprite> moneySprites;

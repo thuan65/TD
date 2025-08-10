@@ -4,52 +4,41 @@ LoseState::LoseState(sf::RenderWindow* window, std::stack<std::unique_ptr<State>
 	: State(window, states) {
 	allowRenderBelow = true;
 	dimOverlay.setFillColor(sf::Color(0, 0, 0, 128));
+	newGameButtonSprite.setScale({ 0.7f, 0.7f });
+	mainMenuButtonSprite.setScale({ 0.7f, 0.7f });
+
+	SoundManager::playLoseMusic();
 }
 
-void LoseState::handleInput(const std::optional<sf::Event>& event) {
+void LoseState::handleInput(const std::optional<sf::Event>& event, sf::Vector2f mouseCoords) {
 
 	if (!event.has_value()) return;
 
-	sf::Vector2f mouseCoords = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
-
-	if (newGameButton.shape.getGlobalBounds().contains(mouseCoords)) {
-		newGameButton.shape.setFillColor(Resource_Management::colorWhenClickOnButton);
-		newGameButton.shape.setPosition({ newGameButton.getInitialPosition().x,  newGameButton.getInitialPosition().y - 2.0f });
-		if (const auto* keyPressed = event->getIf<sf::Event::MouseButtonPressed>()) {
-			if (keyPressed->button == sf::Mouse::Button::Left) {
-				quit = true;
-				numPop = 2;
-				return;
-			}
-		}
-	}
-	else {
-		newGameButton.shape.setFillColor(Resource_Management::buttonShapeFillColor);
-		newGameButton.shape.setPosition(newGameButton.getInitialPosition());
+	if (newGameButtonSprite.isClicked(event, mouseCoords)) {
+		quit = true;
+		numPop = 2;
+		SoundManager::playSound(Resource_Management::buttonClickSound);
+		SoundManager::stopMusic();
+		return;
 	}
 
-	if (mainMenuButton.shape.getGlobalBounds().contains(mouseCoords)) {
-		mainMenuButton.shape.setFillColor(Resource_Management::colorWhenClickOnButton);
-		mainMenuButton.shape.setPosition({ mainMenuButton.getInitialPosition().x,  mainMenuButton.getInitialPosition().y - 2.0f });
-		if (const auto* keyPressed = event->getIf<sf::Event::MouseButtonPressed>()) {
-			if (keyPressed->button == sf::Mouse::Button::Left) {
-				quit = true;
-				numPop = 3;
-				return;
-			}
-		}
-	}
-	else {
-		mainMenuButton.shape.setFillColor(Resource_Management::buttonShapeFillColor);
-		mainMenuButton.shape.setPosition(mainMenuButton.getInitialPosition());
+	if (mainMenuButtonSprite.isClicked(event, mouseCoords)) {
+		quit = true;
+		numPop = 3;
+		SoundManager::playSound(Resource_Management::buttonClickSound);
+		SoundManager::stopMusic();
+		return;
 	}
 }
 
-void LoseState::update(float dt) {}
+void LoseState::update(float dt, sf::Vector2f mouseCoords) {
+	newGameButtonSprite.update(mouseCoords);
+	mainMenuButtonSprite.update(mouseCoords);
+}
 
 void LoseState::render() {
 	window->draw(dimOverlay);
 	window->draw(loseBackgroundSprite);
-	window->draw(newGameButton);
-	window->draw(mainMenuButton);
+	window->draw(newGameButtonSprite);
+	window->draw(mainMenuButtonSprite);
 }

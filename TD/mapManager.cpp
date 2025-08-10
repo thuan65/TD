@@ -61,6 +61,7 @@ void mapManager::loadMapConfig(std::string filePathMapconfg) {
 
 		std::getline(fin, line);
 		mapcfg.filePathForBuildPosition = line;
+	
 
 }
 

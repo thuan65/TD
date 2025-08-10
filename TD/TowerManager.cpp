@@ -26,7 +26,11 @@ void TowerManager::setupBuildMenu() {
     buildMenuTower2Icon = std::make_unique<sf::Sprite>(Resource_Management::getTexture("Tower2_Icon")[0]);
     buildMenuTower3Icon = std::make_unique<sf::Sprite>(Resource_Management::getTexture("Tower3_Icon")[0]);
     buildMenuTower4Icon = std::make_unique<sf::Sprite>(Resource_Management::getTexture("Tower4_Icon")[0]);
-
+    const float menuIconScale = 0.05f; // << CHỈNH SỬA CON SỐ NÀY
+	/*buildMenuTower1Icon->setScale(sf::Vector2f(menuIconScale, menuIconScale));*/
+	buildMenuTower2Icon->setScale(sf::Vector2f(menuIconScale, menuIconScale));
+	/*buildMenuTower3Icon->setScale(sf::Vector2f(menuIconScale, menuIconScale));
+	buildMenuTower4Icon->setScale(sf::Vector2f(menuIconScale, menuIconScale));*/
     upgradeMenuBackground = std::make_unique<sf::RectangleShape>();
     upgradeMenuBackground->setSize({ 74.f, 60.f });
     upgradeMenuBackground->setFillColor(sf::Color(120, 120, 120, 220));
@@ -63,12 +67,12 @@ void TowerManager::openBuildMenu(int row, int col) {
 
     buildMenuBackground->setPosition({ menuX, menuY });
     buildMenuTower1Icon->setPosition({ menuX + 5.f, menuY + 2.5f });
-    buildMenuTower2Icon->setPosition({ menuX + 42.f, menuY + 2.5f });
+    buildMenuTower2Icon->setPosition({ menuX + 35.f, menuY + 2.5f });
     buildMenuTower3Icon->setPosition({ menuX + 79.f, menuY + 2.5f });
     buildMenuTower4Icon->setPosition({ menuX + 116.f, menuY + 2.5f });
 
     drawNumber(TOWER1_COST, buildMenuTower1Icon->getPosition().x, buildMenuTower1Icon->getPosition().y + 50, tower1CostSprites);
-    drawNumber(TOWER2_COST, buildMenuTower2Icon->getPosition().x, buildMenuTower2Icon->getPosition().y + 50, tower2CostSprites);
+    drawNumber(TOWER2_COST, buildMenuTower2Icon->getPosition().x + 5, buildMenuTower2Icon->getPosition().y + 50, tower2CostSprites);
     drawNumber(TOWER3_COST, buildMenuTower3Icon->getPosition().x, buildMenuTower3Icon->getPosition().y + 50, tower3CostSprites);
     drawNumber(TOWER4_COST, buildMenuTower4Icon->getPosition().x, buildMenuTower4Icon->getPosition().y + 50, tower4CostSprites);
 }
@@ -295,6 +299,8 @@ void TowerManager::draw(sf::RenderWindow& window) {
         window.draw(*buildMenuTower2Icon);
         window.draw(*buildMenuTower3Icon);
         window.draw(*buildMenuTower4Icon);
+		
+
 
         for (const auto& s : tower1CostSprites) window.draw(s);
         for (const auto& s : tower2CostSprites) window.draw(s);

@@ -8,6 +8,10 @@ class MainMenuState;
 class PauseState;
 class VictoryState;
 class LoseState;
+class LoadGameState;
+class SaveGameState;
+class SaveSlotConfirmOverwriteState;
+class SettingState;
 
 class Button : public sf::Drawable {
 public:
@@ -18,7 +22,7 @@ private:
 	sf::Vector2f initialPosition;
 
 public:
-	Button(sf::Vector2f size, sf::Vector2f initialPosition, const std::string& textString = "button", sf::Color shapeFillColor = sf::Color(111, 111, 111), sf::Color textFillColor = sf::Color(226, 226, 226), sf::Color shapeOutlineColor = sf::Color::Black, float shapeOutlineThickness = 2.0f, sf::Color textOutlineColor = sf::Color::White, float textOutlineThickness = 0.0f);
+	Button(sf::Vector2f size, sf::Vector2f initialPosition, const std::string& textString = "button", unsigned int charSize = 20, sf::Color shapeFillColor = sf::Color(111, 111, 111), sf::Color textFillColor = sf::Color(226, 226, 226), sf::Color shapeOutlineColor = sf::Color::Black, float shapeOutlineThickness = 2.0f, sf::Color textOutlineColor = sf::Color::White, float textOutlineThickness = 0.0f);
 
 	sf::Vector2f getInitialPosition() const { return initialPosition; }
 
@@ -34,5 +38,8 @@ protected:
 	friend class PauseState;
 	friend class VictoryState;
 	friend class LoseState;
+	friend class LoadGameState;
+	friend class SaveGameState;
+	friend class SaveSlotConfirmOverwriteState;
+	friend class SettingState;
 };
-

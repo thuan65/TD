@@ -71,7 +71,7 @@ void WaveManager::startNewWave() {
 
 void WaveManager::loadWaveFromFile(int rwave_number) {
 
-	ifstream fin("Data\\1wave\\map1\\wave" + to_string(rwave_number) + ".txt");
+	ifstream fin(filePath + to_string(rwave_number) + ".txt");
 
 	if (fin.fail()) {//use catch throw here
 		cout << "ERROR Reading WaveSpawn File";
@@ -90,7 +90,6 @@ void WaveManager::loadWaveFromFile(int rwave_number) {
 		ss >> info.health;
 		ss >> info.speed;
 		ss >> info.bounty;
-
 		EnemyInfoForWave.emplace_back(info);
 	}
 	fin.close();

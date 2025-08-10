@@ -2,6 +2,8 @@
 
 LoadGameState::LoadGameState(sf::RenderWindow* window, std::stack<std::unique_ptr<State>>* states) :
 	State(window, states) {
+	dimOverlay.setFillColor(sf::Color(0, 0, 0, 128));
+
 	loadGameText.setFillColor(sf::Color::White);
 	loadGameText.setOutlineColor(sf::Color::Black);
 	loadGameText.setOutlineThickness(5.0f);
@@ -12,9 +14,8 @@ LoadGameState::LoadGameState(sf::RenderWindow* window, std::stack<std::unique_pt
 	slotEmptyText.setFillColor(sf::Color::Red);
 	slotEmptyText.setOutlineColor(sf::Color::Black);
 	slotEmptyText.setOutlineThickness(2.0f);
-	slotEmptyText.setCharacterSize(24);
 	slotEmptyText.setOrigin({ slotEmptyText.getLocalBounds().position + slotEmptyText.getLocalBounds().size / 2.0f });
-	slotEmptyText.setPosition({saveSlot1Button.getInitialPosition().x + saveSlot1Button.shape.getSize().x - 20, saveSlot1Button.getInitialPosition().y});
+	slotEmptyText.setPosition({ saveSlot1Button.getInitialPosition().x + saveSlot1Button.shape.getSize().x - 20, saveSlot1Button.getInitialPosition().y });
 
 	goBackArrowSprite.setScale({ 0.2f, 0.2f });
 	goBackArrowSprite.rotate(sf::degrees(180));
@@ -22,25 +23,18 @@ LoadGameState::LoadGameState(sf::RenderWindow* window, std::stack<std::unique_pt
 	checkSaveSlots();
 }
 
-void LoadGameState::handleInput(const std::optional<sf::Event>& event) {
+void LoadGameState::handleInput(const std::optional<sf::Event>& event, sf::Vector2f mouseCoords) {
 
 	if (!event.has_value()) return;
 
-	sf::Vector2f mouseCoords = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
-
 	shouldDrawEmptySaveSlot1 = shouldDrawEmptySaveSlot2 = shouldDrawEmptySaveSlot3 = shouldDrawEmptySaveSlot4 = false;
 
-	if (goBackArrowSprite.getGlobalBounds().contains(mouseCoords)) {
-		goBackArrowSprite.setPosition(goBackArrowSprite.initialPosition + sf::Vector2f(0.0f, -2.0f));
-		if (const auto* keyPressed = event->getIf<sf::Event::MouseButtonPressed>()) {
-			if (keyPressed->button == sf::Mouse::Button::Left) {
-				quit = true;
-				numPop = 1;
-				return;
-			}
-		}
+	if (goBackArrowSprite.isClicked(event, mouseCoords)) {
+		quit = true;
+		numPop = 1;
+		SoundManager::playSound(Resource_Management::buttonClickSound);
+		return;
 	}
-	else goBackArrowSprite.setPosition(goBackArrowSprite.initialPosition);
 
 	if (saveSlot1Button.shape.getGlobalBounds().contains(mouseCoords)) {
 		saveSlot1Button.shape.setFillColor(Resource_Management::colorWhenClickOnButton);
@@ -56,6 +50,7 @@ void LoadGameState::handleInput(const std::optional<sf::Event>& event) {
 					shouldDrawEmptySaveSlot1 = true;
 					slotEmptyText.setPosition({ saveSlot1Button.getInitialPosition().x + saveSlot1Button.shape.getSize().x - 20, saveSlot1Button.getInitialPosition().y });
 				}
+				SoundManager::playSound(Resource_Management::buttonClickSound);
 			}
 		}
 	}
@@ -79,6 +74,7 @@ void LoadGameState::handleInput(const std::optional<sf::Event>& event) {
 					shouldDrawEmptySaveSlot2 = true;
 					slotEmptyText.setPosition({ saveSlot2Button.getInitialPosition().x + saveSlot2Button.shape.getSize().x - 20, saveSlot2Button.getInitialPosition().y });
 				}
+				SoundManager::playSound(Resource_Management::buttonClickSound);
 			}
 		}
 	}
@@ -101,6 +97,7 @@ void LoadGameState::handleInput(const std::optional<sf::Event>& event) {
 					shouldDrawEmptySaveSlot3 = true;
 					slotEmptyText.setPosition({ saveSlot3Button.getInitialPosition().x + saveSlot3Button.shape.getSize().x - 20, saveSlot3Button.getInitialPosition().y });
 				}
+				SoundManager::playSound(Resource_Management::buttonClickSound);
 			}
 		}
 	}
@@ -123,6 +120,7 @@ void LoadGameState::handleInput(const std::optional<sf::Event>& event) {
 					shouldDrawEmptySaveSlot4 = true;
 					slotEmptyText.setPosition({ saveSlot4Button.getInitialPosition().x + saveSlot4Button.shape.getSize().x - 20, saveSlot4Button.getInitialPosition().y });
 				}
+				SoundManager::playSound(Resource_Management::buttonClickSound);
 			}
 		}
 	}
@@ -132,12 +130,16 @@ void LoadGameState::handleInput(const std::optional<sf::Event>& event) {
 	}
 }
 
-void LoadGameState::update(float dt) {}
+void LoadGameState::update(float dt, sf::Vector2f mouseCoords) {
+	goBackArrowSprite.update(mouseCoords);
+}
 
 void LoadGameState::render() {
 	window->draw(loadGameBackgroundSprite);
+	window->draw(dimOverlay);
 	window->draw(loadGameText);
-	window->draw(goBackArrowSprite); if (shouldDrawEmptySaveSlot1 || shouldDrawEmptySaveSlot2 || shouldDrawEmptySaveSlot3 || shouldDrawEmptySaveSlot4)
+	window->draw(goBackArrowSprite);
+	if (shouldDrawEmptySaveSlot1 || shouldDrawEmptySaveSlot2 || shouldDrawEmptySaveSlot3 || shouldDrawEmptySaveSlot4)
 	window->draw(slotEmptyText);
 	window->draw(saveSlot1Button);
 	window->draw(saveSlot2Button);

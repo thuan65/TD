@@ -17,10 +17,21 @@ PlayState::PlayState(sf::RenderWindow* window, std::stack<std::unique_ptr<State>
 	//backgroundSprite(getBackgroundTexture(mapID, currentFrame))    
 {
     GameSaver::setPlayState(this);
-	pauseIconSprite.setScale({ 0.15f, 0.15f });
+
+    pauseIconSprite.setScale({ 0.3f, 0.3f });
+    speedUpIconSprite.setScale({ 0.3f, 0.3f });
+    playIconSprite.setScale({ 0.3f, 0.3f });
+
+    pressToStartText.setFillColor(sf::Color::White);
+    pressToStartText.setOutlineColor(sf::Color::Black);
+    pressToStartText.setOutlineThickness(1.0f);
+    pressToStartText.setOrigin({ pressToStartText.getLocalBounds().position + pressToStartText.getLocalBounds().size / 2.0f });
+    pressToStartText.setPosition({ 100, 24 });
+
     towerControl.setWaveManager(&waveControl);
     updateGUISprites();
     mapSelection.selectMap(mapID);
+
 }
 
 //Phuong thuc ho tro save/load
@@ -60,7 +71,7 @@ void PlayState::load(std::istream& fileIn) {
 // --- CÁC HÀM TRỢ GIÚP ---
 void PlayState::updateGUISprites() {
     livesSprites.clear();
-    const sf::Texture& heartTex = Resource_Management::getTexture("Heart_Icon")[0];
+    sf::Texture& heartTex = Resource_Management::Heart_Icon;
     const float heartScale = 0.01f; // Bạn có thể chỉnh size ở đây
     for (int i = 0; i < lives; ++i) {
         sf::Sprite heartSprite(heartTex);
@@ -138,34 +149,51 @@ void PlayState::handleEnemyResults() {
     }
 }
 
-void PlayState::handleInput(const std::optional<sf::Event>& event) {
+void PlayState::handleInput(const std::optional<sf::Event>& event, sf::Vector2f mouseCoords) {
 
     if (!event.has_value()) return;
 
-    sf::Vector2f mouseCoords = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
-
-    //Pause Icon if mouse is on it
-    if (pauseIconSprite.getGlobalBounds().contains(mouseCoords)) {
-        pauseIconSprite.setPosition(pauseIconSprite.initialPosition + sf::Vector2f(0.0f, -2.0f));
-    }
-    else {
-        pauseIconSprite.setPosition(pauseIconSprite.initialPosition);
+    if (pauseIconSprite.isClicked(event, mouseCoords)) {
+        states->push(std::make_unique<PauseState>(window, states, &pauseIconSprite));
+        SoundManager::playSound(Resource_Management::buttonClickSound);
+        return;
     }
 
-    //Handle when left click
+    if (speedUpIconSprite.isClicked(event, mouseCoords)) {
+        if (alreadySpeedUp == false) {
+            alreadySpeedUp = true;
+            playSpeed *= 2;
+        }
+        else {
+            alreadySpeedUp = false;
+            playSpeed /= 2;
+        }
+    }
+
+    if (playIconSprite.isClicked(event, mouseCoords)) {
+        std::cout << startPlaying << " ";
+        startPlaying = true;
+        states->push(std::make_unique<CountdownState>(window, states));
+    }
+
     if (const auto* keyPressed = event->getIf<sf::Event::MouseButtonPressed>()) {
         if (keyPressed->button == sf::Mouse::Button::Left) {
-            if (pauseIconSprite.getGlobalBounds().contains(mouseCoords)) {
-                states->push(std::make_unique<PauseState>(window, states, &pauseIconSprite));
-            }
-            else {
-                towerControl.resolveTowerAt(mouseCoords, money);
-            }
+            towerControl.resolveTowerAt(mouseCoords, money);
         }
     }
 }
 
-void PlayState::update(float deltaTime){
+    void PlayState::update(float deltaTime, sf::Vector2f mouseCoords) {
+        pauseIconSprite.update(mouseCoords);
+        speedUpIconSprite.update(mouseCoords);
+        playIconSprite.update(mouseCoords);
+        if (alreadySpeedUp == true)
+            speedUpIconSprite.setColor(sf::Color(255, 255, 255, 200));
+        else speedUpIconSprite.setColor(sf::Color::White);
+
+        if (SoundManager::getMusicStatus() == sf::Music::SoundSource::Status::Paused) {
+            SoundManager::resumeMusic();
+        }
 
     handleWaveTiming(deltaTime);
 
@@ -188,11 +216,26 @@ void PlayState::update(float deltaTime){
         playerWon = true;
         states->push(std::make_unique<VictoryState>(window, states));
     }
+    if (SoundManager::getMusicStatus() == sf::Music::SoundSource::Status::Paused) {
+        SoundManager::resumeMusic();
+    }
+    else if (SoundManager::getMusicStatus() == sf::Music::SoundSource::Status::Stopped) {
+        SoundManager::playPlayMusic();
+    }
 }
 
 void PlayState::render() {
+    //window->clear();
 	//window->draw(backgroundSprite);
-	window->clear();
+    window->draw(speedUpIconSprite);
+    if (dynamic_cast<PauseState*>(states->top().get()) == nullptr)
+        window->draw(pauseIconSprite);
+    if (startPlaying == false) {
+
+        window->draw(playIconSprite);
+        window->draw(pressToStartText);
+    }
+
 	gameMap.draw(*window);
 	waveControl.draw(*window);
 	towerControl.draw(*window);

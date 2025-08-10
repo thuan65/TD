@@ -22,6 +22,14 @@ tower::tower(const std::string& type, const std::vector<sf::Texture>& rtowerText
 	}
 
 	totalFrame = towerTexture.size();
+	float scale = 1.0f; // Mặc định là 100%
+	if (type == "Tower1") {
+		scale = 1.0f; // Ví dụ: Thu nhỏ trụ 1 còn 80%
+	}
+	else if (type == "Tower2") {
+		scale = 0.08f; // Ví dụ: Thu nhỏ trụ băng mới (48x48) còn 60%
+	}
+	towerSprite.setScale({ scale, scale });
 
 	if (type == "Tower1") {
 		damage = 25; range = 150.f; FireRate = 1.0f; upgradeCost = 75; sellValue = TOWER1_COST / 2;
