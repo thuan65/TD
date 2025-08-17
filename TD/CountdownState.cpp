@@ -3,7 +3,7 @@
 CountdownState::CountdownState(sf::RenderWindow* window, std::stack<std::unique_ptr<State>>* states) :
 	State(window, states) {
 	allowRenderBelow = true;
-	allowUpdateBelow = true;
+	allowUpdateBelow = false;
 
 	dimOverlay.setFillColor(sf::Color(0, 0, 0, 128));
 

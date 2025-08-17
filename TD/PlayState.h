@@ -21,7 +21,7 @@
 #include "CountdownState.h"
 #include <stack>
 #include <memory>
-#include <stack>
+
 
 //namespace sf {
 //	class Sprite;
@@ -72,7 +72,7 @@ private:
 	float timeUntilNextWave; // Thời gian đếm ngược
 
 	// Hằng số thời gian nghỉ giữa các wave
-	const float TIME_BETWEEN_WAVES = 3.0f; // 3 giây    
+	const float TIME_BETWEEN_WAVES = 4.0f; // 3 giây    
 
 	std::vector<sf::Sprite> nextWaveTimerSprites;
 	void updateGUISprites();

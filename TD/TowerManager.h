@@ -4,7 +4,11 @@
 #include "BulletManager.h"
 #include "ISaveable.h"
 #include "Resource_Management.h"
+#include "FreezeTower.h"
+#include "DarkTower.h"
 #include "WaveManager.h"
+#include "ElectricTower.h"
+#include "FlameTower.h"
 #include <SFML/Graphics.hpp>
 #include <fstream>
 #include <vector>
@@ -82,6 +86,8 @@ public:
 	void reset();
 	void sellTower();
 	void upgrateTower();
+
+	void buildSelectedTower(int type);
 
 	void setWaveManager(WaveManager* manager);
 

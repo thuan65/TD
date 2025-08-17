@@ -3,7 +3,7 @@
 #include "PlayState.h"
 
 WaveManager::WaveManager()
-	: filePath("No path for wave loading yet"), wave_number(0), enemySpawnIndex(0) //Start from wave 1
+	: filePath("No path for wave loading yet"), numberOfPath(1), wave_number(0), enemySpawnIndex(0) //Start from wave 1
 {
 }
 
@@ -96,9 +96,12 @@ void WaveManager::loadWaveFromFile(int rwave_number) {
 }
 
 void WaveManager::spawnEnemy(const EnemyInfo& info) {
+	// Random chọn 1 trong các đường có sẵn
+	int chosen = rand() % numberOfPath;
 
-	enemy* e = new enemy(Resource_Management::getTexture(info.enemy_type), PathFinder::getPath(), info.enemy_type, info.health, info.speed, info.bounty);
+	enemy* e = new enemy(Resource_Management::getTexture(info.enemy_type), PathFinder::getPath(chosen), info.enemy_type, info.health, info.speed, info.bounty);
 	activeEnemy.push_back(e);
+
 }
 
 bool WaveManager::AllEnemySpawned() const {

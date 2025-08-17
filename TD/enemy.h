@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "point.h"
 #include "Resource_Management.h"
 #include <vector>
 #include <iostream>
@@ -89,7 +88,6 @@ public:
 	void Update(float);
 	void draw(sf::RenderWindow& window);
 	
-	bool lastHurtAnimationFinished(int currentFrame, float deltaTime);
 	//////////////////////For_Animation///////////////////
 
 	bool reachedEnd(); //Enemy reached ended ?

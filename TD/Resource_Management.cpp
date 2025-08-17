@@ -23,15 +23,24 @@ std::vector<sf::Texture> Resource_Management::Map_Game1;
 std::vector<sf::Texture> Resource_Management::Map_Game2;
 std::vector<sf::Texture> Resource_Management::Map_Game3;
 std::vector<sf::Texture> Resource_Management::Map_Game4;
-std::vector<sf::Texture> Resource_Management::Tower1;
-std::vector<sf::Texture> Resource_Management::Tower2;
+std::vector<sf::Texture> Resource_Management::FreezeTower;
+std::vector<sf::Texture> Resource_Management::DarkTower;
 std::vector<sf::Texture> Resource_Management::bullet1;
+std::vector<sf::Texture> Resource_Management::bullet2;
+std::vector<sf::Texture> Resource_Management::bullet3;
+std::vector<sf::Texture> Resource_Management::bullet4;
+
 std::vector<sf::Texture> Resource_Management::Tower1_Icon;
 std::vector<sf::Texture> Resource_Management::Tower2_Icon;
-std::vector<sf::Texture> Resource_Management::Tower3;
-std::vector<sf::Texture> Resource_Management::Tower4;
+std::vector<sf::Texture> Resource_Management::ElectricTower;
+std::vector<sf::Texture> Resource_Management::FlameTower;
 std::vector<sf::Texture> Resource_Management::Tower3_Icon;
 std::vector<sf::Texture> Resource_Management::Tower4_Icon;
+std::vector<sf::Texture> Resource_Management::Tower1_L2;
+std::vector<sf::Texture> Resource_Management::Tower2_L2;
+std::vector<sf::Texture> Resource_Management::Tower3_L2;
+std::vector<sf::Texture> Resource_Management::Tower4_L2;
+
 sf::Texture Resource_Management::Heart_Icon;
 std::vector<std::vector<sf::Texture>> Resource_Management::Digits;
 std::vector<sf::Texture> Resource_Management::Victory_Image;
@@ -66,6 +75,8 @@ std::vector<sf::Texture> Resource_Management::Mage_Sleame_Hurt;
 std::vector<sf::Texture> Resource_Management::Mage_Sleame_Dead;
 std::vector<sf::Texture> Resource_Management::Upgrade_Icon;
 std::vector<sf::Texture> Resource_Management::Sell_Icon;
+
+std::vector<sf::Texture> Resource_Management::NoTexture;
 
 
 sf::Texture Resource_Management::loadGameBackgroundTexture;
@@ -108,6 +119,9 @@ void Resource_Management::init() {
     }
 
     try {
+        ///////////////////////No Texture template///////////////////////////////////////
+        loadFrame(NoTexture, "Data\\2tower\\tempTowerObject", 1);
+
         ///////////////////////Load Enemy Texture///////////////////////////////////////
         loadFrame(Knight_Sleame, "Data\\3enemy\\KnightSleame\\KnightSleame", 2);
     ;
@@ -120,10 +134,10 @@ void Resource_Management::init() {
         loadFrame(Map_Game4, "Data\\4map\\Texture\\Map4\\Map4_Frame", 2);
 
         ///////////////////////Load Tower Texture///////////////////////////////////////
-        loadFrame(Tower1, "Data\\2tower\\Tower\\DarkTower\\DarkTowerFrame", 2);
-        loadFrame(Tower2, "Data\\2tower\\Tower\\IceTower\\IceTowerFrame", 2);
-        loadFrame(Tower3, "Data\\2tower\\Tower\\ElectricTower\\ElectricTowerFrame", 2);
-        loadFrame(Tower4, "Data\\2tower\\Tower\\FlameTower\\FlameTowerFrame", 2);
+        loadFrame(DarkTower, "Data\\2tower\\Tower\\DarkTower\\DarkTowerFrame", 2);
+        loadFrame(FreezeTower, "Data\\2tower\\Tower\\IceTower\\IceTowerFrame", 2);
+        loadFrame(ElectricTower, "Data\\2tower\\Tower\\ElectricTower\\ElectricTowerFrame", 2);
+        loadFrame(FlameTower, "Data\\2tower\\Tower\\FlameTower\\FlameTowerFrame", 2);
 
         ///////////////////////Load Tower Icon ///////////////////////////////////////
         loadFrame(Tower1_Icon, "Data\\2tower\\Tower\\DarkTower\\DarkTowerFrame", 2);
@@ -131,6 +145,10 @@ void Resource_Management::init() {
         loadFrame(Tower3_Icon, "Data\\2tower\\Tower\\ElectricTower\\ElectricTowerFrame", 2);
         loadFrame(Tower4_Icon, "Data\\2tower\\Tower\\FlameTower\\FlameTowerFrame", 2);
 
+        loadFrame(Tower1_L2, "Data\\2tower\\Tower_2\\DarkTower\\DarkTowerFrame", 2);
+        loadFrame(Tower2_L2, "Data\\2tower\\Tower_2\\IceTower\\IceTowerFrame", 2);
+        loadFrame(Tower3_L2, "Data\\2tower\\Tower_2\\ElectricTower\\ElectricTowerFrame", 2);
+        loadFrame(Tower4_L2, "Data\\2tower\\Tower_2\\FlameTower\\FlameTowerFrame", 2);
         
         ///////////////////////Load Enemy Texture ///////////////////////////////////////
         loadFrame(Dumber_Movement, "Data\\3enemy\\Dumber\\Movement\\DumperMovement_Frame", 4);
@@ -197,9 +215,10 @@ void Resource_Management::init() {
         loadSound(buttonClickErrorSound, "Data/audio/sound/button_click_error_sound.wav");
         loadSound(boomSound, "Data/audio/sound/boom_sound.wav");
 
-        bullet1.resize(1);
-        if (!bullet1[0].loadFromFile("Data\\5bullet\\test.png"))
-            throw std::runtime_error("Failed to load bullet texture");
+        loadFrame(bullet1, "Data\\5bullet\\IceBullet", 1);
+        loadFrame(bullet2, "Data\\5bullet\\DarkBullet", 1);
+        loadFrame(bullet3, "Data\\5bullet\\LightningBullet", 1);
+        loadFrame(bullet4, "Data\\5bullet\\FlameBullet", 1);
 
         Digits.resize(10); // Có 10 chữ số từ 0 đến 9
         for (int i = 0; i < 10; ++i) {
@@ -283,7 +302,11 @@ const std::vector<sf::Texture>& Resource_Management::getTexture(const std::strin
         init();
     }
 
- 
+    if (name == "IceBullet") return bullet1;
+    if (name == "DarkBullet") return bullet2;
+    if (name == "LightningBullet") return bullet3;
+    if (name == "FlameBullet") return bullet4;
+
     if (name == "Knight_Sleame") return Knight_Sleame;//Note the default animation is walk or movement
     if (name == "Knight_Sleame_Hurt") return Knight_Sleame_Hurt;
     if (name == "Knight_Sleame_Dead") return Knight_Sleame_Dead;
@@ -324,11 +347,13 @@ const std::vector<sf::Texture>& Resource_Management::getTexture(const std::strin
     if (name == "Map_Game2") return Map_Game2;
     if (name == "Map_Game3") return Map_Game3;
     if (name == "Map_Game4") return Map_Game4;
-    if (name == "Tower1") return Tower1;
-    if (name == "Tower2") return Tower2;
-    if (name == "Tower3") return Tower3;
-    if (name == "Tower4") return Tower4;
-    if (name == "bullet") return bullet1;
+
+
+    if (name == "FreezeTower") return FreezeTower;
+    if (name == "DarkTower") return DarkTower;
+    if (name == "ElectricTower") return ElectricTower;
+    if (name == "FlameTower") return FlameTower;
+
     if (name == "Tower1_Icon") return Tower1_Icon;
     if (name == "Tower2_Icon") return Tower2_Icon;
     if (name == "Tower3_Icon") return Tower3_Icon;
@@ -338,6 +363,10 @@ const std::vector<sf::Texture>& Resource_Management::getTexture(const std::strin
     if (name == "GameOver_Image") return GameOver_Image;
 	if (name == "Upgrade_Icon") return Upgrade_Icon;
 	if (name == "Sell_Icon") return Sell_Icon;
+    if (name == "DarkTower_L2") return Tower1_L2;
+    if (name == "FreezeTower_L2") return Tower2_L2;
+    if (name == "ElectricTower_L2") return Tower3_L2;
+    if (name == "FlameTower_L2") return Tower4_L2;
 
 
     // Nếu không tìm thấy, ném một ngoại lệ rõ ràng
@@ -361,7 +390,6 @@ void Resource_Management::loadSound(sf::SoundBuffer& buffer, const std::string& 
         std::cerr << "cannot load texture " << filepath << std::endl;
     }
 }
-
 
 const unsigned int Resource_Management::WINDOW_WIDTH = 540;
 const unsigned int Resource_Management::WINDOW_HEIGHT = 360;

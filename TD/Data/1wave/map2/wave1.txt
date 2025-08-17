@@ -1,0 +1,8 @@
+#	SwapTime 	EnemyType 	Health Speed Bouty
+	0.0 	Mushroom	100 50 10
+	1.5 	Mushroom	100 50 10
+	3.0 	Mushroom			80 75 15
+	3.5 	Mushroom	 		80 75 15
+	5.5 	Knight_Sleame 		400 35 50
+	7.0 	Mage_Sleame		100 50 10
+	7.5 	Mage_Sleame		100 50 10

@@ -73,8 +73,6 @@ void mapTowerDefense_Game::makeMap_GameData() {
 	PathFinder::setStart(startPos); PathFinder::setEnd(endDes);
 }
 
-
-
 void mapTowerDefense_Game::Update(float deltaTime)
 {
 	animate(deltaTime);
@@ -99,4 +97,8 @@ void mapTowerDefense_Game::draw(sf::RenderWindow& window) {
 void mapTowerDefense_Game::setTexture(const std::vector<sf::Texture>& rMap_GameTexture) {
 	Map_GameTexture = rMap_GameTexture;
 	Map_GameSprite.setTexture(Map_GameTexture[0]);
+}
+
+void mapTowerDefense_Game::findSecondPath() {
+	PathFinder::findSecondPath(_Map_Game_Logic);
 }

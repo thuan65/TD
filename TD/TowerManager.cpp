@@ -26,11 +26,14 @@ void TowerManager::setupBuildMenu() {
     buildMenuTower2Icon = std::make_unique<sf::Sprite>(Resource_Management::getTexture("Tower2_Icon")[0]);
     buildMenuTower3Icon = std::make_unique<sf::Sprite>(Resource_Management::getTexture("Tower3_Icon")[0]);
     buildMenuTower4Icon = std::make_unique<sf::Sprite>(Resource_Management::getTexture("Tower4_Icon")[0]);
-    const float menuIconScale = 0.05f; // << CHỈNH SỬA CON SỐ NÀY
-	/*buildMenuTower1Icon->setScale(sf::Vector2f(menuIconScale, menuIconScale));*/
-	buildMenuTower2Icon->setScale(sf::Vector2f(menuIconScale, menuIconScale));
-	/*buildMenuTower3Icon->setScale(sf::Vector2f(menuIconScale, menuIconScale));
-	buildMenuTower4Icon->setScale(sf::Vector2f(menuIconScale, menuIconScale));*/
+    const float menuIconScale2 = 0.05f; // << CHỈNH SỬA CON SỐ NÀY
+    const float menuIconScale1 = 0.04f; // << CHỈNH SỬA CON SỐ NÀY
+    const float menuIconScale4 = 0.04f; // << CHỈNH SỬA CON SỐ NÀY
+	const float menuIconScale3 = 0.04f; // << CHỈNH SỬA CON SỐ NÀY
+    buildMenuTower1Icon->setScale(sf::Vector2f(menuIconScale1, menuIconScale1));
+    buildMenuTower2Icon->setScale(sf::Vector2f(menuIconScale2, menuIconScale2));
+    buildMenuTower3Icon->setScale(sf::Vector2f(menuIconScale3, menuIconScale3));
+    buildMenuTower4Icon->setScale(sf::Vector2f(menuIconScale4, menuIconScale4));
     upgradeMenuBackground = std::make_unique<sf::RectangleShape>();
     upgradeMenuBackground->setSize({ 74.f, 60.f });
     upgradeMenuBackground->setFillColor(sf::Color(120, 120, 120, 220));
@@ -66,15 +69,15 @@ void TowerManager::openBuildMenu(int row, int col) {
     if (menuY + menuSize.y > windowSize.y) menuY = windowSize.y - menuSize.y;
 
     buildMenuBackground->setPosition({ menuX, menuY });
-    buildMenuTower1Icon->setPosition({ menuX + 5.f, menuY + 2.5f });
+    buildMenuTower1Icon->setPosition({ menuX + 1.f, menuY + 2.5f });
     buildMenuTower2Icon->setPosition({ menuX + 35.f, menuY + 2.5f });
     buildMenuTower3Icon->setPosition({ menuX + 79.f, menuY + 2.5f });
     buildMenuTower4Icon->setPosition({ menuX + 116.f, menuY + 2.5f });
 
-    drawNumber(TOWER1_COST, buildMenuTower1Icon->getPosition().x, buildMenuTower1Icon->getPosition().y + 50, tower1CostSprites);
+    drawNumber(TOWER1_COST, buildMenuTower1Icon->getPosition().x + 8.5, buildMenuTower1Icon->getPosition().y + 50, tower1CostSprites);
     drawNumber(TOWER2_COST, buildMenuTower2Icon->getPosition().x + 5, buildMenuTower2Icon->getPosition().y + 50, tower2CostSprites);
-    drawNumber(TOWER3_COST, buildMenuTower3Icon->getPosition().x, buildMenuTower3Icon->getPosition().y + 50, tower3CostSprites);
-    drawNumber(TOWER4_COST, buildMenuTower4Icon->getPosition().x, buildMenuTower4Icon->getPosition().y + 50, tower4CostSprites);
+    drawNumber(TOWER3_COST, buildMenuTower3Icon->getPosition().x + 9.5, buildMenuTower3Icon->getPosition().y + 50, tower3CostSprites);
+    drawNumber(TOWER4_COST, buildMenuTower4Icon->getPosition().x + 7, buildMenuTower4Icon->getPosition().y + 50, tower4CostSprites);
 }
 
 void TowerManager::closeBuildMenu() {
@@ -113,23 +116,6 @@ void TowerManager::setWaveManager(WaveManager* manager) {
 }
 
 // --- LOGIC GAME CHÍNH ---
-//void TowerManager::ReadFile(const std::string& filePath) {
-//    std::ifstream fin(filePath);
-//    if (fin.fail()) {
-//        throw std::runtime_error("Fail to open build_Position.txt for TowerManager");
-//    }
-//    buildZones.clear();
-//    float row, col;
-//    std::string ignoreline;
-//    getline(fin, ignoreline);
-//    while (fin >> row >> col) {
-//        sf::FloatRect zone(
-//            { col * point::TileSize, row * point::TileSize },
-//            { (float)point::TileSize, (float)point::TileSize }
-//        );
-//        buildZones.push_back({ zone, false });
-//    }
-//}
 
 void TowerManager::ReadFile(const std::string& filePath) {
 	std::ifstream fin(filePath);
@@ -182,16 +168,16 @@ void TowerManager::resolveTowerAt(sf::Vector2f worldPos, int& money) {
     if (isBuildMenuOpen) {
      
         if (buildMenuTower1Icon->getGlobalBounds().contains(worldPos)) {
-            if (money >= TOWER1_COST) { money -= TOWER1_COST; buildTower(theTowerPosition, "Tower1"); }
+            if (money >= TOWER1_COST) { money -= TOWER1_COST; buildTower(theTowerPosition, "DarkTower"); }
         }
         else if (buildMenuTower2Icon->getGlobalBounds().contains(worldPos)) {
-            if (money >= TOWER2_COST) { money -= TOWER2_COST; buildTower(theTowerPosition, "Tower2"); }
+            if (money >= TOWER2_COST) { money -= TOWER2_COST; buildTower(theTowerPosition, "FreezeTower"); }
         }
         else if (buildMenuTower3Icon->getGlobalBounds().contains(worldPos)) {
-            if (money >= TOWER3_COST) { money -= TOWER3_COST; buildTower(theTowerPosition, "Tower3"); }
+            if (money >= TOWER3_COST) { money -= TOWER3_COST; buildTower(theTowerPosition, "ElectricTower"); }
         }
         else if (buildMenuTower4Icon->getGlobalBounds().contains(worldPos)) {
-            if (money >= TOWER4_COST) { money -= TOWER4_COST; buildTower(theTowerPosition, "Tower4"); }
+            if (money >= TOWER4_COST) { money -= TOWER4_COST; buildTower(theTowerPosition, "FlameTower"); }
         }
         closeBuildMenu();
         return;
@@ -230,21 +216,49 @@ void TowerManager::resolveTowerAt(sf::Vector2f worldPos, int& money) {
 //}
 
 bool TowerManager::buildTower(sf::Vector2f worldPos, std::string towerType) {
-    /*tower* buildNewTower = new tower(towerType, Resource_Management::getTexture(towerType));*/
-    tower* buildNewTower = new tower(towerType, Resource_Management::getTexture(towerType), buildMenuTilePosition.y, buildMenuTilePosition.x);
-    for (int i = 0; i < buildZones.size(); ++i) {//Tìm ô có thể xây tháp
+    int typeId = 0;
+    if (towerType == "ElectricTower") typeId = 1;
+    else if (towerType == "DarkTower") typeId = 2;
+    else if (towerType == "FlameTower") typeId = 3;
+    else if (towerType == "FreezeTower") typeId = 4;
+    else return false;
 
-        if (buildZones[i].bounds.contains(worldPos)) {
-            sf::Vector2f towerPosition = buildZones[i].bounds.getCenter();
-            towerPosition.y -= 12.5f;
-            buildNewTower->setPosition(towerPosition);//Set the tower position in the middle of the Tile
-            buildZones[i].TowerExist = true;
-            //std::cout << "Build:  " << buildZones[i].bounds.getCenter().x << " " << buildZones[i].bounds.getCenter().y << "\n";
-            //std::cout << buildNewTower->getPosition().x << " " << buildNewTower->getPosition().y << "\n";
-            towers.emplace_back(buildNewTower);
+    int row = static_cast<int>(worldPos.y / point::TileSize);
+    int col = static_cast<int>(worldPos.x / point::TileSize);
+
+    for (auto& zone : buildZones) {
+        if (zone.bounds.contains(worldPos) && !zone.TowerExist) {
+            sf::Vector2f center = {
+                zone.bounds.position.x + zone.bounds.size.x / 2.f,
+                zone.bounds.position.y + zone.bounds.size.y / 2.f
+            };
+            buildSelectedTower(typeId);
+            if (!towers.empty()) {
+                towers.back()->setPosition(center);
+            }
+            zone.TowerExist = true;
             return true;
-            break;
         }
+    }
+    return false;
+}
+
+void TowerManager::buildSelectedTower(int type) {
+    switch (type) {
+    case 1:
+        towers.emplace_back(new ElectricTower("ElectricTower"));
+        break;
+    case 2:
+        towers.emplace_back(new DarkTower("DarkTower"));
+        break;
+    case 3:
+        towers.emplace_back(new FlameTower("FlameTower"));
+        break;
+    case 4:
+        towers.emplace_back(new FreezeTower("FreezeTower"));
+        break;
+    default:
+        break;
     }
 }
 
@@ -283,15 +297,7 @@ void TowerManager::draw(sf::RenderWindow& window) {
     for (auto* t : towers) {
         t->draw(window);
     }
-    for (const auto& zone : buildZones) {
-        sf::RectangleShape shape;
-        shape.setPosition(sf::Vector2f(zone.bounds.position));
-        shape.setSize(sf::Vector2f(zone.bounds.size));
-        shape.setFillColor(sf::Color::Transparent);
-        shape.setOutlineColor(sf::Color::Green);
-        shape.setOutlineThickness(1.f);
-        window.draw(shape);
-    }
+  
 
     if (isBuildMenuOpen) {
         window.draw(*buildMenuBackground);
@@ -363,10 +369,17 @@ void TowerManager::loadSave(std::istream& fileIn) {
 }
 
 void TowerManager::addTower(const string& towerType, sf::Vector2f towerPositon, int TowerLevel) {
-    tower* buildNewTower = new tower(towerType, Resource_Management::getTexture(towerType));
-    buildNewTower->setPosition(towerPositon);
-    buildNewTower->updadeToLevel(TowerLevel);//Upgrate cho den level hien tai
-    towers.emplace_back(buildNewTower);
+    tower* buildNewTower = nullptr;
+    if (towerType == "ElectricTower") buildNewTower = new ElectricTower("ElectricTower");
+    else if (towerType == "DarkTower") buildNewTower = new DarkTower("DarkTower");
+    else if (towerType == "FlameTower") buildNewTower = new FlameTower("FlameTower");
+    else if (towerType == "FreezeTower") buildNewTower = new FreezeTower("FreezeTower");
+
+    if (buildNewTower) {
+        buildNewTower->setPosition(towerPositon);
+        buildNewTower->updadeToLevel(TowerLevel);
+        towers.emplace_back(buildNewTower);
+    }
 }
 
 // --- CÁC HÀM CHƯA DÙNG ĐẾN ---

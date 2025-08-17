@@ -37,6 +37,7 @@ public:
 	// -1 là tường, 0 là trống, 1 là tower
 	//void resetMap_GameData();
 	void makeMap_GameData();
+	void findSecondPath();
 	bool ReadFile(std::string fileName);
 	void setFilePath(const::string& filePath);//The file path to the map logic matrix
 	void setFilePathForStartEnd(const std::string& rfilePath);

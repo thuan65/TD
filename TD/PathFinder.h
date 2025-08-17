@@ -10,6 +10,9 @@ private:
 	static std::vector<sf::Vector2f> _path;
 	static point _start, _end, _curr;
 
+	static std::vector<sf::Vector2f> tmpPath;
+	static std::vector<sf::Vector2f> _path2;//For map 4
+
 	static int dd[4], dc[4];
 public:
 
@@ -28,6 +31,9 @@ public:
 
 	static void findPath(std::vector<std::vector<point>>);
 	static const std::vector<sf::Vector2f>& getPath() { return _path; }
+	static const std::vector<sf::Vector2f>& getPath(int index);
+	static void findSecondPath(std::vector<std::vector<point>>);
+
 private:
 	static void calcPath(std::vector<std::vector<int>>, point, point, int = 1);
 

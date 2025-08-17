@@ -1,0 +1,4 @@
+#	SpawTime 	EnemyType 	Health Speed Bouty
+	0.0 	Knight_Sleame 		400 35 50
+	1.0 	Sleame 			100 50 10
+	1.5 	Sleame 			100 50 10

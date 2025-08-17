@@ -6,8 +6,8 @@ BulletManager::BulletManager(WaveManager *waveControl)
 	:waveControl(waveControl)
 {}
 
-void BulletManager::spawBullet(tower* theTower, enemy* enemies, int damage) {
-	bullets.emplace_back(new bullet(Resource_Management::getTexture("bullet"), 500, damage));
+void BulletManager::spawBullet(tower* theTower, enemy* enemies, int damage, std::string bulletType) {
+	bullets.emplace_back(new bullet(Resource_Management::getTexture(bulletType), 500, damage));
 	bullets.back()->Initialize(theTower, enemies);
 }
 

@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "point.h"
 #include <vector>
 #include "SFML/Graphics.hpp"
 

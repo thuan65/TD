@@ -11,18 +11,19 @@ private:
 	Resource_Management() = default;
 
 	// Các biến texture vẫn là static private
-	
 
-
-	static std::vector<sf::Texture> Tower1;
-	static std::vector<sf::Texture> Tower2;
-	static std::vector<sf::Texture> Tower3;
-	static std::vector<sf::Texture> Tower4;
 	static std::vector<sf::Texture> bullet1;
+	static std::vector<sf::Texture> bullet2;
+	static std::vector<sf::Texture> bullet3;
+	static std::vector<sf::Texture> bullet4;
 	static std::vector<sf::Texture> Tower1_Icon;
 	static std::vector<sf::Texture> Tower2_Icon;
 	static std::vector<sf::Texture> Tower3_Icon;
 	static std::vector<sf::Texture> Tower4_Icon;
+	static std::vector<sf::Texture> Tower1_L2;
+	static std::vector<sf::Texture> Tower2_L2;
+	static std::vector<sf::Texture> Tower3_L2;
+	static std::vector<sf::Texture> Tower4_L2;
 
 	static std::vector<sf::Texture> Victory_Image;
 	static std::vector<sf::Texture> GameOver_Image;
@@ -112,6 +113,7 @@ public:
 	static sf::Texture knobVolumeTexture;
 	static sf::Texture yesIconTexture;
 	static sf::Texture noIconTexture;
+	static std::vector<sf::Texture> NoTexture;
 
 	//Remove thoose thing later/////////////////////////////
 	static std::vector<sf::Texture> Map1BackgroundTexture;
@@ -139,6 +141,11 @@ public:
 	static sf::Texture quitButtonTexture;
 	static sf::Texture continueGameButtonTexture;
 
+	static std::vector<sf::Texture> FreezeTower;
+	static std::vector<sf::Texture> DarkTower;
+	static std::vector<sf::Texture> ElectricTower;
+	static std::vector<sf::Texture> FlameTower;
+
 
 
 	static sf::Texture Heart_Icon;
@@ -158,7 +165,6 @@ private:
 	static void loadTexture(sf::Texture& texture, const std::string& filepath);//Load only one Texture
 	static void loadFont(sf::Font& font, const std::string& filepath);
 	static void loadSound(sf::SoundBuffer& buffer, const std::string& filepath);
-
 
 public:
 	static const unsigned int WINDOW_WIDTH;

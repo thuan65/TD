@@ -77,7 +77,7 @@ void PlayState::updateGUISprites() {
         sf::Sprite heartSprite(heartTex);
         heartSprite.setScale(sf::Vector2f(heartScale, heartScale));
         float scaledHeartWidth = heartTex.getSize().x * heartScale;
-        heartSprite.setPosition({ 10.f + i * (scaledHeartWidth + 5), 10.f });
+        heartSprite.setPosition({ 200.f + i * (scaledHeartWidth + 5), 10.f });
         livesSprites.push_back(heartSprite);
     }
     drawNumber(money, 300.f, 10.f, moneySprites);
@@ -109,6 +109,13 @@ void PlayState::drawNumber(int number, float x, float y, std::vector<sf::Sprite>
     }
 }
 void PlayState::handleWaveTiming(float deltaTime) {
+
+    if (currentWave == 0) {
+        currentWave++;
+        waveControl.startWave(currentWave);
+        return;
+    }
+
     if (waveControl.WaveEnded() && !isBetweenWaves) {
         // Nếu wave vừa kết thúc và chưa bắt đầu đếm ngược
         if (currentWave < WaveManager::TOTAL_WAVES) {
@@ -173,6 +180,7 @@ void PlayState::handleInput(const std::optional<sf::Event>& event, sf::Vector2f 
     if (playIconSprite.isClicked(event, mouseCoords)) {
         std::cout << startPlaying << " ";
         startPlaying = true;
+        timeUntilNextWave = 0;
         states->push(std::make_unique<CountdownState>(window, states));
     }
 
@@ -183,28 +191,30 @@ void PlayState::handleInput(const std::optional<sf::Event>& event, sf::Vector2f 
     }
 }
 
-    void PlayState::update(float deltaTime, sf::Vector2f mouseCoords) {
-        pauseIconSprite.update(mouseCoords);
-        speedUpIconSprite.update(mouseCoords);
-        playIconSprite.update(mouseCoords);
-        if (alreadySpeedUp == true)
-            speedUpIconSprite.setColor(sf::Color(255, 255, 255, 200));
-        else speedUpIconSprite.setColor(sf::Color::White);
+void PlayState::update(float deltaTime, sf::Vector2f mouseCoords) {
+    pauseIconSprite.update(mouseCoords);
+    speedUpIconSprite.update(mouseCoords);
+    playIconSprite.update(mouseCoords);
+    if (alreadySpeedUp == true)
+        speedUpIconSprite.setColor(sf::Color(255, 255, 255, 200));
+    else speedUpIconSprite.setColor(sf::Color::White);
 
-        if (SoundManager::getMusicStatus() == sf::Music::SoundSource::Status::Paused) {
-            SoundManager::resumeMusic();
-        }
+    if (SoundManager::getMusicStatus() == sf::Music::SoundSource::Status::Paused) {
+        SoundManager::resumeMusic();
+    }
 
+    if (startPlaying == true) {//Chi update khi game start
     handleWaveTiming(deltaTime);
 
     // Update các hệ thống
-	waveControl.update(deltaTime);
-	towerControl.update(deltaTime);
-	bulletManager.update(deltaTime);
-	gameMap.Update(deltaTime);
-    updateGUISprites();
+    waveControl.update(deltaTime);
+    towerControl.update(deltaTime);
+    bulletManager.update(deltaTime);
+    gameMap.Update(deltaTime);
+ 
     handleEnemyResults();
-
+    }
+    updateGUISprites();
 	//if (timeAccumulator >= 0.5f) {
 	//	timeAccumulator -= 0.5f;
 	//	currentFrame = 1 - currentFrame;
@@ -227,19 +237,19 @@ void PlayState::handleInput(const std::optional<sf::Event>& event, sf::Vector2f 
 void PlayState::render() {
     //window->clear();
 	//window->draw(backgroundSprite);
-    window->draw(speedUpIconSprite);
-    if (dynamic_cast<PauseState*>(states->top().get()) == nullptr)
-        window->draw(pauseIconSprite);
-    if (startPlaying == false) {
-
-        window->draw(playIconSprite);
-        window->draw(pressToStartText);
-    }
 
 	gameMap.draw(*window);
 	waveControl.draw(*window);
 	towerControl.draw(*window);
 	bulletManager.draw(*window);
+
+    window->draw(speedUpIconSprite);
+    if (dynamic_cast<PauseState*>(states->top().get()) == nullptr)
+        window->draw(pauseIconSprite);
+    if (startPlaying == false) {
+        window->draw(playIconSprite);
+        window->draw(pressToStartText);
+    }
 
 	for (const auto& sprite : livesSprites) window->draw(sprite);
 	for (const auto& sprite : moneySprites) window->draw(sprite);

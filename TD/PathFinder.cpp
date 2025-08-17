@@ -12,12 +12,14 @@ point PathFinder::_curr;
 point PathFinder::_end;
 
 std::vector<sf::Vector2f> PathFinder::_path;
+std::vector<sf::Vector2f> PathFinder::tmpPath;
+std::vector<sf::Vector2f> PathFinder::_path2;
 
 int PathFinder::dd[4] = { -1, 0, 1, 0 };
 int PathFinder::dc[4] = { 0, -1, 0, 1 };
 
 void PathFinder::findPath(std::vector<std::vector<point>> a) {
-	_path.clear();
+	tmpPath.clear();
 
 	//Bang chứa cái thuộc tính của thứ nằm trên Map_Game
 	std::vector<std::vector<int>> ta;
@@ -34,6 +36,39 @@ void PathFinder::findPath(std::vector<std::vector<point>> a) {
 	e = _end;
 
 	calcPath(ta, s, e);
+	_path = tmpPath;
+}
+
+const std::vector<sf::Vector2f>& PathFinder::getPath(int index) {
+
+	if (index == 0) {
+		return _path;
+	}
+	else if (index == 1) {
+	 return _path2; 
+	}
+}
+
+void PathFinder::findSecondPath(std::vector<std::vector<point>> a) {
+	tmpPath.clear();	
+	_path2.clear();
+
+	//Bang chứa cái thuộc tính của thứ nằm trên Map_Game
+	std::vector<std::vector<int>> ta;
+	ta.resize(a.size(), std::vector<int>(a[0].size()));
+	for (int i = 0; i < a.size(); i++) {
+		for (int j = 0; j < a[0].size(); j++) {
+			ta[i][j] = a[i][j].getC();
+		}
+	}
+	point s, e;
+	s = { 10,0,0 };
+	e = { 5,15,0 };
+
+	calcPath(ta, s, e);
+
+	_path2 = tmpPath;
+	_path2[0].y = 280;
 }
 
 //B1: tạo ra được một cái bảng đường đi (DFS)
@@ -50,7 +85,7 @@ void PathFinder::calcPath(std::vector<std::vector<int>> a, point s, point e, int
 			for (int i = 0; i < a.size(); i++) {
 				for (int j = 0; j < a[0].size(); j++) {
 					if (a[i][j] == k) {
-						_path.emplace_back(sf::Vector2f{ (float)j * point::TileSize, (float)i * point::TileSize}); //(X,Y) 
+						tmpPath.emplace_back(sf::Vector2f{ (float)j * point::TileSize, (float)i * point::TileSize}); //(X,Y) 
 						goto Nhan;
 					}
 				}

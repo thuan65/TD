@@ -62,7 +62,6 @@ void mapManager::loadMapConfig(std::string filePathMapconfg) {
 		std::getline(fin, line);
 		mapcfg.filePathForBuildPosition = line;
 	
-
 }
 
 void mapManager::setUpMap() {
@@ -71,10 +70,15 @@ void mapManager::setUpMap() {
 	gameMap->setFilePath(mapcfg.filePathForMapLogic);
 	
 	gameMap->setFilePathForStartEnd(mapcfg.filePathForStartEndPositon);
+
 	towerControl->ReadFile(mapcfg.filePathForBuildPosition);
 
 	waveControl->reset();
 	gameMap->reset();
+	if (mapSelection == MapID::Map4) {
+		gameMap->findSecondPath();
+		waveControl->setNumberOfPath(2);
+	}
 	towerControl->reset();
 }
 

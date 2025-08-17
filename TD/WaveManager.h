@@ -19,7 +19,7 @@ class WaveManager : public ISaveable {
 private:
 
 	std::string filePath;
-
+	int numberOfPath;
 	struct EnemyInfo {
 		float spawnTime;
 		std::string enemy_type;
@@ -49,6 +49,7 @@ public:
 	void setWaveNumber(int rwave_number) { wave_number = rwave_number; }
 	void setEnemySpawnIndex(int rEnemySpawnIndex) { enemySpawnIndex = rEnemySpawnIndex; }
 	void setTimeSinceLastWave(float rtimeSinceLastWave) { timeSinceLastWave = rtimeSinceLastWave; }
+	void setNumberOfPath(int rNumberOfPath) { numberOfPath = rNumberOfPath; }
 
 	int getWaveNumber() { return wave_number; }
 	int getEnemySpawnIndex() { return enemySpawnIndex; }

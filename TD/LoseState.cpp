@@ -36,9 +36,12 @@ void LoseState::update(float dt, sf::Vector2f mouseCoords) {
 	mainMenuButtonSprite.update(mouseCoords);
 }
 
+
+
 void LoseState::render() {
 	window->draw(dimOverlay);
 	window->draw(loseBackgroundSprite);
 	window->draw(newGameButtonSprite);
 	window->draw(mainMenuButtonSprite);
 }
+

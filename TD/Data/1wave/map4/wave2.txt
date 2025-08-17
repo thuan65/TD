@@ -1,0 +1,5 @@
+#	SpawTime 	EnemyType 	Health Speed Bouty
+	0.0 	Runner 	100 50 10
+	1.5 	Runner 	100 50 10
+	7.0 	Sleame 			100 50 10
+	7.5 	Sleame 			100 50 10
